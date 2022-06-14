@@ -1,0 +1,55 @@
+Implementation of the methods described in the ipol article ``the integral rank
+transform''.  There are two implementations: krt (suitable for small-support
+kernels, very slow for large kernels) and krt3d (general case, suitable for
+arbitrary kernels, running time and space depends on the gray-level
+quantization).
+
+
+
+krt [options] KERNEL [IN [OUT]]
+
+IN : input image (by default, stdin)
+OUT : output image of the same size as the input (by default, stdout)
+KERNEL : string that specifies the kernel k  Examples:
+
+"file.npy" : the kernel is given by a numeric array, the center is at the
+center of the image
+
+"gauss:S" : the kernel is a gaussian of that sigma=S (in pixels)
+
+"disk:R" : disk of radius R
+
+"rectangle:N" : centered rectangle of size (2M+1)x(2M+1), where M=floor(N)
+
+options:
+
+-p 0 : getpixel = 0 outside the original image domain
+-p 1 : getpixel = nearest neighbor
+-p 2 : getpixel = symmetric extension
+... (periodic, etc)
+
+
+
+
+
+krt3d [options] KERNEL [IN [OUT]]
+
+IN : input image (by default, stdin)
+OUT : output image of the same size as the input (by default, stdout)
+KERNEL : string that specifies the kernel k  Examples:
+
+"file.npy" : the kernel is given by a numeric array, the center is at the
+center of the image, extended by zero outside of its domain
+
+"gauss:S" : the kernel is a gaussian of that sigma=S (in pixels)
+
+"riesz:S" : riesz kernel of parameter S
+
+options:
+
+-s 255 : gray-scale factor
+-n 256 : number of gray-scale bins
+
+future:
+-h σ : gray-level filtering parameter
+
