@@ -1,6 +1,6 @@
 # user-editable configuration
-CFLAGS  = -march=native -Os
-CFLAGS  = -g -Wall -Wextra -Wno-unused
+CFLAGS  = -g -Wall -Wextra
+CFLAGS  = -march=native -O3
 
 # required libraries
 LDLIBS  = -lfftw3 -lpng -ljpeg -ltiff
@@ -16,7 +16,7 @@ default : $(BIN)
 # each binary depends on all the object files
 $(BIN)  : $(OBJ)
 
-# manpages
+# build manpages from --help output
 %.1 : % ; help2man -N ./$^ > $@
 manpages: $(BIN) $(MAN)
 

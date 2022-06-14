@@ -1,3 +1,4 @@
+#include <stdio.h>  // sscanf
 #include <stdlib.h> // malloc, free
 
 static float pixel(float *x, int w, int h, int i, int j)
@@ -11,12 +12,34 @@ static float pixel(float *x, int w, int h, int i, int j)
 
 static float *build_kernel_from_string(char *s, int *w, int *h)
 {
+	float p; // kernel parameter
+
+	if (1 == sscanf(s, "gauss%g", &p)) {
+		;
+	}
+
+	if (1 == sscanf(s, "square%g", &p)) {
+		int n = p;
+		if (n >= 1 && n < 1000)
+		{
+			*w = *h = n;
+			float *k = malloc(n * n * sizeof*k);
+			for (int i = 0; i < n*n; i++)
+				k[i] = 1.0/(n*n - 1);
+			return k;
+		}
+	}
+
+	if (1 == sscanf(s, "disk%g", &p)) {
+		;
+	}
+
 	*w = 7;
 	*h = 7;
 	int wh = *w * *h;
 	float *k = malloc(wh * sizeof*k);
 	for (int i = 0; i < wh; i++)
-		k[i] = 1.0/wh;
+		k[i] = 1.0/(wh - 1);
 	return k;
 }
 
