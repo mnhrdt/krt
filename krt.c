@@ -44,11 +44,11 @@ static float *build_kernel_from_string(char *s, int *w, int *h)
 }
 
 void kernel_rank_transform_bruteforce(
-		char *kernel_string,   // textual description of the kernel
-		float *y,              // output image data
-		float *x,              // input image data
-		int w,                 // image width
-		int h                  // image height
+		char *kernel_string,  // textual description of the kernel
+		float *y,             // output image data
+		float *x,             // input image data
+		int w,                // image width
+		int h                 // image height
 		)
 {
 	int W, H; // kernel width, height
@@ -57,23 +57,23 @@ void kernel_rank_transform_bruteforce(
 	for (int i = 0; i < w*h; i++)
 		y[i] = 0;
 
-	for (int j = 0; j < h; j++)
-	for (int i = 0; i < w; i++)
-	for (int q = 0; q < H; q++)
-	for (int p = 0; p < W; p++)
-		if (pixel(x, w, h, i+p-W/2, j+q-H/2) > pixel(x, w, h, i, j))
+	for (int j = 0; j < h; j++)   // image line
+	for (int i = 0; i < w; i++)   // image column
+	for (int q = 0; q < H; q++)   // kernel line
+	for (int p = 0; p < W; p++)   // kernel column
+		if (pixel(x, w, h, i+p-W/2, j+q-H/2) < pixel(x, w, h, i, j))
 			y[j*w+i] += pixel(k, W, H, p, q);
 
 	free(k);
 }
 
 void kernel_rank_transform_bruteforce_split(
-		char *kernel_string,   // textual description of the kernel
-		float *y,              // output image data
-		float *x,              // input image data
-		int w,                 // image width
-		int h,                 // image height
-		int pd                 // pixel dimension
+		char *kernel_string,  // textual description of the kernel
+		float *y,             // output image data
+		float *x,             // input image data
+		int w,                // image width
+		int h,                // image height
+		int pd                // pixel dimension
 		)
 {
 	for (int i = 0; i < pd; i++)
