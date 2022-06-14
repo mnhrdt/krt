@@ -1,6 +1,6 @@
 #include <stdlib.h> // malloc, free
 
-static float getpixel(float *x, int w, int h, int i, int j)
+static float pixel(float *x, int w, int h, int i, int j)
 {
 	if (i < 0) i = 0;
 	if (j < 0) j = 0;
@@ -11,7 +11,6 @@ static float getpixel(float *x, int w, int h, int i, int j)
 
 static float *build_kernel_from_string(char *s, int *w, int *h)
 {
-	(void)s;
 	*w = 7;
 	*h = 7;
 	int wh = *w * *h;
@@ -32,22 +31,15 @@ void kernel_rank_transform_bruteforce(
 	int W, H; // kernel width, height
 	float *k = build_kernel_from_string(kernel_string, &W, &H);
 
+	for (int i = 0; i < w*h; i++)
+		y[i] = 0;
+
 	for (int j = 0; j < h; j++)
 	for (int i = 0; i < w; i++)
-	{
-		float xij = getpixel(x, w, h, i, j);
-		double a = 0;
-		for (int q = 0; q < H; q++)
-		for (int p = 0; p < W; p++)
-		{
-			// TODO: verify signs, symmetry, center, etc
-			float xpq = getpixel(x, w, h, i+p-W/2, j+q-H/2);
-			float kpq = getpixel(k, W, H, p, q);
-			if (xpq > xij)
-				a += kpq;
-		}
-		y[j*w + i] = a;
-	}
+	for (int q = 0; q < H; q++)
+	for (int p = 0; p < W; p++)
+		if (pixel(x, w, h, i+p-W/2, j+q-H/2) > pixel(x, w, h, i, j))
+			y[j*w+i] += pixel(k, W, H, p, q);
 
 	free(k);
 }
@@ -71,10 +63,41 @@ void kernel_rank_transform_bruteforce_split(
 #define KRT_MAIN
 
 #ifdef KRT_MAIN
-#include <stdio.h>
+#include <stdio.h>  // puts, fprintf
+#include <string.h> // strcmp
 #include "iio.h"
+char *version = "krt 1.0\n\nWritten by RGvG and EML";
+char *help = ""
+"Krt computes the kernel rank transform of an image\n"
+"\n"
+"The kernel rank transform is like the classical rank transform, but\n"
+"using weighted neighborhoods, defined by a user-supplied kernel.\n"
+"The output image has the same size as the input and its values are between\n"
+"0 and 1.  If the pixels have several components, each component image is\n"
+"treated independently.\n"
+"\n"
+"Usage: krt KERNEL in out\n"
+"   or: krt KERNEL in > out\n"
+"   or: cat in | krt KERNEL > out\n"
+"\n"
+"Kernels:\n"
+" squareN     square of size (2N+1) x (2N+1)\n"
+" diskR       discrete disk of radius R\n"
+" gaussS      gaussian kernel of size S\n"
+" file.npy    read the kernel weights from an image file\n"
+"\n"
+"Examples:\n"
+" krt square7 i.png o.png    Classic rank transform of 49-pixel neighborhood\n"
+" krt gauss2.7 i.png o.png   Gaussian-weighted kernel rank transform\n"
+"\n"
+"Report bugs to <grompone@gmail.com>"
+;
 int main(int c, char *v[])
 {
+	// process help options
+	if (c == 2 && 0 == strcmp(v[1], "--help"   )) return 0*puts(help);
+	if (c == 2 && 0 == strcmp(v[1], "--version")) return 0*puts(version);
+
 	// process input arguments
 	if (c != 2 && c != 3 && c != 4)
 		return fprintf(stderr,
