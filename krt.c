@@ -43,9 +43,82 @@ static float *build_kernel_from_string(char *s, int *w, int *h)
 		return k;
 	}
 
+	if (1 == sscanf(s, "laplace%g", &p))
+	{
+		int n = 2*ceil(3*fabs(p)) + 1; // TODO: add this as an option?
+		fprintf(stderr, "laplacian of σ = %g (n = %d)\n", fabs(p), n);
+		*w = *h = n;
+		float *k = malloc(n * n * sizeof*k);
+
+		// fill-in laplacian kernel
+		for (int j = 0; j < n; j++)
+		for (int i = 0; i < n; i++)
+			k[n*j + i] = exp(-hypot(i-n/2, j-n/2)/p);
+
+		// set central pixel to 0 (cf. article)
+		k[n*(n/2) + n/2] = 0;
+
+		// normalize so that the sum of k is 1
+		float K = 0;
+		for (int i = 0; i < n*n; i++)
+			K += k[i];
+		for (int i = 0; i < n*n; i++)
+			k[i] /= K;
+		return k;
+	}
+
+	if (1 == sscanf(s, "cauchy%g", &p))
+	{
+		int n = 2*ceil(16*sqrt(p)) + 1;
+		fprintf(stderr, "cauchy of σ = %g (n = %d)\n", fabs(p), n);
+		*w = *h = n;
+		float *k = malloc(n * n * sizeof*k);
+
+		// fill-in cauchy kernel
+		for (int j = 0; j < n; j++)
+		for (int i = 0; i < n; i++)
+			k[n*j + i] = p/(p + pow(hypot(i-n/2, j-n/2),2) );
+
+		// set central pixel to 0 (cf. article)
+		k[n*(n/2) + n/2] = 0;
+
+		// normalize so that the sum of k is 1
+		float K = 0;
+		for (int i = 0; i < n*n; i++)
+			K += k[i];
+		for (int i = 0; i < n*n; i++)
+			k[i] /= K;
+		return k;
+	}
+
+	if (1 == sscanf(s, "landc%g", &p)) // cut land (parameter=discrete size)
+	{
+		int n = 2*ceil(p) + 1;
+		fprintf(stderr, "land of p = %g (n = %d)\n", fabs(p), n);
+		*w = *h = n;
+		float *k = malloc(n * n * sizeof*k);
+
+		// fill-in land kernel
+		for (int j = 0; j < n; j++)
+		for (int i = 0; i < n; i++)
+			k[n*j + i] = 1/hypot(i-n/2, j-n/2);
+
+		// set central pixel to 0 (cf. article)
+		k[n*(n/2) + n/2] = 0;
+
+		// normalize so that the sum of k is 1
+		float K = 0;
+		for (int i = 0; i < n*n; i++)
+			K += k[i];
+		for (int i = 0; i < n*n; i++)
+			k[i] /= K;
+		return k;
+	}
+
 	if (1 == sscanf(s, "square%g", &p))
 	{
 		int n = p;
+		fprintf(stderr, "square of side n = %d\n", n);
 		if (n >= 1 && n < 1000)
 		{
 			*w = *h = n;
