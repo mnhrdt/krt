@@ -1,4 +1,5 @@
-#include <stdio.h>  // sscanf
+#include <math.h>   // fabs, ceil, exp
+#include <stdio.h>  // sscanf, fprintf
 #include <stdlib.h> // malloc, free
 
 static float pixel(float *x, int w, int h, int i, int j)
@@ -14,11 +15,36 @@ static float *build_kernel_from_string(char *s, int *w, int *h)
 {
 	float p; // kernel parameter
 
-	if (1 == sscanf(s, "gauss%g", &p)) {
-		;
+	if (1 == sscanf(s, "gauss%g", &p))
+	{
+		int n = 2*ceil(3*fabs(p)) + 1; // TODO: add this as an option?
+		fprintf(stderr, "gaussian of σ = %g (n = %d)\n", fabs(p), n);
+		*w = *h = n;
+		float *k = malloc(n * n * sizeof*k);
+
+		// fill-in gaussian kernel
+		for (int j = 0; j < n; j++)
+		for (int i = 0; i < n; i++)
+		{
+			float x = i - n/2;
+			float y = j - n/2;
+			k[n*j + i] = exp(-(x*x + y*y)/(2*p*p));
+		}
+
+		// set central pixel to 0 (cf. article)
+		k[n*(n/2) + n/2] = 0;
+
+		// normalize so that the sum of k is 1
+		float K = 0;
+		for (int i = 0; i < n*n; i++)
+			K += k[i];
+		for (int i = 0; i < n*n; i++)
+			k[i] /= K;
+		return k;
 	}
 
-	if (1 == sscanf(s, "square%g", &p)) {
+	if (1 == sscanf(s, "square%g", &p))
+	{
 		int n = p;
 		if (n >= 1 && n < 1000)
 		{
@@ -30,7 +56,8 @@ static float *build_kernel_from_string(char *s, int *w, int *h)
 		}
 	}
 
-	if (1 == sscanf(s, "disk%g", &p)) {
+	if (1 == sscanf(s, "disk%g", &p))
+	{
 		;
 	}
 
@@ -43,10 +70,17 @@ static float *build_kernel_from_string(char *s, int *w, int *h)
 	return k;
 }
 
+static float discrete_heaviside(float x) // like Heaviside, but gives 0.5 at 0
+{
+	if (x < 0) return 0;
+	if (x > 0) return 1;
+	return 0.5;
+}
+
 void kernel_rank_transform_bruteforce(
 		char *kernel_string,  // textual description of the kernel
-		float *y,             // output image data
-		float *x,             // input image data
+		float *v,             // output image data
+		float *u,             // input image data
 		int w,                // image width
 		int h                 // image height
 		)
@@ -55,14 +89,19 @@ void kernel_rank_transform_bruteforce(
 	float *k = build_kernel_from_string(kernel_string, &W, &H);
 
 	for (int i = 0; i < w*h; i++)
-		y[i] = 0;
+		v[i] = 0;
 
 	for (int j = 0; j < h; j++)   // image line
 	for (int i = 0; i < w; i++)   // image column
 	for (int q = 0; q < H; q++)   // kernel line
 	for (int p = 0; p < W; p++)   // kernel column
-		if (pixel(x, w, h, i+p-W/2, j+q-H/2) < pixel(x, w, h, i, j))
-			y[j*w+i] += pixel(k, W, H, p, q);
+	{
+		float ux = pixel(u, w, h, i, j);
+		float uy = pixel(u, w, h, i+p-W/2, j+q-H/2);
+		float kxy = pixel(k, W, H, p, q);
+		v[j*w+i] += kxy * discrete_heaviside(ux - uy);
+		// TODO: verify that this is correct for asymmetric kernels
+	}
 
 	free(k);
 }
@@ -106,12 +145,12 @@ char *help = ""
 "Kernels:\n"
 " squareN     square of size (2N+1) x (2N+1)\n"
 " diskR       discrete disk of radius R\n"
-" gaussS      gaussian kernel of size S\n"
+" gaussS      gaussian kernel of sigma S\n"
 " file.npy    read the kernel weights from an image file\n"
 "\n"
 "Examples:\n"
-" krt square7 i.png o.png    Classic rank transform of 49-pixel neighborhood\n"
-" krt gauss2.7 i.png o.png   Gaussian-weighted kernel rank transform\n"
+" krt square7 i.png o.tiff   Classic rank transform of 49-pixel neighborhood\n"
+" krt gauss2.7 i.png o.tiff  Gaussian-weighted kernel rank transform\n"
 "\n"
 "Report bugs to <grompone@gmail.com>"
 ;

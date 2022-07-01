@@ -3,7 +3,7 @@ CFLAGS  = -g -Wall -Wextra
 CFLAGS  = -march=native -O3
 
 # required libraries
-LDLIBS  = -lfftw3 -lpng -ljpeg -ltiff
+LDLIBS  = -lm -lfftw3 -lpng -ljpeg -ltiff
 
 # files
 BIN     = krt #krt3d
