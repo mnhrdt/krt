@@ -1,0 +1,278 @@
+% git clone https://git.overleaf.com/620ba8e1df8113bf7a89ca28
+% https://www.overleaf.com/project/620ba8e1df8113bf7a89ca28
+
+\documentclass[12pt]{article}                  % base article class
+\usepackage[osf,sups]{Baskervaldx}             % baskerville, lining figures
+\usepackage[bigdelims,baskervaldx]{newtxmath}  % baskerville math
+\usepackage{graphicx}
+
+
+\setlength{\parindent}{0pt}         % no paragraph indentation
+\setlength{\parskip}{7pt}           % spacing between paragraphs
+
+
+\begin{document}
+
+\begin{center}
+    \Huge The Kernel Rank Transform
+\end{center}
+
+\bigskip
+
+\section{Definition and properties}
+
+Recall the original definition of the rank transform in a discrete setting
+(put reference)
+
+Corresponding definition for a continuous domain (find references)
+
+Propose a generalization using an arbitrary kernel, of which the original
+definition is a particular case (the kernel being the indicator function of
+a square)
+
+{\bf Definition.}
+Let~$u:\mathbf{R}^2\to\mathbf{R}$ be a compactly-supported grayscale image
+and~$\kappa:\mathbf{R}^2\to\mathbf{R}$ be a nonnegative function of
+integral~$1$.  The~\emph{rank transform of~$u$ with kernel~$\kappa$} is the
+image defined by
+\begin{equation}
+R_{\kappa}(u)(x) = \int\kappa(x-y)\mathbf{1}_{\left[u < u(x)\right]}(y)\mathrm{d}y
+\end{equation}
+by construction,~$R_\kappa(u)$ is an image that takes values in the
+interval~$[0,1]$.
+
+The rank transform can be interpreted as a local contrast equalization of
+of~$u$, where the concept of ``local'' is defined by the kernel~$\kappa$.
+Below we give the elementary properties of rank transforms and propose some
+equivalent definitions and approximations of it.
+
+TODO: write intuitive definition in terms of area percent of the support
+of~$\kappa$ is covered by the level sets of~$u$.
+
+\subsection{Equivalent definitions}
+
+We can rewrite the definition above in terms of the heaviside step
+function~$H(x)=\mathbf{1}_{[0,+\infty[}(x)$:
+\begin{equation}
+R_\kappa(u)(x)=
+\int
+\kappa(x-y)
+H\left(u\left(x\right)-u\left(y\right)\right)
+\mathrm{d} y
+\end{equation}
+
+This expression looks eerily similar to a convolution, but it isn't really.
+
+In fact, it can be written as a convolution in~$(x,u)$ space.  We define the
+graph of an image~$u:\mathbf{R}^2\to\mathbf{R}$ as the
+function~$U:\mathbf{R}^2\times\mathbf{R}\to\mathbf{R}$ defined by
+\[
+	U(x,t) = \begin{cases}
+		0 & \textrm{if $\ t< u(x)$} \\
+		1 & \textrm{if $\ t\ge u(x)$}
+	\end{cases}
+\]
+Then we define the ``kernel''
+\[
+	K(x,t) = \kappa(x)\delta(t)
+\]
+And now the convolution of~$U$ and~$K$ is
+\[
+	(U*K)(\xi,\tau)
+	=
+	\int
+	\int U\left(y,t\right)K\left(\xi-y,\tau-t\right)
+		\mathrm{d} y
+		\mathrm{d} t
+\]
+\[
+	\quad
+	=\int
+	U(y,\tau)
+	\kappa(\xi - y)
+		\mathrm{d} y
+\]
+\[
+	\quad
+	=\int\kappa(\xi-y)H(\tau - u(y))
+		\mathrm{d} y
+\]
+Thus
+\begin{equation}\label{eq:convolution1}
+	R_\kappa(u)(x)=(U*K)(x,u(x))
+\end{equation}
+
+Example in dimension 1 and k=interval
+
+Example in dimension 2 (image)
+
+\subsection{Simple (formal) properties}
+
+If~$x$ is the site of the global maximum of~$u$, then~$R_\kappa(u)(x)=1$.
+This is also true if~$x$ is a local maximum on a neighborhood defined by the
+support of~$\kappa$.
+
+Correspondingly, if~$x$ is the site of the global minimum of~$u$,
+then~$R_\kappa(u)(x)=0$.
+
+If the level lines of~$u$ are straight lines (for example, when~$u$ is
+affine), and~$\kappa$ is symmetric, then~$R_\kappa(u)=\frac12$.  This also
+holds locally (where locality is defined by the support of~$\kappa$).
+
+
+
+
+\subsection{Limit for a constant kernel}
+
+In the limit when~$\kappa$ is constant, the rank transform is the histogram
+equalization of~$u$.  To see this, notice that the function
+\[
+H(\lambda) = \int\mathbf{1}_{[u\ge\lambda]}
+\]
+is the (reverse) accumulated histogram of~$u$.  This is, the area of the domain
+where~$u$ has a value larger than~$\lambda$.  The derivative of~$H$ is thus the
+histogram of~$u$.
+
+Notice that this global/local relation is the same as found in local
+histogram normalization techniques.
+The following two formulations are really similar:
+
+Ref. Sapiro, Caselles,  "Histogram modification via Differential Equations",
+formula (21)
+
+Ref. Bertalmío et al. "evidence for the intrinsically nonlinear nature of
+receptive fields in vision", formula (10) and next
+
+
+
+\subsection{Bilateral}
+The accumulated histogram can be ``smoothed'' by using a smooth sigmoid instead
+of the discontinuous indicator function.  For example, let~$\sigma$ be a step
+function centered at~$0$, we can define the~$\sigma$-smoothed accumulated
+histogram of~$u$ by
+\[
+H_\sigma(\lambda)=\int\sigma(u(x)-\lambda)\mathrm{d}x
+\]
+Thus, a more general version of the definition for the rank transform is
+\begin{equation}\label{eq:generalrank}
+R_{\kappa,\sigma}(u)(x)=\int \kappa(x-y)\sigma(u(x)-u(y))\mathrm{d}y
+\end{equation}
+in the limit when~$\sigma$ is the heaviside step function we recover the
+original definition~$R_\sigma(u)$.
+
+Notice that the convolution formalism given in
+equation~(\ref{eq:convolution1}) puts the~$\sigma$ and~$\kappa$ smoothings
+on an equal footing.  Indeed, by defining
+\[
+	K_\sigma(x,t)=\kappa(x)\sigma'(t)
+\]
+we can write formula~(\ref{eq:generalrank}) as
+\begin{equation}\label{eq:convolution2}
+	R_{\kappa,\sigma}(u)(x)=(U*K_\sigma)(x,u(x)).
+\end{equation}
+
+
+\subsection{Related constructions}
+
+Retinex.  Histogram equalization.  Guided filters.  Integral transforms.
+Bilateral filtering.
+Morphological rank.  Census.  Non-local laplacians.  Poisson editing of
+normalized vectors.  Curvature. ``local contrast equalization''
+
+
+
+
+\section{Implementation}
+
+Discrete implementation for a small support kernel, written in C
+
+{\small
+\begin{verbatim}
+krt [options] KERNEL [IN [OUT]]
+
+IN : input image (by default, stdin)
+OUT : output image of the same size as the input (by default, stdout)
+KERNEL : string that specifies the kernel k  Examples:
+
+"file.npy" : the kernel is given by a numeric array, the center is at the
+center of the image
+
+"gauss:S" : the kernel is a gaussian of that sigma=S (in pixels)
+
+"disk:R" : disk of radius R
+
+"rectangle:N" : centered rectangle of size (2M+1)x(2M+1), where M=floor(N)
+
+options:
+
+-p 0 : getpixel = 0 outside the original image domain
+-p 1 : getpixel = nearest neighbor
+-p 2 : getpixel = symmetric extension
+... (periodic, etc)
+
+\end{verbatim}
+}
+
+Generic implementation as a 3d convolution (consider the problem of
+gray-scale sampling!), written in C
+
+{\small
+\begin{verbatim}
+krt3d [options] KERNEL [IN [OUT]]
+
+IN : input image (by default, stdin)
+OUT : output image of the same size as the input (by default, stdout)
+KERNEL : string that specifies the kernel k  Examples:
+
+"file.npy" : the kernel is given by a numeric array, the center is at the
+center of the image, extended by zero outside of its domain
+
+"gauss:S" : the kernel is a gaussian of that sigma=S (in pixels)
+
+"riesz:S" : riesz kernel of parameter S
+
+options:
+
+-s 255 : gray-scale factor
+-n 256 : number of gray-scale bins
+
+future:
+-h s : gray-level filtering parameter
+
+\end{verbatim}
+}
+
+Verification that both implementations give the same result
+
+Comparison of both implementations (table of running times depending on
+kernel size/number of gray levels?)
+
+\section{Examples and applications}
+
+
+\subsection{Effect of the scale parameter}
+
+show square rank scale-space (using square of varying side)
+
+show gaussian rank scale-space
+
+
+\subsection{Comparison of different kernels}
+
+maybe show other kernel scalespaces ?
+
+multi-scale kernels (e.g. riesz scale space)
+
+non-isotropic kernels ?
+(ref. hirschmuller "7x5")
+
+
+
+\section{References}
+
+
+
+\end{document}
+
+
+% vim:set tw=76 filetype=tex spell spelllang=en:
