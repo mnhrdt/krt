@@ -23,4 +23,4 @@ manpages: $(BIN) $(MAN)
 # bureaucracy
 clean   : ; $(RM) $(BIN) $(OBJ)
 distclean: clean ; $(RM) $(MAN)
-.PHONY  : default clean distclean
+.PHONY  : default clean distclean manpages doc
