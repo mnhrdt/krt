@@ -171,6 +171,25 @@ we can write formula~(\ref{eq:generalrank}) as
 	R_{\kappa,\sigma}(u)(x)=(U*K_\sigma)(x,u(x)).
 \end{equation}
 
+\subsection{Iterated filtering}
+
+The kernel rank transform $R_\sigma$ is an operator that transforms images into images of the same size.
+What happens when we compute iterates of this operator?   Is it idempotent?  Is it a semigroup?  Do the iterates explose? (unlikely since they are always images with values on the unit interval).
+
+Some experimental observations with a Gaussian kernel of size
+6:
+
+The operator is not idempotent (show experiments with a synthetic and a small real image).
+
+The operator is not a semigroup on the parameter $\sigma$.  We built a list of a few hundred images $R_\sigma(u)$ with finely varying $\sigma$, and we compared them to $R_6(R_6(u))$.  They are all very different, the closet one being about $\sigma=4.4$.
+
+The iterates $R_6^n(u)$ seem to converge to a fixed point.  The fixed point does not look like any $R_\sigma(u)$, the closest one being for~$\sigma=5.4$.
+
+Apparently, we can define a limit operator~$R^\infty_\sigma$ by
+\[
+R^\infty_\sigma(u) := \lim_{n\to\infty}R^n_\sigma(u)
+\]
+We do not know whether these limit operators are the kernel rank transdform for a different kernel.   If that was the case, the krt of that kernel  would be idempotent.   
 
 \subsection{Related constructions}
 
@@ -179,8 +198,13 @@ Bilateral filtering.
 Morphological rank.  Census.  Non-local laplacians.  Poisson editing of
 normalized vectors.  Curvature. ``local contrast equalization''
 
+Contrast-limited adaptive histogram equalization (!)
 
 
+\subsubsection{Histogram modification via Differential Equations}
+
+Ref. Sapiro, Caselles,  "Histogram modification via Differential Equations",
+formula (21)
 
 \section{Implementation}
 
