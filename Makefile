@@ -22,5 +22,9 @@ manpages: $(BIN) $(MAN)
 
 # bureaucracy
 clean   : ; $(RM) $(BIN) $(OBJ)
-distclean: clean ; $(RM) $(MAN)
+distclean: clean doc-clean ; $(RM) $(MAN)
 .PHONY  : default clean distclean manpages doc
+
+# build latex article and associated experiments
+doc     : $(BIN) ; $(MAKE) -C article
+doc-clean : ; $(MAKE) -C article clean

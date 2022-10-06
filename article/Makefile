@@ -1,4 +1,3 @@
-#PDF  = $(shell ls *.tex | sed 's/\.tex/.pdf/')
 PDF = a.pdf
 
 pdf: $(PDF)
