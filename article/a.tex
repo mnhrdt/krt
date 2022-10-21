@@ -356,6 +356,35 @@ non-isotropic kernels ?
 
 After applying the KRT, noise becomes uniform.
 
+This is an important difference between the original discrete rank transform
+and the kernel rank transform (with a non-constant kernel like the
+gaussian).  Both transforms produce an image with a locally uniform
+histogram, as much as they can.  But the original rank transform, by
+construction, produces an image whose values are integers between 1
+and~$N^2$, while the smooth kernel rank transform will give generally
+different floating point numbers.  Even for kernels with small support, it
+produces images whose histogram is uniform, but much more finely quantized.
+
+%SCRIPT plambda zero:256x256 "randg" -o f/randg.npy
+%SCRIPT ./krt square7 f/randg.npy |plambda "48 * 1 + round"| ghisto -p | gnuplot > f/randg_k7_h.png
+%SCRIPT ./krt gauss1.5 f/randg.npy |plambda '1000 * round 1000 /'| ghisto -p | gnuplot > f/randg_g15_h.png
+\begin{figure}[p]
+	\begin{tabular}{cc}
+		\includegraphics[width=0.49\linewidth]{f/randg_k7_h.png} &
+		\includegraphics[width=0.49\linewidth]{f/randg_g15_h.png} \\
+		rank transform~$7x7$ &
+		KRT~$\sigma=1.5$
+	\end{tabular}
+	\caption{\label{fig:histograms}
+	Histograms of white Gaussian noise uniformized with a classical
+	rank transform of size~$7x7$ and a kernel rank transform with a
+	Gaussian of~$\sigma=1.5$ (with the same $7\times7$ support).
+	}
+\end{figure}
+
+
+
+
 \subsection{Application: image comparison}
 
 If we have images of the same scene with very different dynamic ranges, the

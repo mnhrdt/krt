@@ -27,7 +27,7 @@ static float *build_kernel_from_string(char *s, int *w, int *h)
 
 	if (1 == sscanf(s, "gauss%g", &p))
 	{
-		int n = 2*ceil(3*fabs(p)) + 1; // TODO: add this as an option?
+		int n = 2*ceil(2*fabs(p)) + 1; // TODO: add this as an option?
 		fprintf(stderr, "gaussian of σ = %g (n = %d)\n", fabs(p), n);
 		*w = *h = n;
 		float *k = malloc(n * n * sizeof*k);
