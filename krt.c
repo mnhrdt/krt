@@ -11,6 +11,16 @@ static float pixel(float *x, int w, int h, int i, int j)
 	return x[j*w+i];
 }
 
+static float pixel_e(float *x, int w, int h, int i, int j)
+{
+	if (i < 0 || j < 0 || i >= w || j >= h)
+	{
+		fprintf(stderr, "bad pixel [%d,%d](%d,%d)!\n", w, h, i, j);
+		return 0;
+	}
+	return x[j*w+i];
+}
+
 static float *build_kernel_from_string(char *s, int *w, int *h)
 {
 	float p; // kernel parameter
@@ -168,9 +178,10 @@ void kernel_rank_transform_bruteforce(
 	for (int i = 0; i < w; i++)   // image column
 	for (int q = 0; q < H; q++)   // kernel line
 	for (int p = 0; p < W; p++)   // kernel column
+	if (p!=W/2 || q!=H/2)
 	{
 		float ux = pixel(u, w, h, i, j);
-		float uy = pixel(u, w, h, i+p-W/2, j+q-H/2);
+		float uy = pixel(u, w, h, i + p - W/2, j + q - H/2);
 		float kxy = pixel(k, W, H, p, q);
 		v[j*w+i] += kxy * discrete_heaviside(ux - uy);
 		// TODO: verify that this is correct for asymmetric kernels

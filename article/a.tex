@@ -26,18 +26,24 @@ images before patch-matching for stereo vision (?).
 %SCRIPT ./krt square3 f/x.png  |qeasy 0 1 - f/x_sq3.png
 %SCRIPT ./krt square10 f/x.png |qeasy 0 1 - f/x_sq10.png
 %SCRIPT ./krt square40 f/x.png |qeasy 0 1 - f/x_sq40.png
-\begin{figure}[b]
-	\begin{tabular}{llll}
-		\includegraphics[width=0.23\linewidth]{f/x.png} &
-		\includegraphics[width=0.23\linewidth]{f/x_sq3.png} &
-		\includegraphics[width=0.23\linewidth]{f/x_sq10.png} &
-		\includegraphics[width=0.23\linewidth]{f/x_sq40.png} \\
+\begin{figure}[p]
+	\begin{tabular}{ll}
+		\includegraphics[width=0.49\linewidth]{f/x.png} &
+		\includegraphics[width=0.49\linewidth]{f/x_sq3.png} \\
 		Image $256\times256$&
-		$N=3$ &
+		$N=3$ \\
+		&\\
+		\includegraphics[width=0.49\linewidth]{f/x_sq10.png} &
+		\includegraphics[width=0.49\linewidth]{f/x_sq40.png} \\
 		$N=10$ &
 		$N=40$ \\
 	\end{tabular}
-	\caption{\label{fig:original rank transform}}
+	\caption{\label{fig:original rank transform}
+	Effect of the original rank transform on a gray-scale image, with
+	windows of size~$N\times N$ for different values of~$N$.
+	The original construction produces an image with values between~$1$
+	and~$N^2$, here normalized between black and white.
+	}
 \end{figure}
 
 In this article we extend this definition to a more general kernel.
@@ -66,7 +72,7 @@ Let~$u:\mathbf{R}^2\to\mathbf{R}$ be a compactly-supported grayscale image
 and~$\kappa:\mathbf{R}^2\to\mathbf{R}$ be a nonnegative function of
 integral~$1$.  The~\emph{rank transform of~$u$ with kernel~$\kappa$} is the
 image defined by
-\begin{equation}
+\begin{equation}\label{eq:rtdef}
 R_{\kappa}(u)(x) = \int\kappa(x-y)\mathbf{1}_{\left[u < u(x)\right]}(y)\mathrm{d}y
 \end{equation}
 by construction,~$R_\kappa(u)$ is an image that takes values in the
@@ -78,7 +84,21 @@ Below we give the elementary properties of rank transforms and propose some
 equivalent definitions and approximations of it.
 
 TODO: write intuitive definition in terms of area percent of the support
-of~$\kappa$ is covered by the level sets of~$u$.
+of~$\kappa$ is covered by the level sets of~$u$.  Add a FIGURE for this.
+
+TODO: give a discrete interpretation of formula~\ref{eq:rtdef} and observe
+that the original rank transform is a particular case of this when~$\kappa$
+is a constant square.
+
+TODO: Issue of constant patches, how is it defined?
+
+\subsection{Normalization and Visualization}
+
+Typical ranges: $[1,N^2]$, $[0,1]$, $[-1,1]$
+
+Visualization: gray-scale, signed
+%(point to a later section where the link to curvature is explained)
+
 
 \subsection{Equivalent definitions}
 
@@ -133,11 +153,17 @@ Thus
 	R_\kappa(u)(x)=(U*K)(x,u(x))
 \end{equation}
 
-Example in dimension 1 and k=interval
+Example in dimension 1 and k=interval.  Add THE FIGURE
 
 Example in dimension 2 (image)
 
 \subsection{Simple (formal) properties}
+
+Fundamental property: invariance under arbitrary contrast changes (without
+change inversion).~$R_k(f\circ u)=R_k(u)$, for any increasing injective function~$f$
+
+Symmetry with respect to inversion:~$R_k(-u)=1-R_k(u)$
+
 
 If~$x$ is the site of the global maximum of~$u$, then~$R_\kappa(u)(x)=1$.
 This is also true if~$x$ is a local maximum on a neighborhood defined by the
@@ -152,6 +178,36 @@ holds locally (where locality is defined by the support of~$\kappa$).
 
 
 
+
+
+\subsection{Iterated filtering}
+
+The kernel rank transform $R_\sigma$ is an operator that transforms images into images of the same size.
+What happens when we compute iterates of this operator?   Is it idempotent?  Is it a semigroup?  Do the iterates explose? (unlikely since they are always images with values on the unit interval).
+
+Some experimental observations with a Gaussian kernel of size
+6:
+
+The operator is not idempotent (show experiments with a synthetic and a small real image).
+
+The operator is not a semigroup on the parameter $\sigma$.  We built a list of a few hundred images $R_\sigma(u)$ with finely varying $\sigma$, and we compared them to $R_6(R_6(u))$.  They are all very different, the closet one being about $\sigma=4.4$.
+
+The iterates $R_6^n(u)$ seem to converge to a fixed point.  The fixed point does not look like any $R_\sigma(u)$, the closest one being for~$\sigma=5.4$.
+
+Apparently, we can define a limit operator~$R^\infty_\sigma$ by
+\[
+R^\infty_\sigma(u) := \lim_{n\to\infty}R^n_\sigma(u)
+\]
+We do not know whether these limit operators are the kernel rank transdform for a different kernel.   If that was the case, the krt of that kernel  would be idempotent.   
+
+\section{Related constructions}
+
+Retinex.  Histogram equalization.  Guided filters.  Integral transforms.
+Bilateral filtering.
+Morphological rank.  Census.  Non-local laplacians.  Poisson editing of
+normalized vectors.  Curvature. ``local contrast equalization''
+
+Contrast-limited adaptive histogram equalization (!)
 
 \subsection{Limit for a constant kernel}
 
@@ -174,6 +230,9 @@ formula (21)
 Ref. Bertalmío et al. "evidence for the intrinsically nonlinear nature of
 receptive fields in vision", formula (10) and next
 
+\subsection{Limit for a point kernel}
+
+curvature
 
 
 \subsection{Bilateral}
@@ -201,35 +260,6 @@ we can write formula~(\ref{eq:generalrank}) as
 \begin{equation}\label{eq:convolution2}
 	R_{\kappa,\sigma}(u)(x)=(U*K_\sigma)(x,u(x)).
 \end{equation}
-
-\subsection{Iterated filtering}
-
-The kernel rank transform $R_\sigma$ is an operator that transforms images into images of the same size.
-What happens when we compute iterates of this operator?   Is it idempotent?  Is it a semigroup?  Do the iterates explose? (unlikely since they are always images with values on the unit interval).
-
-Some experimental observations with a Gaussian kernel of size
-6:
-
-The operator is not idempotent (show experiments with a synthetic and a small real image).
-
-The operator is not a semigroup on the parameter $\sigma$.  We built a list of a few hundred images $R_\sigma(u)$ with finely varying $\sigma$, and we compared them to $R_6(R_6(u))$.  They are all very different, the closet one being about $\sigma=4.4$.
-
-The iterates $R_6^n(u)$ seem to converge to a fixed point.  The fixed point does not look like any $R_\sigma(u)$, the closest one being for~$\sigma=5.4$.
-
-Apparently, we can define a limit operator~$R^\infty_\sigma$ by
-\[
-R^\infty_\sigma(u) := \lim_{n\to\infty}R^n_\sigma(u)
-\]
-We do not know whether these limit operators are the kernel rank transdform for a different kernel.   If that was the case, the krt of that kernel  would be idempotent.   
-
-\subsection{Related constructions}
-
-Retinex.  Histogram equalization.  Guided filters.  Integral transforms.
-Bilateral filtering.
-Morphological rank.  Census.  Non-local laplacians.  Poisson editing of
-normalized vectors.  Curvature. ``local contrast equalization''
-
-Contrast-limited adaptive histogram equalization (!)
 
 
 \subsubsection{Histogram modification via Differential Equations}
@@ -305,14 +335,14 @@ kernel size/number of gray levels?)
 \section{Examples and applications}
 
 
-\subsection{Effect of the scale parameter}
+\subsection{Experiment: Effect of the scale parameter}
 
 show square rank scale-space (using square of varying side)
 
 show gaussian rank scale-space
 
 
-\subsection{Comparison of different kernels}
+\subsection{Experiment: Comparison of different kernels}
 
 maybe show other kernel scalespaces ?
 
@@ -321,6 +351,15 @@ multi-scale kernels (e.g. riesz scale space)
 non-isotropic kernels ?
 (ref. hirschmuller "7x5")
 
+
+\subsection{Application: noise uniformization}
+
+After applying the KRT, noise becomes uniform.
+
+\subsection{Application: image comparison}
+
+If we have images of the same scene with very different dynamic ranges, the
+rank transform allows to compare them directly.
 
 
 \section{References}
