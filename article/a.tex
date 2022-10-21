@@ -16,10 +16,44 @@
 
 \bigskip
 
-\section{Definition and properties}
+\section{Introduction}
 
 Recall the original definition of the rank transform in a discrete setting
-(put reference)
+(put reference).
+The original motivation for the rank transform was a pre-processing of
+images before patch-matching for stereo vision (?).
+
+%SCRIPT ./krt square3 f/x.png  |qeasy 0 1 - f/x_sq3.png
+%SCRIPT ./krt square10 f/x.png |qeasy 0 1 - f/x_sq10.png
+%SCRIPT ./krt square40 f/x.png |qeasy 0 1 - f/x_sq40.png
+\begin{figure}[b]
+	\begin{tabular}{llll}
+		\includegraphics[width=0.23\linewidth]{f/x.png} &
+		\includegraphics[width=0.23\linewidth]{f/x_sq3.png} &
+		\includegraphics[width=0.23\linewidth]{f/x_sq10.png} &
+		\includegraphics[width=0.23\linewidth]{f/x_sq40.png} \\
+		Image $256\times256$&
+		$N=3$ &
+		$N=10$ &
+		$N=40$ \\
+	\end{tabular}
+	\caption{\label{fig:original rank transform}}
+\end{figure}
+
+In this article we extend this definition to a more general kernel.
+There are two reasons for this generalization.
+The first reason is that it has some useful properties that lead to nice
+applications: image comparison, noise estimation, local contrast
+equalization.
+The second reason is allows a common framework to connect several closely
+related ideas:
+Retinex.  Histogram equalization.  Guided filters.  Integral transforms.
+Bilateral filtering.
+Morphological rank.  Census.  Non-local laplacians.  Poisson editing of
+normalized vectors.  Curvature. ``local contrast equalization''
+
+
+\section{Definition and properties}
 
 Corresponding definition for a continuous domain (find references)
 
