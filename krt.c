@@ -211,6 +211,7 @@ void kernel_rank_transform_bruteforce_split(
 #ifdef KRT_MAIN
 #include <stdio.h>  // puts, fprintf
 #include <string.h> // strcmp
+#include <stdlib.h> // setenv
 #include "iio.h"
 char *version = "krt 1.0\n\nWritten by RGvG and EML";
 char *help = ""
@@ -264,6 +265,7 @@ int main(int c, char *v[])
 	kernel_rank_transform_bruteforce_split(kernel_string, y, x, w, h, pd);
 
 	// write result and exit
+	setenv("IIO_REM", version, 0);
 	iio_write_image_float_split(filename_out, y, w, h, pd);
 }
 #endif//KRT_MAIN
