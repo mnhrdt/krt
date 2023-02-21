@@ -172,9 +172,10 @@ support of~$\kappa$.
 Correspondingly, if~$x$ is the site of the global minimum of~$u$,
 then~$R_\kappa(u)(x)=0$.
 
-If the level lines of~$u$ are straight lines (for example, when~$u$ is
-affine), and~$\kappa$ is symmetric, then~$R_\kappa(u)=\frac12$.  This also
-holds locally (where locality is defined by the support of~$\kappa$).
+If the level lines of~$u$ are straight lines with the same orientation (for
+example, when~$u$ is affine), and~$\kappa$ is symmetric,
+then~$R_\kappa(u)=\frac12$.  This also holds locally (where locality is
+defined by the support of~$\kappa$).
 
 
 
@@ -262,11 +263,6 @@ we can write formula~(\ref{eq:generalrank}) as
 \end{equation}
 
 
-\subsubsection{Histogram modification via Differential Equations}
-
-Ref. Sapiro, Caselles,  "Histogram modification via Differential Equations",
-formula (21)
-
 \section{Implementation}
 
 Discrete implementation for a small support kernel, written in C
@@ -334,6 +330,94 @@ kernel size/number of gray levels?)
 
 \section{Examples and applications}
 
+\subsection{Experiment: mach bands}
+
+%SCRIPT plambda zero:500x120 ":i 50 / floor" -o f/mach.npy
+%%SCRIPT plambda zero:500x120 ":i 50 / floor randg 0.01 * +" -o f/mach.npy
+%%SCRIPT plambda zero:500x120 ":i 50 / floor randg 0.1 * +" -o f/mach.npy
+%SCRIPT plambda f/mach.npy '7 - 14 * 127 +' -o f/mach.png
+
+%SCRIPT X="set term pngcairo size 500,200;unset key;unset xtics"
+%SCRIPT cat f/mach.npy|(echo "$X";cline 0)|gnuplot >f/p_mach.png
+
+%SCRIPT ./krt square21 f/mach.npy|qeasy 0 1 - f/mach_sq21.png
+%SCRIPT ./krt square21 f/mach.npy|(echo "$X";cline 0)|gnuplot >f/p_mach_sq21.png
+
+%SCRIPT ./krt gauss7 f/mach.npy|qeasy 0 1 - f/mach_g7.png
+%SCRIPT ./krt gauss7 f/mach.npy|(echo "$X";cline 0)|gnuplot >f/p_mach_g7.png
+
+%SCRIPT ./krt cauchy3 f/mach.npy|qeasy 0 1 - f/mach_c3.png
+%SCRIPT ./krt cauchy3 f/mach.npy|(echo "$X";cline 0)|gnuplot >f/p_mach_c3.png
+
+
+%SCRIPT plambda f/mach.npy ":i 0.004 * +" -o f/umach.npy
+%SCRIPT plambda f/umach.npy '7 - 14 * 127 +' -o f/umach.png
+%SCRIPT cat f/umach.npy|(echo "$X";cline 0)|gnuplot >f/p_umach.png
+%SCRIPT ./krt square21 f/umach.npy|qeasy 0 1 - f/umach_sq21.png
+%SCRIPT ./krt square21 f/umach.npy|(echo "$X";cline 0)|gnuplot >f/p_umach_sq21.png
+%SCRIPT ./krt gauss7 f/umach.npy|qeasy 0 1 - f/umach_g7.png
+%SCRIPT ./krt gauss7 f/umach.npy|(echo "$X";cline 0)|gnuplot >f/p_umach_g7.png
+%SCRIPT ./krt cauchy3 f/umach.npy|qeasy 0 1 - f/umach_c3.png
+%SCRIPT ./krt cauchy3 f/umach.npy|(echo "$X";cline 0)|gnuplot >f/p_umach_c3.png
+
+%SCRIPT plambda f/mach.npy ":i 0.004 * -" -o f/dmach.npy
+%SCRIPT plambda f/dmach.npy '7 - 14 * 127 +' -o f/dmach.png
+%SCRIPT cat f/dmach.npy|(echo "$X";cline 0)|gnuplot >f/p_dmach.png
+%SCRIPT ./krt square21 f/dmach.npy|qeasy 0 1 - f/dmach_sq21.png
+%SCRIPT ./krt square21 f/dmach.npy|(echo "$X";cline 0)|gnuplot >f/p_dmach_sq21.png
+%SCRIPT ./krt gauss7 f/dmach.npy|qeasy 0 1 - f/dmach_g7.png
+%SCRIPT ./krt gauss7 f/dmach.npy|(echo "$X";cline 0)|gnuplot >f/p_dmach_g7.png
+%SCRIPT ./krt cauchy3 f/dmach.npy|qeasy 0 1 - f/dmach_c3.png
+%SCRIPT ./krt cauchy3 f/dmach.npy|(echo "$X";cline 0)|gnuplot >f/p_dmach_c3.png
+
+\begin{figure}
+	\begin{tabular}{cc}
+		\includegraphics[width=0.45\linewidth]{f/mach.png} &
+		\includegraphics[width=0.45\linewidth]{f/p_mach.png} \\
+		\includegraphics[width=0.45\linewidth]{f/mach_sq21.png} &
+		\includegraphics[width=0.45\linewidth]{f/p_mach_sq21.png} \\
+		\includegraphics[width=0.45\linewidth]{f/mach_g7.png} &
+		\includegraphics[width=0.45\linewidth]{f/p_mach_g7.png} \\
+		\includegraphics[width=0.45\linewidth]{f/mach_c3.png} &
+		\includegraphics[width=0.45\linewidth]{f/p_mach_c3.png} \\
+	\end{tabular}
+	\caption{\label{fig:machnonoise}
+		Mach bands without noise, various kernels.
+	}
+\end{figure}
+
+\begin{figure}
+	\begin{tabular}{cc}
+		\includegraphics[width=0.45\linewidth]{f/umach.png} &
+		\includegraphics[width=0.45\linewidth]{f/p_umach.png} \\
+		\includegraphics[width=0.45\linewidth]{f/umach_sq21.png} &
+		\includegraphics[width=0.45\linewidth]{f/p_umach_sq21.png} \\
+		\includegraphics[width=0.45\linewidth]{f/umach_g7.png} &
+		\includegraphics[width=0.45\linewidth]{f/p_umach_g7.png} \\
+		\includegraphics[width=0.45\linewidth]{f/umach_c3.png} &
+		\includegraphics[width=0.45\linewidth]{f/p_umach_c3.png} \\
+	\end{tabular}
+	\caption{\label{fig:machup}
+		Mach bands with up-ramp, various kernels.
+	}
+\end{figure}
+
+\begin{figure}
+	\begin{tabular}{cc}
+		\includegraphics[width=0.45\linewidth]{f/dmach.png} &
+		\includegraphics[width=0.45\linewidth]{f/p_dmach.png} \\
+		\includegraphics[width=0.45\linewidth]{f/dmach_sq21.png} &
+		\includegraphics[width=0.45\linewidth]{f/p_dmach_sq21.png} \\
+		\includegraphics[width=0.45\linewidth]{f/dmach_g7.png} &
+		\includegraphics[width=0.45\linewidth]{f/p_dmach_g7.png} \\
+		\includegraphics[width=0.45\linewidth]{f/dmach_c3.png} &
+		\includegraphics[width=0.45\linewidth]{f/p_dmach_c3.png} \\
+	\end{tabular}
+	\caption{\label{fig:machdown}
+		Mach bands with down-ramp, various kernels.
+	}
+\end{figure}
+
 
 \subsection{Experiment: Effect of the scale parameter}
 
@@ -350,6 +434,10 @@ multi-scale kernels (e.g. riesz scale space)
 
 non-isotropic kernels ?
 (ref. hirschmuller "7x5")
+
+
+
+
 
 
 \subsection{Application: noise uniformization}
