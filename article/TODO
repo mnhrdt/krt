@@ -1,0 +1,19 @@
+CODE
+
+1. add smooth heaviside, and command line option
+
+
+ARTICLE
+
+1. put new experiments with adelson checkerboard
+2. maybe try other effects (chubb illusion, cornsweet illusion, ...)
+3. run mach bands with noise
+4. prepare a complete set of experiments (via a script) for a "technical report"
+5. an experiment with color (separable)
+6. compare with retinex
+7. use the method as a binariaztion criterion (and compare with otsu)
+8. [maybe] quantitative expriments comparing it to other normalization
+   preprocessing methods for block matching
+9. draw a figure showing the effect of the convolution (2d or 3d)
+10. put references as bibtex
+11. re-do the histogram uniformization experiments and see if they improve
