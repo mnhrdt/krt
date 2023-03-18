@@ -160,16 +160,91 @@ static float discrete_heaviside(float x) // like Heaviside, but gives 0.5 at 0
 	return 0.5;
 }
 
+static float gap_heaviside_parameter;
+static float gap_heaviside(float x)
+{
+	if (x < -gap_heaviside_parameter) return 0;
+	if (x >  gap_heaviside_parameter) return 1;
+	if (gap_heaviside_parameter <= 0.0) return 0.5;
+	return 0.5 * (x + gap_heaviside_parameter) / gap_heaviside_parameter;
+}
+
+static float logistic_h_parameter;
+static float logistic_h(float x)
+{
+	return 1.0 / (1.0 + exp(logistic_h_parameter * x));
+}
+
+static float arctan_h_parameter;
+static float arctan_h(float x)
+{
+	return 0.5 + 0.5 * atan(arctan_h_parameter * x);
+}
+
+static float erf_h_parameter;
+static float erf_h(float x)
+{
+	/* error function erf approximation based on the formula given in
+	   "A handy approximation for the error function and its inverse"
+	   by Sergei Winitzki, February 6, 2008,
+	   http://sites.google.com/site/winitzki/sergei-winitzkis-files/erf-approx.pdf
+	*/
+	float erf;
+	float a = 8.0 / 3.0 / M_PI * (M_PI - 3.0) / (4.0 - M_PI);
+	x *= erf_h_parameter;
+	erf = sqrt( 1.0 - exp(-x*x * (4.0/M_PI + a*x*x) / (1.0 + a*x*x)) );
+	if( x < 0.0 ) erf = -erf;
+	return 0.5 + 0.5 * erf;
+}
+
+static float (*build_heaviside_from_string(char *s))(float)
+{
+	float p; // parameter
+
+	if (1 == sscanf(s, "gap%g", &p))
+	{
+		fprintf(stderr, "Heaviside with gap of radius = %g\n", fabs(p));
+		gap_heaviside_parameter = fabs(p);
+		return gap_heaviside;
+	}
+
+	if (1 == sscanf(s, "logistic%g", &p))
+	{
+		fprintf(stderr, "logistic 'Heaviside' scaled by %g\n", fabs(p));
+		logistic_h_parameter = fabs(p);
+		return logistic_h;
+	}
+
+	if (1 == sscanf(s, "arctan%g", &p))
+	{
+		fprintf(stderr, "arctan 'Heaviside' scaled by %g\n", fabs(p));
+		arctan_h_parameter = fabs(p);
+		return arctan_h;
+	}
+
+	if (1 == sscanf(s, "erf%g", &p))
+	{
+		fprintf(stderr, "erf 'Heaviside' scaled by %g\n", fabs(p));
+		erf_h_parameter = fabs(p);
+		return erf_h;
+	}
+
+	fprintf(stderr, "discrete Heaviside function\n");
+	return discrete_heaviside;
+}
+
 void kernel_rank_transform_bruteforce(
-		char *kernel_string,  // textual description of the kernel
-		float *v,             // output image data
-		float *u,             // input image data
-		int w,                // image width
-		int h                 // image height
+		char *kernel_string,    // textual description of the kernel
+		char *heaviside_string, // textual description of Heaviside f.
+		float *v,               // output image data
+		float *u,               // input image data
+		int w,                  // image width
+		int h                   // image height
 		)
 {
 	int W, H; // kernel width, height
 	float *k = build_kernel_from_string(kernel_string, &W, &H);
+	float (*HH)(float) = build_heaviside_from_string(heaviside_string);
 
 	for (int i = 0; i < w*h; i++)
 		v[i] = 0;
@@ -183,7 +258,8 @@ void kernel_rank_transform_bruteforce(
 		float ux = pixel(u, w, h, i, j);
 		float uy = pixel(u, w, h, i + p - W/2, j + q - H/2);
 		float kxy = pixel(k, W, H, p, q);
-		v[j*w+i] += kxy * discrete_heaviside(ux - uy);
+		//v[j*w+i] += kxy * discrete_heaviside(ux - uy);
+		v[j*w+i] += kxy * HH(ux - uy);
 		// TODO: verify that this is correct for asymmetric kernels
 	}
 
@@ -191,16 +267,18 @@ void kernel_rank_transform_bruteforce(
 }
 
 void kernel_rank_transform_bruteforce_split(
-		char *kernel_string,  // textual description of the kernel
-		float *y,             // output image data
-		float *x,             // input image data
-		int w,                // image width
-		int h,                // image height
-		int pd                // pixel dimension
+		char *kernel_string,    // textual description of the kernel
+		char *heaviside_string, // textual description of Heaviside f.
+		float *y,               // output image data
+		float *x,               // input image data
+		int w,                  // image width
+		int h,                  // image height
+		int pd                  // pixel dimension
 		)
 {
 	for (int i = 0; i < pd; i++)
 		kernel_rank_transform_bruteforce(kernel_string,
+				heaviside_string,
 				y + i*w*h,
 				x + i*w*h,
 				w, h);
@@ -223,9 +301,9 @@ char *help = ""
 "0 and 1.  If the pixels have several components, each component image is\n"
 "treated independently.\n"
 "\n"
-"Usage: krt KERNEL in out\n"
-"   or: krt KERNEL in > out\n"
-"   or: cat in | krt KERNEL > out\n"
+"Usage: krt KERNEL HEAVISIDE in out\n"
+"   or: krt KERNEL HEAVISIDE in > out\n"
+"   or: cat in | krt KERNEL HEAVISIDE > out\n"
 "\n"
 "Kernels:\n"
 " squareN     square of size (2N+1) x (2N+1)\n"
@@ -233,9 +311,16 @@ char *help = ""
 " gaussS      gaussian kernel of sigma S\n"
 " file.npy    read the kernel weights from an image file\n"
 "\n"
+"Heaviside:\n"
+" h           Discrete Heaviside function\n"
+" gapR        Heaviside function with a gap of radius R\n"
+" logisticK   logistic function scaled by a factor K\n"
+" arctanK     arc tangent function scaled by a factor K\n"
+" erfK        error function scaled by a factor K\n"
+"\n"
 "Examples:\n"
-" krt square7 i.png o.tiff   Classic rank transform of 49-pixel neighborhood\n"
-" krt gauss2.7 i.png o.tiff  Gaussian-weighted kernel rank transform\n"
+" krt square7 h i.png o.tif   Classic rank transform of 49-pixel neighborhood\n"
+" krt gauss2.7 h i.png o.tif  Gaussian-weighted kernel rank transform\n"
 "\n"
 "Report bugs to <grompone@gmail.com>"
 ;
@@ -246,13 +331,14 @@ int main(int c, char *v[])
 	if (c == 2 && 0 == strcmp(v[1], "--version")) return 0*puts(version);
 
 	// process input arguments
-	if (c != 2 && c != 3 && c != 4)
+	if (c != 3 && c != 4 && c != 5)
 		return fprintf(stderr,
-			"usage:\n\t%s KERNEL [in.png [out.png]]\n", *v);
-			//          0 1       2       3
+			"usage:\n\t%s KERNEL HEAVISIDE [in.png [out.png]]\n", *v);
+			//          0 1      2          3       4
 	char *kernel_string = v[1];
-	char *filename_in   = c > 2 ? v[2] : "-";
-	char *filename_out  = c > 3 ? v[3] : "-";
+	char *heaviside_string = v[2];
+	char *filename_in   = c > 3 ? v[3] : "-";
+	char *filename_out  = c > 4 ? v[4] : "-";
 
 	// read input image
 	int w, h, pd;
@@ -262,7 +348,8 @@ int main(int c, char *v[])
 	float *y = malloc(w * h * pd * sizeof*y);
 
 	// run the algorithm
-	kernel_rank_transform_bruteforce_split(kernel_string, y, x, w, h, pd);
+	kernel_rank_transform_bruteforce_split(kernel_string,
+			heaviside_string, y, x, w, h, pd);
 
 	// write result and exit
 	setenv("IIO_REM", version, 0);
