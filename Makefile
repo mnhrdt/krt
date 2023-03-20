@@ -17,7 +17,7 @@ default : $(BIN)
 $(BIN)  : $(OBJ)
 
 # build manpages from --help output
-%.1 : % ; help2man -N ./$^ > $@
+%.1 : % ; SOURCE_DATE_EPOCH=1666666666 help2man -N ./$^ > $@
 manpages: $(BIN) $(MAN)
 
 # bureaucracy

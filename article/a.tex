@@ -330,6 +330,100 @@ kernel size/number of gray levels?)
 
 \section{Examples and applications}
 
+\subsection{Experiment: Adelson checkerboard }
+
+% f/adelson.png
+%SCRIPT ./krt square5  f/adelson.png |qauto -p 0 - f/adelson_sq5.png
+%SCRIPT ./krt gauss5   f/adelson.png |qauto -p 0 - f/adelson_g5.png
+%SCRIPT ./krt landc25  f/adelson.png |qauto -p 0 - f/adelson_l25.png
+%SCRIPT ./krt square5 -h gap2 f/adelson.png|qauto -p 0 - f/adelson_sq5_gap2.png
+%SCRIPT ./krt gauss5  -h gap2 f/adelson.png|qauto -p 0 - f/adelson_g5_gap2.png
+%SCRIPT ./krt landc25 -h gap2 f/adelson.png|qauto -p 0 - f/adelson_l25_gap2.png
+%SCRIPT ./krt square5 -h gap10 f/adelson.png|qauto -p 0 - f/adelson_sq5_gap10.png
+%SCRIPT ./krt gauss5  -h gap10 f/adelson.png|qauto -p 0 - f/adelson_g5_gap10.png
+%SCRIPT ./krt landc25 -h gap10 f/adelson.png|qauto -p 0 - f/adelson_l25_gap10.png
+%SCRIPT ./krt square5 -h gap20 f/adelson.png|qauto -p 0 - f/adelson_sq5_gap20.png
+%SCRIPT ./krt gauss5  -h gap20 f/adelson.png|qauto -p 0 - f/adelson_g5_gap20.png
+%SCRIPT ./krt landc25 -h gap20 f/adelson.png|qauto -p 0 - f/adelson_l25_gap20.png
+%SCRIPT ./krt square5 -h gap200 f/adelson.png|qauto -p 0 - f/adelson_sq5_gap200.png
+%SCRIPT ./krt gauss5  -h gap200 f/adelson.png|qauto -p 0 - f/adelson_g5_gap200.png
+%SCRIPT ./krt landc25 -h gap200 f/adelson.png|qauto -p 0 - f/adelson_l25_gap200.png
+
+\begin{tabular}{cccc}
+	& square 5 & gauss 5 & land25 \\
+	h&
+	\includegraphics[width=0.3\linewidth]{f/adelson_sq5.png} &
+	\includegraphics[width=0.3\linewidth]{f/adelson_g5.png} &
+	\includegraphics[width=0.3\linewidth]{f/adelson_l25.png} \\
+	gap2&
+	\includegraphics[width=0.3\linewidth]{f/adelson_sq5_gap2.png} &
+	\includegraphics[width=0.3\linewidth]{f/adelson_g5_gap2.png} &
+	\includegraphics[width=0.3\linewidth]{f/adelson_l25_gap2.png} \\
+	gap10&
+	\includegraphics[width=0.3\linewidth]{f/adelson_sq5_gap10.png} &
+	\includegraphics[width=0.3\linewidth]{f/adelson_g5_gap10.png} &
+	\includegraphics[width=0.3\linewidth]{f/adelson_l25_gap10.png} \\
+	gap20&
+	\includegraphics[width=0.3\linewidth]{f/adelson_sq5_gap20.png} &
+	\includegraphics[width=0.3\linewidth]{f/adelson_g5_gap20.png} &
+	\includegraphics[width=0.3\linewidth]{f/adelson_l25_gap20.png} \\
+	gap200&
+	\includegraphics[width=0.3\linewidth]{f/adelson_sq5_gap200.png} &
+	\includegraphics[width=0.3\linewidth]{f/adelson_g5_gap200.png} &
+	\includegraphics[width=0.3\linewidth]{f/adelson_l25_gap200.png} \\
+\end{tabular}
+
+%SCRIPT ./krt square3  f/adelson.png |qauto -p 0 - f/adelson_sq3.png
+%SCRIPT ./krt square13  f/adelson.png |qauto -p 0 - f/adelson_sq13.png
+%SCRIPT ./krt square33  f/adelson.png |qauto -p 0 - f/adelson_sq33.png
+%SCRIPT ./krt gauss3   f/adelson.png |qauto -p 0 - f/adelson_g3.png
+%SCRIPT ./krt gauss13   f/adelson.png |qauto -p 0 - f/adelson_g13.png
+%SCRIPT ./krt gauss33   f/adelson.png |qauto -p 0 - f/adelson_g33.png
+%SCRIPT ./krt landc3   f/adelson.png |qauto -p 0 - f/adelson_l3.png
+%SCRIPT ./krt landc13   f/adelson.png |qauto -p 0 - f/adelson_l13.png
+%SCRIPT ./krt landc33   f/adelson.png |qauto -p 0 - f/adelson_l33.png
+\begin{tabular}{cccc}
+	(heaviside)& square & gauss & land \\
+	3&
+	\includegraphics[width=0.3\linewidth]{f/adelson_sq3.png} &
+	\includegraphics[width=0.3\linewidth]{f/adelson_g3.png} &
+	\includegraphics[width=0.3\linewidth]{f/adelson_l3.png} \\
+	13&
+	\includegraphics[width=0.3\linewidth]{f/adelson_sq13.png} &
+	\includegraphics[width=0.3\linewidth]{f/adelson_g13.png} &
+	\includegraphics[width=0.3\linewidth]{f/adelson_l13.png} \\
+	33&
+	\includegraphics[width=0.3\linewidth]{f/adelson_sq33.png} &
+	\includegraphics[width=0.3\linewidth]{f/adelson_g33.png} &
+	\includegraphics[width=0.3\linewidth]{f/adelson_l33.png} \\
+\end{tabular}
+
+%SCRIPT ./krt square3  -h gap20 f/adelson.png |qauto -p 0 -  f/adelson_sq3_gap20.png
+%SCRIPT ./krt square13 -h gap20  f/adelson.png |qauto -p 0 - f/adelson_sq13_gap20.png
+%SCRIPT ./krt square33 -h gap20  f/adelson.png |qauto -p 0 - f/adelson_sq33_gap20.png
+%SCRIPT ./krt gauss3   -h gap20 f/adelson.png |qauto -p 0 -  f/adelson_g3_gap20.png
+%SCRIPT ./krt gauss13  -h gap20  f/adelson.png |qauto -p 0 - f/adelson_g13_gap20.png
+%SCRIPT ./krt gauss33  -h gap20  f/adelson.png |qauto -p 0 - f/adelson_g33_gap20.png
+%SCRIPT ./krt landc3   -h gap20 f/adelson.png |qauto -p 0 -  f/adelson_l3_gap20.png
+%SCRIPT ./krt landc13  -h gap20  f/adelson.png |qauto -p 0 - f/adelson_l13_gap20.png
+%SCRIPT ./krt landc33  -h gap20  f/adelson.png |qauto -p 0 - f/adelson_l33_gap20.png
+\begin{tabular}{cccc}
+	(gap20) & square & gauss  & land \\
+	3&
+	\includegraphics[width=0.3\linewidth]{f/adelson_sq3_gap20.png} &
+	\includegraphics[width=0.3\linewidth]{f/adelson_g3_gap20.png} &
+	\includegraphics[width=0.3\linewidth]{f/adelson_l3_gap20.png} \\
+	13&
+	\includegraphics[width=0.3\linewidth]{f/adelson_sq13_gap20.png} &
+	\includegraphics[width=0.3\linewidth]{f/adelson_g13_gap20.png} &
+	\includegraphics[width=0.3\linewidth]{f/adelson_l13_gap20.png} \\
+	33&
+	\includegraphics[width=0.3\linewidth]{f/adelson_sq33_gap20.png} &
+	\includegraphics[width=0.3\linewidth]{f/adelson_g33_gap20.png} &
+	\includegraphics[width=0.3\linewidth]{f/adelson_l33_gap20.png} \\
+\end{tabular}
+
+
 \subsection{Experiment: mach bands}
 
 %SCRIPT plambda zero:500x120 ":i 50 / floor" -o f/mach.npy
@@ -337,7 +431,7 @@ kernel size/number of gray levels?)
 %%SCRIPT plambda zero:500x120 ":i 50 / floor randg 0.1 * +" -o f/mach.npy
 %SCRIPT plambda f/mach.npy '7 - 14 * 127 +' -o f/mach.png
 
-%SCRIPT X="set term pngcairo size 500,200;unset key;unset xtics"
+%SCRIPT export X="set term pngcairo size 500,200;unset key;unset xtics"
 %SCRIPT cat f/mach.npy|(echo "$X";cline 0)|gnuplot >f/p_mach.png
 
 %SCRIPT ./krt square21 f/mach.npy|qeasy 0 1 - f/mach_sq21.png
@@ -349,6 +443,9 @@ kernel size/number of gray levels?)
 %SCRIPT ./krt cauchy3 f/mach.npy|qeasy 0 1 - f/mach_c3.png
 %SCRIPT ./krt cauchy3 f/mach.npy|(echo "$X";cline 0)|gnuplot >f/p_mach_c3.png
 
+%SCRIPT ./krt landc40 f/mach.npy|qeasy 0 1 - f/mach_la.png
+%SCRIPT ./krt landc40 f/mach.npy|(echo "$X";cline 0)|gnuplot >f/p_mach_la.png
+
 
 %SCRIPT plambda f/mach.npy ":i 0.004 * +" -o f/umach.npy
 %SCRIPT plambda f/umach.npy '7 - 14 * 127 +' -o f/umach.png
@@ -359,6 +456,8 @@ kernel size/number of gray levels?)
 %SCRIPT ./krt gauss7 f/umach.npy|(echo "$X";cline 0)|gnuplot >f/p_umach_g7.png
 %SCRIPT ./krt cauchy3 f/umach.npy|qeasy 0 1 - f/umach_c3.png
 %SCRIPT ./krt cauchy3 f/umach.npy|(echo "$X";cline 0)|gnuplot >f/p_umach_c3.png
+%SCRIPT ./krt landc40 f/umach.npy|qeasy 0 1 - f/umach_la.png
+%SCRIPT ./krt landc40 f/umach.npy|(echo "$X";cline 0)|gnuplot >f/p_umach_la.png
 
 %SCRIPT plambda f/mach.npy ":i 0.004 * -" -o f/dmach.npy
 %SCRIPT plambda f/dmach.npy '7 - 14 * 127 +' -o f/dmach.png
@@ -369,6 +468,8 @@ kernel size/number of gray levels?)
 %SCRIPT ./krt gauss7 f/dmach.npy|(echo "$X";cline 0)|gnuplot >f/p_dmach_g7.png
 %SCRIPT ./krt cauchy3 f/dmach.npy|qeasy 0 1 - f/dmach_c3.png
 %SCRIPT ./krt cauchy3 f/dmach.npy|(echo "$X";cline 0)|gnuplot >f/p_dmach_c3.png
+%SCRIPT ./krt landc40 f/dmach.npy|qeasy 0 1 - f/dmach_la.png
+%SCRIPT ./krt landc40 f/dmach.npy|(echo "$X";cline 0)|gnuplot >f/p_dmach_la.png
 
 \begin{figure}
 	\begin{tabular}{cc}
@@ -380,6 +481,8 @@ kernel size/number of gray levels?)
 		\includegraphics[width=0.45\linewidth]{f/p_mach_g7.png} \\
 		\includegraphics[width=0.45\linewidth]{f/mach_c3.png} &
 		\includegraphics[width=0.45\linewidth]{f/p_mach_c3.png} \\
+		\includegraphics[width=0.45\linewidth]{f/mach_la.png} &
+		\includegraphics[width=0.45\linewidth]{f/p_mach_la.png} \\
 	\end{tabular}
 	\caption{\label{fig:machnonoise}
 		Mach bands without noise, various kernels.
@@ -396,6 +499,8 @@ kernel size/number of gray levels?)
 		\includegraphics[width=0.45\linewidth]{f/p_umach_g7.png} \\
 		\includegraphics[width=0.45\linewidth]{f/umach_c3.png} &
 		\includegraphics[width=0.45\linewidth]{f/p_umach_c3.png} \\
+		\includegraphics[width=0.45\linewidth]{f/umach_la.png} &
+		\includegraphics[width=0.45\linewidth]{f/p_umach_la.png} \\
 	\end{tabular}
 	\caption{\label{fig:machup}
 		Mach bands with up-ramp, various kernels.
@@ -412,6 +517,8 @@ kernel size/number of gray levels?)
 		\includegraphics[width=0.45\linewidth]{f/p_dmach_g7.png} \\
 		\includegraphics[width=0.45\linewidth]{f/dmach_c3.png} &
 		\includegraphics[width=0.45\linewidth]{f/p_dmach_c3.png} \\
+		\includegraphics[width=0.45\linewidth]{f/dmach_la.png} &
+		\includegraphics[width=0.45\linewidth]{f/p_dmach_la.png} \\
 	\end{tabular}
 	\caption{\label{fig:machdown}
 		Mach bands with down-ramp, various kernels.

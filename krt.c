@@ -172,13 +172,13 @@ static float gap_heaviside(float x)
 static float logistic_h_parameter;
 static float logistic_h(float x)
 {
-	return 1.0 / (1.0 + exp(logistic_h_parameter * x));
+	return 1.0 / (1.0 + exp(-x/logistic_h_parameter));
 }
 
 static float arctan_h_parameter;
 static float arctan_h(float x)
 {
-	return 0.5 + 0.5 * atan(arctan_h_parameter * x);
+	return 0.5 + atan(x/arctan_h_parameter) / M_PI;
 }
 
 static float erf_h_parameter;
@@ -187,11 +187,10 @@ static float erf_h(float x)
 	/* error function erf approximation based on the formula given in
 	   "A handy approximation for the error function and its inverse"
 	   by Sergei Winitzki, February 6, 2008,
-	   http://sites.google.com/site/winitzki/sergei-winitzkis-files/erf-approx.pdf
 	*/
 	float erf;
 	float a = 8.0 / 3.0 / M_PI * (M_PI - 3.0) / (4.0 - M_PI);
-	x *= erf_h_parameter;
+	x /= erf_h_parameter;
 	erf = sqrt( 1.0 - exp(-x*x * (4.0/M_PI + a*x*x) / (1.0 + a*x*x)) );
 	if( x < 0.0 ) erf = -erf;
 	return 0.5 + 0.5 * erf;
@@ -324,21 +323,45 @@ char *help = ""
 "\n"
 "Report bugs to <grompone@gmail.com>"
 ;
+
+// @c pointer to original argc
+// @v pointer to original argv
+// @o option name (after hyphen)
+// @d default value
+static char *pick_option(int *c, char ***v, char *o, char *d)
+{
+	int argc = *c;
+	char **argv = *v;
+	int id = d ? 1 : 0;
+	for (int i = 0; i < argc - id; i++)
+		if (argv[i][0] == '-' && 0 == strcmp(argv[i]+1, o))
+		{
+			char *r = argv[i+id]+1-id;
+			*c -= id+1;
+			for (int j = i; j < argc - id; j++)
+				(*v)[j] = (*v)[j+id+1];
+			return r;
+		}
+	return d;
+}
+
 int main(int c, char *v[])
 {
 	// process help options
 	if (c == 2 && 0 == strcmp(v[1], "--help"   )) return 0*puts(help);
 	if (c == 2 && 0 == strcmp(v[1], "--version")) return 0*puts(version);
 
+	// extract_named_parameters
+	char *heaviside_string = pick_option(&c, &v, "h", "h");
+
 	// process input arguments
-	if (c != 3 && c != 4 && c != 5)
+	if (c != 2 && c != 3 && c != 4)
 		return fprintf(stderr,
-			"usage:\n\t%s KERNEL HEAVISIDE [in.png [out.png]]\n", *v);
-			//          0 1      2          3       4
+			"usage:\n\t%s KERNEL [-h HEAVISIDE] [in [out]]\n", *v);
+			//          0 1                      2   3
 	char *kernel_string = v[1];
-	char *heaviside_string = v[2];
-	char *filename_in   = c > 3 ? v[3] : "-";
-	char *filename_out  = c > 4 ? v[4] : "-";
+	char *filename_in   = c > 2 ? v[2] : "-";
+	char *filename_out  = c > 3 ? v[3] : "-";
 
 	// read input image
 	int w, h, pd;
