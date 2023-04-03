@@ -21,6 +21,27 @@ static float pixel_e(float *x, int w, int h, int i, int j)
 	return x[j*w+i];
 }
 
+// find the truncation size so that the cropped land kernel has σ at least s
+static int land_truncation_for_sigma(float s)
+{
+	int n = 1;
+	float ss;
+	float m;
+	do {
+		n = n + 2;
+		ss = 0;
+		m = 0;
+		for (int j = 0; j < n; j++)
+		for (int i = 0; i < n; i++)
+		if (i-n/2 != 0 || j-n/2 != 0)
+		{
+			m += 1 / hypot(i - n/2, j - n/2);
+			ss += (i - n/2)*(i - n/2) / hypot(i - n/2, j - n/2);
+		}
+	} while (sqrt(ss/m) < s);
+	return n;
+}
+
 static float *build_kernel_from_string(char *s, int *w, int *h)
 {
 	float p; // kernel parameter
@@ -103,7 +124,8 @@ static float *build_kernel_from_string(char *s, int *w, int *h)
 
 	if (1 == sscanf(s, "landc%g", &p)) // cut land (parameter=discrete size)
 	{
-		int n = 2*ceil(p) + 1;
+		//int n = 2*ceil(p) + 1;
+		int n = land_truncation_for_sigma(p);
 		fprintf(stderr, "land of p = %g (n = %d)\n", fabs(p), n);
 		*w = *h = n;
 		float *k = malloc(n * n * sizeof*k);
@@ -111,7 +133,7 @@ static float *build_kernel_from_string(char *s, int *w, int *h)
 		// fill-in land kernel
 		for (int j = 0; j < n; j++)
 		for (int i = 0; i < n; i++)
-			k[n*j + i] = 1/hypot(i-n/2, j-n/2);
+			k[n*j + i] = 1/hypot(i-n/2, j-n/2); // inf at center
 
 		// set central pixel to 0 (cf. article)
 		k[n*(n/2) + n/2] = 0;
@@ -125,10 +147,25 @@ static float *build_kernel_from_string(char *s, int *w, int *h)
 		return k;
 	}
 
-	if (1 == sscanf(s, "square%g", &p))
+	if (1 == sscanf(s, "actualsquare%g", &p))
 	{
 		int n = p;
-		fprintf(stderr, "square of side n = %d\n", n);
+		fprintf(stderr, "actual square of side n = %d\n", n);
+		if (n >= 1 && n < 1000)
+		{
+			*w = *h = n;
+			float *k = malloc(n * n * sizeof*k);
+			for (int i = 0; i < n*n; i++)
+				k[i] = 1.0/(n*n - 1);
+			return k;
+		}
+	}
+
+	if (1 == sscanf(s, "square%g", &p))
+	{
+		int n = 1 + 2*round(sqrt(3)*p);
+		fprintf(stderr, "square of σ = %g, side=%d\n",
+				(n-1)/sqrt(12), n);
 		if (n >= 1 && n < 1000)
 		{
 			*w = *h = n;
@@ -257,8 +294,8 @@ void kernel_rank_transform_bruteforce(
 		float ux = pixel(u, w, h, i, j);
 		float uy = pixel(u, w, h, i + p - W/2, j + q - H/2);
 		float kxy = pixel(k, W, H, p, q);
-		//v[j*w+i] += kxy * discrete_heaviside(ux - uy);
 		v[j*w+i] += kxy * HH(ux - uy);
+		//v[j*w+i] += kxy * discrete_heaviside(ux - uy);
 		// TODO: verify that this is correct for asymmetric kernels
 	}
 

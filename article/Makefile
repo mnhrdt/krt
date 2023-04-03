@@ -2,7 +2,8 @@ PDF = a.pdf
 
 only: ; cat a.tex | pdflatexfilter > a.pdf
 
-rerun: $(PDF)
+rerun: a.tex
+	grep ^%SCRIPT $< | cut -c9- | sh
 
 %.pdf : %.tex
 	grep ^%SCRIPT $< | cut -c9- | sh
