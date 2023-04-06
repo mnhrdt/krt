@@ -20,6 +20,12 @@ ARTICLE
  9. draw a figure showing the effect of the convolution (2d or 3d)
 10. put references as bibtex
 11. re-do the histogram uniformization experiments and see if they improve
+12. IMPORTANT ISSUE: the "plain" krt (with heaviside H) is by construction
+contrast-invariant.  However, adding a "gap" parameter to H, or using a
+sigmoid, renders it non-contrast invariant.  This must be discussed in the
+article, probably with an example.  This has neural ramifications because the
+heaviside is not, so to say, trainable, but the sigmoids are.
+
 
 
 DONE
