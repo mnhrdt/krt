@@ -1,8 +1,6 @@
 CODE
 
-2. normalize parameters for smooth heaviside
-3. heaviside parameter should be optional, by default it should be
-discontinuous Heaviside
+4. add a simple test (apart from the article compilation?)
 
 
 ARTICLE
@@ -31,3 +29,6 @@ heaviside is not, so to say, trainable, but the sigmoids are.
 DONE
 
 1. add smooth heaviside, and command line option
+2. normalize parameters for smooth heaviside
+3. heaviside parameter should be optional, by default it should be
+discontinuous Heaviside

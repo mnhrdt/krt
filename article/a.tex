@@ -262,6 +262,22 @@ we can write formula~(\ref{eq:generalrank}) as
 	R_{\kappa,\sigma}(u)(x)=(U*K_\sigma)(x,u(x)).
 \end{equation}
 
+%SCRIPT gnuplot > f/plot_heavisides.png <<EOF
+%SCRIPT set term pngcairo size 500,400
+%SCRIPT gap(x)=x>1?1:(x<-1?0:(0.5*(x+1)))
+%SCRIPT plot [-1.5:1.5] [-0.25:1.75] 0.5+atan(x*pi)/pi,1/(1+exp(-4*x)),gap(2*x),0.5+erf(x*sqrt(pi))/2
+%SCRIPT EOF
+
+\begin{figure}
+	\centering
+	\includegraphics[width=0.5\linewidth]{f/plot_heavisides.png}
+	\caption{Plots of the ``smooth heavisides''~$\sigma$ implemented in
+	our program.  In all cases the parameter is set to~$1$, which
+	corresponds to a slope of~$1$ at the origin.}
+	\label{fig:heavisides}
+\end{figure}
+
+
 
 \section{Implementation}
 
@@ -423,18 +439,18 @@ kernel size/number of gray levels?)
 	\includegraphics[width=0.3\linewidth]{f/adelson_l33_gap20.png} \\
 \end{tabular}
 
-%SCRIPT ./krt square13 -h gap2 f/adelson.png |qauto -p 0 - f/adelson_sq13_gap2.png
-%SCRIPT ./krt square13 -h logistic2 f/adelson.png |qauto -p 0 - f/adelson_sq13_logis2.png
-%SCRIPT ./krt square13 -h arctan2 f/adelson.png |qauto -p 0 - f/adelson_sq13_atan2.png
-%SCRIPT ./krt square13 -h gap10 f/adelson.png |qauto -p 0 - f/adelson_sq13_gap10.png
-%SCRIPT ./krt square13 -h logistic10 f/adelson.png |qauto -p 0 - f/adelson_sq13_logis10.png
-%SCRIPT ./krt square13 -h arctan10 f/adelson.png |qauto -p 0 - f/adelson_sq13_atan10.png
-%SCRIPT ./krt square13 -h gap20 f/adelson.png |qauto -p 0 - f/adelson_sq13_gap20.png
-%SCRIPT ./krt square13 -h logistic20 f/adelson.png |qauto -p 0 - f/adelson_sq13_logis20.png
-%SCRIPT ./krt square13 -h arctan20 f/adelson.png |qauto -p 0 - f/adelson_sq13_atan20.png
-%SCRIPT ./krt square13 -h gap200 f/adelson.png |qauto -p 0 - f/adelson_sq13_gap200.png
-%SCRIPT ./krt square13 -h logistic200 f/adelson.png |qauto -p 0 - f/adelson_sq13_logis200.png
-%SCRIPT ./krt square13 -h arctan200 f/adelson.png |qauto -p 0 - f/adelson_sq13_atan200.png
+%SCRIPT ./krt square13 -h gap2 f/adelson.png |qeasy 0 1 - f/adelson_sq13_gap2.png
+%SCRIPT ./krt square13 -h logistic2 f/adelson.png |qeasy 0 1 - f/adelson_sq13_logis2.png
+%SCRIPT ./krt square13 -h arctan2 f/adelson.png |qeasy 0 1 - f/adelson_sq13_atan2.png
+%SCRIPT ./krt square13 -h gap10 f/adelson.png |qeasy 0 1 - f/adelson_sq13_gap10.png
+%SCRIPT ./krt square13 -h logistic10 f/adelson.png |qeasy 0 1 - f/adelson_sq13_logis10.png
+%SCRIPT ./krt square13 -h arctan10 f/adelson.png |qeasy 0 1 - f/adelson_sq13_atan10.png
+%SCRIPT ./krt square13 -h gap20 f/adelson.png |qeasy 0 1 - f/adelson_sq13_gap20.png
+%SCRIPT ./krt square13 -h logistic20 f/adelson.png |qeasy 0 1 - f/adelson_sq13_logis20.png
+%SCRIPT ./krt square13 -h arctan20 f/adelson.png |qeasy 0 1 - f/adelson_sq13_atan20.png
+%SCRIPT ./krt square13 -h gap200 f/adelson.png |qeasy 0 1 - f/adelson_sq13_gap200.png
+%SCRIPT ./krt square13 -h logistic200 f/adelson.png |qeasy 0 1 - f/adelson_sq13_logis200.png
+%SCRIPT ./krt square13 -h arctan200 f/adelson.png |qeasy 0 1 - f/adelson_sq13_atan200.png
 \begin{tabular}{cccc}
 	(square 13) & gap & logistic & arctan \\
 	gap2&

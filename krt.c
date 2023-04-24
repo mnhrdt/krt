@@ -197,25 +197,28 @@ static float discrete_heaviside(float x) // like Heaviside, but gives 0.5 at 0
 	return 0.5;
 }
 
+// NOTE: the "gap" parameters are normalized so that for
+// parameter=1 the slope of the function equals 1
+
 static float gap_heaviside_parameter;
 static float gap_heaviside(float x)
 {
-	if (x < -gap_heaviside_parameter) return 0;
-	if (x >  gap_heaviside_parameter) return 1;
+	if (2*x < -gap_heaviside_parameter) return 0;
+	if (2*x >  gap_heaviside_parameter) return 1;
 	if (gap_heaviside_parameter <= 0.0) return 0.5;
-	return 0.5 * (x + gap_heaviside_parameter) / gap_heaviside_parameter;
+	return 0.5 * (2*x + gap_heaviside_parameter) / gap_heaviside_parameter;
 }
 
 static float logistic_h_parameter;
 static float logistic_h(float x)
 {
-	return 1.0 / (1.0 + exp(-x/logistic_h_parameter));
+	return 1.0 / (1.0 + exp(-4*x/logistic_h_parameter));
 }
 
 static float arctan_h_parameter;
 static float arctan_h(float x)
 {
-	return 0.5 + atan(x/arctan_h_parameter) / M_PI;
+	return 0.5 + atan(M_PI*x/arctan_h_parameter) / M_PI;
 }
 
 static float erf_h_parameter;
@@ -227,7 +230,7 @@ static float erf_h(float x)
 	*/
 	float erf;
 	float a = 8.0 / 3.0 / M_PI * (M_PI - 3.0) / (4.0 - M_PI);
-	x /= erf_h_parameter;
+	x *= sqrt(M_PI) / erf_h_parameter;
 	erf = sqrt( 1.0 - exp(-x*x * (4.0/M_PI + a*x*x) / (1.0 + a*x*x)) );
 	if( x < 0.0 ) erf = -erf;
 	return 0.5 + 0.5 * erf;
@@ -381,6 +384,24 @@ static char *pick_option(int *c, char ***v, char *o, char *d)
 		}
 	return d;
 }
+
+//int main_plot_heavisides(void)
+//{
+//	float p = 2;
+//	gap_heaviside_parameter = p;
+//	logistic_h_parameter = p;
+//	arctan_h_parameter = p;
+//	erf_h_parameter = p;
+//	for (float x = -2; x <= 2; x += 0.01)
+//	{
+//		float y1 = discrete_heaviside(x);
+//		float y2 = gap_heaviside(x);
+//		float y3 = logistic_h(x);
+//		float y4 = arctan_h(x);
+//		float y5 = erf_h(x);
+//		printf("%g %g %g %g %g %g\n", x, y1, y2, y3, y4, y5);
+//	}
+//}
 
 int main(int c, char *v[])
 {
