@@ -8,6 +8,8 @@
 \setlength{\parskip}{7pt}           % spacing between paragraphs
 
 
+\def\parens#1{\left(#1\right)}
+
 \begin{document}
 
 \begin{center}
@@ -18,10 +20,26 @@
 
 \section{Introduction}
 
-Recall the original definition of the rank transform in a discrete setting
-(put reference).
-The original motivation for the rank transform was a pre-processing of
-images before patch-matching for stereo vision (?).
+%Recall the original definition of the rank transform in a discrete setting
+%(put reference).
+The rank and census transforms were introduced in 1994 by
+Zabih-Woodfill~\cite{ZW} as pre-processing steps to improve the performance
+of patch-matching for stereo vision algorithms.
+Using the same notation as the original authors, the rank transform of a
+digital image~$P\mapsto I(P)$ is defined as the
+digital image
+\begin{equation}\label{eq:rt}
+	R(P) = \left\|\left\{
+		P'\in N(P)\ |\ I(P')< I(P)
+	\right\}\right\|
+\end{equation}
+where~$N(P)$ is a square neighborhood of size~$d\times d$ around the pixel~$P$.
+In other words,~$R(P)$ is the number of pixels in the neighborhood
+whose intensity is less than the intensity of the central pixel.
+Notice that, by construction,~$R(P)$ takes integer values in the
+set~$\{0,\ldots,d^2-1\}$.
+%The original motivation for the rank transform was a pre-processing of
+%images before patch-matching for stereo vision (?).
 
 %SCRIPT ./krt square3 f/x.png  |qeasy 0 1 - f/x_sq3.png
 %SCRIPT ./krt square10 f/x.png |qeasy 0 1 - f/x_sq10.png
@@ -46,7 +64,8 @@ images before patch-matching for stereo vision (?).
 	}
 \end{figure}
 
-In this article we extend this definition to a more general kernel.
+In this article we extend this definition using a weighted neighborhood of
+arbitrary shape.
 There are two reasons for this generalization.
 The first reason is that it has some useful properties that lead to nice
 applications: image comparison, noise estimation, local contrast
@@ -57,25 +76,60 @@ Retinex.  Histogram equalization.  Guided filters.  Integral transforms.
 Bilateral filtering.
 Morphological rank.  Census.  Non-local laplacians.  Poisson editing of
 normalized vectors.  Curvature. ``local contrast equalization''
+\clearpage
 
 
 \section{Definition and properties}
 
-Corresponding definition for a continuous domain (find references)
-
-Propose a generalization using an arbitrary kernel, of which the original
-definition is a particular case (the kernel being the indicator function of
-a square)
+%Corresponding definition for a continuous domain (find references)
+Definition~\ref{eq:rt} can be adapted for an
+image~$u:\mathbf{R}^2\to\mathbf{R}$ as
+\begin{equation}\label{eq:rtcont}
+	R(u)(x) = \int_{N(x)}\mathbf{1}_{\left[u < u(x)\right]}(y)\mathrm{d}y
+\end{equation}
+where~$\mathbf{1}_{\left[u < u(x)\right]}$ is the indicator function of the
+lower level set of~$u$ at level~$u(x)$.  Equivalently,
+\begin{equation}\label{eq:rtcont}
+	R(u)(x) = \int_{N(x)}H(u(x)-u(y))\mathrm{d}y
+\end{equation}
+where~$H$ is the Heaviside step function
+\begin{equation}\label{eq:heaviside}
+	H(t)=\begin{cases}1,& t>0\\
+	0,&t\le 0\end{cases}
+\end{equation}
+This expression can in turn be rewritten as an integral over the whole plane
+\begin{equation}\label{eq:rtcont2}
+	R(u)(x) = \int\mathbf{1}_{N(0)}(y-x)H(u(x)-u(y))\mathrm{d}y
+\end{equation}
+In this article we propose and study a generalization of the classical rank
+transform~\ref{eq:rtcont2}, where we replace the indicator function of a
+square~$\mathbf{1}_{N(0)}$ by an arbitrary integration kernel.  On a later
+section, we will also replace the discontinuous Heaviside function by a
+smooth sigmoid.
+We will see that this general construction includes many other operations in
+image processing as particular cases (bilateral filtering, retinex).
+Notice that, when the integration kernel and the sigmoid are smooth, the
+rank transform will inherit the same regularity.
+%$Propose a generalization using an arbitrary kernel, of which the original
+%$definition is a particular case (the kernel being the indicator function of
+%$a square)
 
 {\bf Definition.}
-Let~$u:\mathbf{R}^2\to\mathbf{R}$ be a compactly-supported grayscale image
-and~$\kappa:\mathbf{R}^2\to\mathbf{R}$ be a nonnegative function of
-integral~$1$.  The~\emph{rank transform of~$u$ with kernel~$\kappa$} is the
-image defined by
+Let~$u:\mathbf{R}^2\to\mathbf{R}$ be a compactly-supported grayscale image,
+$\kappa:\mathbf{R}^2\to\mathbf{R}$ be an integrable function
+and~$\sigma:\mathbf{R}\to\mathbf{R}$ a non-decreasing bounded
+function.  The~\emph{kernel rank transform of~$u$ with kernel~$\kappa$ and
+step~$\sigma$} is the
+image~$R_{\kappa,\,\sigma}(u):\mathbf{R^2}\to\mathbf{R}$ defined by
 \begin{equation}\label{eq:rtdef}
-R_{\kappa}(u)(x) = \int\kappa(x-y)\mathbf{1}_{\left[u < u(x)\right]}(y)\mathrm{d}y
+%R_{\kappa}(u)(x) = \int\kappa(x-y)\mathbf{1}_{\left[u < u(x)\right]}(y)\mathrm{d}y
+	R_{\kappa,\,\sigma}(u)(x) = \int\kappa(x-y)\sigma\parens{u(x)-u(y)}\mathrm{d}y
 \end{equation}
-by construction,~$R_\kappa(u)$ is an image that takes values in the
+%by construction,~$R_\kappa(u)$ is an image that takes values in the
+%interval~$[0,1]$.
+In a typical setting, we will have~$\sigma=H$ and~$\kappa$ is non-negative of
+integral~$1$, in which
+case the~$R_{\kappa,\,\sigma}(u)$ takes values in the
 interval~$[0,1]$.
 
 The rank transform can be interpreted as a local contrast equalization of
@@ -86,18 +140,14 @@ equivalent definitions and approximations of it.
 TODO: write intuitive definition in terms of area percent of the support
 of~$\kappa$ is covered by the level sets of~$u$.  Add a FIGURE for this.
 
+%{\color{gray}
 TODO: give a discrete interpretation of formula~\ref{eq:rtdef} and observe
 that the original rank transform is a particular case of this when~$\kappa$
 is a constant square.
+%}
+Our definition
 
 TODO: Issue of constant patches, how is it defined?
-
-\subsection{Normalization and Visualization}
-
-Typical ranges: $[1,N^2]$, $[0,1]$, $[-1,1]$
-
-Visualization: gray-scale, signed
-%(point to a later section where the link to curvature is explained)
 
 
 \subsection{Equivalent definitions}
@@ -178,6 +228,13 @@ then~$R_\kappa(u)=\frac12$.  This also holds locally (where locality is
 defined by the support of~$\kappa$).
 
 
+
+\subsection{Normalization and Visualization}
+
+Typical ranges: $[1,N^2]$, $[0,1]$, $[-1,1]$
+
+Visualization: gray-scale, signed
+%(point to a later section where the link to curvature is explained)
 
 
 
@@ -637,6 +694,8 @@ rank transform allows to compare them directly.
 
 \section{References}
 
+\bibliographystyle{plain}
+\bibliography{refs}
 
 
 \end{document}
