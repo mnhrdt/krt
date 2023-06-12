@@ -27,6 +27,7 @@ article, probably with an example.  This has neural ramifications because the
 heaviside is not, so to say, trainable, but the sigmoids are.
 
 
+"contrast-invariance is a non-differentiable property"
 
 DONE
 
