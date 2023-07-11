@@ -243,6 +243,73 @@ then~$R_\kappa(u)=\frac12$.  This also holds locally (where locality is
 defined by the support of~$\kappa$).
 
 
+\subsection{Continuity and differentiability}
+
+The experiments on figures~\ref{fig:machup} and~\ref{fig:machdown} show that
+the kernel rank transform (without gap) is a~\emph{discontinuous}
+transformation of the original gray-levels.  The figure shows that two
+images that are nearly identical have very different rank transforms.  This
+is a general phenomenon: any contrast-invariant operator will be likewise
+discontinuous.
+
+The kernel rank transform with a smooth gap~$\sigma$, as defined on
+equation~\ref{eq:rtdef} is continuous with respect to~$u$ by continuity
+under the integral sign.  Thus, it cannot be contrast-invariant.  The
+function~$t\mapsto\sigma(t)$ controls precisely how much contrast-invariance
+is lost: a gray-levels~$t_1$ is considered brighter than a gray-level~$t_2$
+only when~$\sigma(t_1-t_2)$ is close to~$1$.
+
+For a smooth~$\sigma$ we can explicitly compute the variation of
+\begin{equation}
+	R_{\kappa,\,\sigma}(u)(x) = \int\kappa(x-y)\sigma\parens{u(x)-u(y)}\mathrm{d}y
+\end{equation}
+along the direction~$v$ as
+\begin{equation}\label{eq:dkrt}
+	\frac{\delta R_{\kappa,\,\sigma}(u)(x)}{\delta v}
+	= \int\kappa(x-y)\sigma'\parens{u(x)-u(y)}\parens{v(y)-v(x)}\mathrm{d}y
+\end{equation}
+with
+\begin{equation}
+	\frac{\delta R_{\kappa,\,\sigma}(u)(x)}{\delta v}
+	=
+	\lim_{\varepsilon\to0}
+	\frac{R_{\kappa,\,\sigma}(u+\varepsilon v)(x)
+	     -R_{\kappa,\,\sigma}(u)(x)}{\varepsilon}.
+\end{equation}
+This derivative measures how the kernel rank transform of~$u$ changes
+when the image~$u$ is slightly deformed on the direction of an image~$v$.
+This shows that the kernel rank transform is a smooth operation through
+which information can be backpropagated.
+
+Formula~\ref{eq:dkrt} can be interpreted easily when~$v$ is a small Gaussian
+centered around a point~$z$.  In that case, $\frac{\delta
+R_{\kappa,\,\sigma}(u)(x)}{\delta v}$ measures how
+does~$R_{\kappa\,\sigma}u(x)$ changes when~$u(z)$ changes.
+We distinguish two cases, depending on whether~$z$ is close to~$x$ or not.
+When~$z$ is very far from~$x$, the term~$v(y)-v(x)$ is a Gaussian centered
+around~$z$, and the term~$\kappa(x-y)$ is centered around~$x$, thus their
+product is very close to 0.  This means that the KRT is a local operator,
+with a receptive field modulated by the function~$\kappa$.  When~$z=x$, the
+term~$v(y)-v(x)$ is of the form~$a(1-e^{-b(y-x)^2})$, which vanishes
+at~$y=x$, and when multiplied by~$\kappa(x-y)$ gives a ring-shaped ``receptive
+field'' around~$x$.  The receptive field is further reduced after
+multiplication by~$\sigma'\parens{u(x)-u(y)}$, which is a fuzzy region
+around the level line of~$u$ through~$x$.
+
+TODO: add figure with said receptive field (maybe in 1d and for a discrete
+image also? the case of the discrete image is easy: just compute the
+directional derivative when changing a single pixel)
+
+TODO: comment what happens when~$\sigma$ is a heaviside (the derivative
+cannot be computed manually)
+
+TODO: some further comments about locality around the level line.
+
+TODO: maybe formalize what is meant exactly by "contrast-invariance"?
+we have to decide how far we want to go with this formalization
+
+
+
 
 \subsection{Normalization and Visualization}
 
