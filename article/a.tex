@@ -268,7 +268,7 @@ along the direction~$v$ as
 	\frac{\delta R_{\kappa,\,\sigma}(u)(x)}{\delta v}
 	= \int\kappa(x-y)\sigma'\parens{u(x)-u(y)}\parens{v(y)-v(x)}\mathrm{d}y
 \end{equation}
-with
+where
 \begin{equation}
 	\frac{\delta R_{\kappa,\,\sigma}(u)(x)}{\delta v}
 	=
@@ -736,7 +736,16 @@ non-isotropic kernels ?
 
 
 
+\subsection{Experiment: further parameter exploration}
 
+Pick a reference image:
+perlin noise of grain s + gaussian blur of intensity r
+filter this image with gaussian-gaussian krt, varying botht parameters,
+observe the effects depending on whether the parameters are larger/smaller
+than s/r.
+
+
+\subsection{Application: local image normalization}
 
 
 \subsection{Application: noise uniformization}
@@ -770,12 +779,10 @@ produces images whose histogram is uniform, but much more finely quantized.
 \end{figure}
 
 
-
-
 \subsection{Application: image comparison}
 
 If we have images of the same scene with very different dynamic ranges, the
-rank transform allows to compare them directly.
+rank transform allows to compare them directly.   
 
 
 \section{References}
