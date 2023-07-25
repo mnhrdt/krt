@@ -345,6 +345,7 @@ char *help = ""
 "   or: cat in | krt KERNEL [-h HEAVISIDE] > out\n"
 "\n"
 "Kernels:\n"
+// TODO: de-couple kernel type and kernel size in two separate optoins
 " squareN     square of size (2N+1) x (2N+1)\n"
 " diskR       discrete disk of radius R\n"
 " gaussS      gaussian kernel of sigma S\n"
