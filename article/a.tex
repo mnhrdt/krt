@@ -1,9 +1,17 @@
 \documentclass[12pt]{article}                  % base article class
-\usepackage[osf,sups]{Baskervaldx}             % baskerville, lining figures
-\usepackage[bigdelims,baskervaldx]{newtxmath}  % baskerville math
+%\usepackage[osf,sups]{Baskervaldx}             % baskerville, lining figures
+%\usepackage[bigdelims,baskervaldx]{newtxmath}  % baskerville math
 \usepackage{graphicx}
+\usepackage{amsmath,amsthm}         % fancier math
 \usepackage[hidelinks=false]{hyperref}
 
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}{Lemma}
+\newtheorem{remark}{Remark}
+\newtheorem{definition}{Definition}
+\newtheorem{proposition}{Proposition}
+\newtheorem{corollary}{Corollary}
 
 \setlength{\parindent}{0pt}         % no paragraph indentation
 \setlength{\parskip}{7pt}           % spacing between paragraphs
@@ -251,8 +259,40 @@ the kernel rank transform (without gap) is a~\emph{discontinuous}
 transformation of the original gray-levels.  The figure shows that two
 images that are nearly identical have very different rank transforms.  This
 is a general phenomenon: any contrast-invariant operator will be likewise
-discontinuous.
+discontinuous:
 
+\begin{definition}[contrast-invariant filter]
+	Let~$T$ be an operator that transforms gray-level images into images
+	of the same type.  We say that it is~\emph{contrast-invariant} if
+	for any
+	monotonic function~$g:\mathbf{R}\to\mathbf{R}$ and for any image~$I$
+	we have~$T(g\circ I)=T(I)$.
+\end{definition}
+
+\begin{proposition}
+	Any continuous and contrast-invariant image filter is trivial.
+	%(its result does not depend on the input image).
+\end{proposition}
+\begin{proof}
+	Let~$T$ be a contrast-invariant filter that is continuous (with
+	respect to some norm, for example~$L^2$ or~$L^\infty$).
+	Now, fix an image~$I$ and consider the
+	path~$\lambda\mapsto \lambda I$ in the space of images.  By
+	homogeneity of the norm, this path
+	is a continuous curve that joins the image~$I$ to the image~$0$.
+	Since the filter is continuous,~$\displaystyle\lim_{\lambda\to
+	0+}T(\lambda I)=T(0)$.
+	Since the filter is contrast-invariant,~$T(\lambda I)=T(I)$
+	for all~$\lambda>0$.
+	Thus~$T(I)=T(0)$ and the filter is trivial.
+\end{proof}
+
+\begin{corollary}
+	Any non-trivial contrast-invariant filter is discontinuous.
+\end{corollary}
+
+This proposition showcases an important compromise between the two cases of
+the kernel rank transform.
 The kernel rank transform with a smooth gap~$\sigma$, as defined on
 equation~\ref{eq:rtdef} is continuous with respect to~$u$ by continuity
 under the integral sign.  Thus, it cannot be contrast-invariant.  The
