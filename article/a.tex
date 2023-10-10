@@ -34,7 +34,7 @@
 %Recall the original definition of the rank transform in a discrete setting
 %(put reference).
 The rank and census transforms were introduced in 1994 by
-Zabih-Woodfill~\cite{ZW} as pre-processing steps to improve the performance
+Zabih--Woodfill~\cite{ZW} as pre-processing steps to improve the performance
 of patch-matching for stereo vision algorithms.
 Using the same notation as the original authors, the rank transform of a
 digital image~$P\mapsto I(P)$ is defined as the
@@ -103,20 +103,24 @@ lower level set of~$u$ at level~$u(x)$.  Equivalently,
 \begin{equation}\label{eq:rtcont}
 	R(u)(x) = \int_{N(x)}H(u(x)-u(y))\mathrm{d}y
 \end{equation}
-where~$H$ is the Heaviside step function
+where~$H$ is the (symmetric) Heaviside step function
 \begin{equation}\label{eq:heaviside}
-	H(t)=\begin{cases}1,& t>0\\
-	0,&t\le 0\end{cases}
+	H(t)=\begin{cases}
+		0,&t< 0\\
+		\frac12,&t=0\\
+		1,& t>0
+\end{cases}
 \end{equation}
 This expression can in turn be rewritten as an integral over the whole plane
 \begin{equation}\label{eq:rtcont2}
 	R(u)(x) = \int\mathbf{1}_{N(0)}(y-x)H(u(x)-u(y))\mathrm{d}y
 \end{equation}
 In this article we propose and study a generalization of the classical rank
-transform~\ref{eq:rtcont2}, where we replace the indicator function of a
-square~$\mathbf{1}_{N(0)}$ by an arbitrary integration kernel.  On a later
-section, we will also replace the discontinuous Heaviside function by a
-smooth sigmoid.
+transform~(\ref{eq:rtcont2}), where we replace the indicator function of a
+square~$\mathbf{1}_{N(0)}$ by an arbitrary integration kernel.
+We also propose to replace
+%On a later section, we will also
+replace the discontinuous Heaviside function by a smooth sigmoid.
 We will see that this general construction includes many other operations in
 image processing as particular cases (bilateral filtering, retinex).
 Notice that, when the integration kernel and the sigmoid are smooth, the
@@ -125,7 +129,7 @@ rank transform will inherit the same regularity.
 %$definition is a particular case (the kernel being the indicator function of
 %$a square)
 
-{\bf Definition.}
+\begin{definition}
 Let~$u:\mathbf{R}^2\to\mathbf{R}$ be a compactly-supported grayscale image,
 $\kappa:\mathbf{R}^2\to\mathbf{R}$ be an integrable function
 and~$\sigma:\mathbf{R}\to\mathbf{R}$ a non-decreasing bounded
@@ -138,15 +142,56 @@ image~$R_{\kappa,\,\sigma}(u):\mathbf{R^2}\to\mathbf{R}$ defined by
 \end{equation}
 %by construction,~$R_\kappa(u)$ is an image that takes values in the
 %interval~$[0,1]$.
+\end{definition}
 In a typical setting, we will have~$\sigma=H$ and~$\kappa$ is non-negative of
 integral~$1$, in which
 case the~$R_{\kappa,\,\sigma}(u)$ takes values in the
 interval~$[0,1]$.
+%In the discrete case, this integral is readily replaced by a finite sum.
 
 The rank transform can be interpreted as a local contrast equalization of
 of~$u$, where the concept of ``local'' is defined by the kernel~$\kappa$.
+
+It is easier to understand in the particular case
+when~$\kappa$ %=\frac1{|N|}\mathbf{1}_N$
+is the normalized
+indicator function of a neighborhood, and~$\sigma$ is the Heaviside step
+function.  This is shown in figure~\ref{fig:figure1} for a circular
+neighborhood, where~$\kappa=\frac1{\pi r^2}\mathbf{1}_{B(r)}$.
+For a given image~$u$,
+the value of~$K_{\kappa,\sigma}(x)$ is then the proportion of the
+neighborhood of~$x$ where the values of~$u$ are larger than~$u(x)$ (the
+upper level set of~$u$ at level~$u(x)$ intersected with the neighborhood).
+
+
+
 Below we give the elementary properties of rank transforms and propose some
 equivalent definitions and approximations of it.
+
+\begin{figure}
+	\centering
+	\includegraphics[width=0.6\linewidth]{f/figure1.png}
+	\caption{
+		Illustration of the rank transform
+		when~$\kappa=\frac1{2\pi}\mathbf{1}_{B(r)}$ is the
+		indicator function of a disk and~$\sigma$ is a Heaviside
+		function.
+		%
+		This figure shows a level line of an image and four points
+		on it.  In each case, the value of the rank transform is the
+		proportion of the area of the disk that is intersected by
+		the upper level set of the image (shaded regions around each
+		point).
+		%
+		At point~$b$, the level line is locally straight and the
+		value of the rank transform is~$1/2$.  At point~$c$, the
+		level set is concave and the rank transform is~$>1/2$.  At
+		point~$d$ the rank transform is~$\theta/{2\pi}$
+		where~$\theta$ is the angle between two segments of the
+		level line around that point.
+	}
+	\label{fig:figure1}
+\end{figure}
 
 TODO: write intuitive definition in terms of area percent of the support
 of~$\kappa$ is covered by the level sets of~$u$.  Add a FIGURE for this.
@@ -231,31 +276,80 @@ linear-filtering the epigraph of~$u$ and evaluating the resulting filtered
 
 TODO: check whether we can write~$T(x,t)=\kappa(x)\sigma'(t)$.
 
-\subsection{Simple (formal) properties}
+\subsection{Formal properties}
 
-Fundamental property: invariance under arbitrary contrast changes (without
-change inversion).~$R_k(f\circ u)=R_k(u)$, for any increasing injective function~$f$
+%When~$\sigma$ is the Heaviside step function, we write simply~$R_\kappa$.
 
-Symmetry with respect to inversion:~$R_k(-u)=1-R_k(u)$
+\begin{proposition}[structural properties of~$R_{\kappa,\sigma}$]
+	The kernel rank transform operator has the following properties:
+	\begin{enumerate}
+		\item[\bf P1] If~$u$ is a constant image,
+			then~$R_{\kappa,\sigma}(u)=\sigma(0)\int\kappa$.
+		\item[\bf P2] Scaling and shifting of~$\sigma$:
+			$R_{\kappa,a\sigma+b}=aR_{\kappa,\sigma}+b\int\kappa$.
+		\item[\bf P3] Symmetry with respect to inversion: if~$\sigma$
+			is an odd function
+			then~$R_{\kappa,\sigma}(-u)=-R_{\kappa,\sigma}(u)$.
+		\item[\bf P4] If~$\kappa$ is symmetric and~$\sigma$ is
+			anti-symmetric ($\sigma(-t)+\sigma(t)=\sigma(0)$),
+			and~$u$ is an affine function
+			then~$R_{\kappa,\sigma}=\sigma(0)\int\kappa$.
+	\end{enumerate}
+\end{proposition}
+
+Properties P1 and P4 also hold locally with respect to~$u$, where locality is
+defined by the support of~$\kappa$.
+
+Property~P2 says that the scaling of the function~$\sigma$ is an
+essentially arbitrary convention: for example, we can replace the Heaviside
+with a sign function and the results vary
+accordingly:~$R_{\kappa,\mathrm{sgn}}=2R_{\kappa,H}-\int\kappa$.  For
+normalized and symmetric kernels, the result will then take values in the
+range~$[-1,1]$, being~$0$ on flat zones or zones where the level lines are
+straight.
+
+\begin{proposition}
+	When~$\sigma$ is the Heaviside step function, the kernel rank
+	transform has these further properties:
+	\begin{enumerate}
+		\item[\bf H1] Invariance under arbitrary contrast changes: for
+			any increasing injective function~$g$, we
+			have~$R_{\kappa,H}(g\circ u)=R_{\kappa,H}(u)$.
+		\item[\bf H2] If~$x$ is the site of the global maximum of~$u$,
+			then~$R_{\kappa,H}(u)(x)=\int\kappa$.
+			This is also true if~$x$ is a local maximum on a
+			neighborhood defined by the support of~$\kappa$.
+		\item[\bf H3] If~$x$ is the site of the global
+			minimum of~$u$,
+			then~$R_{\kappa,H}(u)(x)=0$.
+			This is also true if~$x$ is a local minimum on a
+			neighborhood defined by the support of~$\kappa$.
+	\end{enumerate}
+\end{proposition}
 
 
-If~$x$ is the site of the global maximum of~$u$, then~$R_\kappa(u)(x)=1$.
-This is also true if~$x$ is a local maximum on a neighborhood defined by the
-support of~$\kappa$.
-
-Correspondingly, if~$x$ is the site of the global minimum of~$u$,
-then~$R_\kappa(u)(x)=0$.
-
-If the level lines of~$u$ are straight lines with the same orientation (for
-example, when~$u$ is affine), and~$\kappa$ is symmetric,
-then~$R_\kappa(u)=\frac12$.  This also holds locally (where locality is
-defined by the support of~$\kappa$).
+%Fundamental property: invariance under arbitrary contrast changes (without
+%change inversion).~$R_k(g\circ u)=R_k(u)$, for any increasing injective
+%function~$g$
+%
+%Symmetry with respect to inversion:~$R_k(-u)=1-R_k(u)$
+%
+%If~$x$ is the site of the global maximum of~$u$, then~$R_\kappa(u)(x)=1$.
+%This is also true if~$x$ is a local maximum on a neighborhood defined by the
+%support of~$\kappa$.
+%
+%Correspondingly, if~$x$ is the site of the global minimum of~$u$,
+%then~$R_\kappa(u)(x)=0$.
+%
+%If the level lines of~$u$ are straight lines with the same orientation (for
+%example, when~$u$ is affine), and~$\kappa$ is symmetric,
+%then~$R_\kappa(u)=\frac12$.
 
 
 \subsection{Continuity and differentiability}
 
 The experiments on figures~\ref{fig:machup} and~\ref{fig:machdown} show that
-the kernel rank transform (without gap) is a~\emph{discontinuous}
+the kernel rank transform (without step) is a~\emph{discontinuous}
 transformation of the original gray-levels.  The figure shows that two
 images that are nearly identical have very different rank transforms.  This
 is a general phenomenon: any contrast-invariant operator will be likewise
@@ -293,7 +387,7 @@ discontinuous:
 
 This proposition showcases an important compromise between the two cases of
 the kernel rank transform.
-The kernel rank transform with a smooth gap~$\sigma$, as defined on
+The kernel rank transform with a smooth step~$\sigma$, as defined on
 equation~\ref{eq:rtdef} is continuous with respect to~$u$ by continuity
 under the integral sign.  Thus, it cannot be contrast-invariant.  The
 function~$t\mapsto\sigma(t)$ controls precisely how much contrast-invariance
@@ -345,11 +439,6 @@ TODO: comment what happens when~$\sigma$ is a heaviside (the derivative
 cannot be computed manually)
 
 TODO: some further comments about locality around the level line.
-
-TODO: maybe formalize what is meant exactly by "contrast-invariance"?
-we have to decide how far we want to go with this formalization
-
-
 
 
 \subsection{Normalization and Visualization}
@@ -468,6 +557,21 @@ we can write formula~(\ref{eq:generalrank}) as
 
 
 \section{Implementation}
+
+The implementation of the kernel rank transform is almost a straightforward
+adaptation of formula~\ref{eq:rtdef} for discrete images, with the integral
+replaced by a sum.
+
+TODO: Pseudocode of the krt algorithm.
+
+TODO: pseudocode of a few kernels (square, normalized )
+
+TODO: discuss a subtlety of the implementation.  For the classical case
+(binary kernel and heaviside step) we want the following three conditions to
+hold: (1) for constant regions the krt is exactly 0.5;  (2) at the global
+maximum, the krt is exactly 1; (3) at the global minimum, the krt is exactly
+0.  These conditions are satisfied by the given implementation, that omits
+the central point in the sum, and in the kernel normalization.
 
 Discrete implementation for a small support kernel, written in C
 
