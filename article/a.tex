@@ -129,16 +129,16 @@ rank transform will inherit the same regularity.
 %$definition is a particular case (the kernel being the indicator function of
 %$a square)
 
-\begin{definition}
-Let~$u:\mathbf{R}^2\to\mathbf{R}$ be a compactly-supported grayscale image,
+\begin{definition}\label{def:krt}
+Let~$u:\mathbf{R}^2\to\mathbf{R}$ be a bounded grayscale image,
 $\kappa:\mathbf{R}^2\to\mathbf{R}$ be an integrable function
-and~$\sigma:\mathbf{R}\to\mathbf{R}$ a non-decreasing bounded
+and~$\sigma:\mathbf{R}\to\mathbf{R}$ a non-decreasing
 function.  The~\emph{kernel rank transform of~$u$ with kernel~$\kappa$ and
 step~$\sigma$} is the
 image~$R_{\kappa,\,\sigma}(u):\mathbf{R^2}\to\mathbf{R}$ defined by
 \begin{equation}\label{eq:rtdef}
 %R_{\kappa}(u)(x) = \int\kappa(x-y)\mathbf{1}_{\left[u < u(x)\right]}(y)\mathrm{d}y
-	R_{\kappa,\,\sigma}(u)(x) = \int\kappa(x-y)\sigma\parens{u(x)-u(y)}\mathrm{d}y
+	R_{\kappa,\,\sigma}(u)(x) = \int\kappa(y-x)\sigma\parens{u(x)-u(y)}\mathrm{d}y
 \end{equation}
 %by construction,~$R_\kappa(u)$ is an image that takes values in the
 %interval~$[0,1]$.
@@ -173,7 +173,7 @@ equivalent definitions and approximations of it.
 	\includegraphics[width=0.6\linewidth]{f/figure1.png}
 	\caption{
 		Illustration of the rank transform
-		when~$\kappa=\frac1{2\pi}\mathbf{1}_{B(r)}$ is the
+		when~$\kappa=\frac1{\pi r^2}\mathbf{1}_{B(r)}$ is the
 		indicator function of a disk and~$\sigma$ is a Heaviside
 		function.
 		%
@@ -196,14 +196,51 @@ equivalent definitions and approximations of it.
 TODO: write intuitive definition in terms of area percent of the support
 of~$\kappa$ is covered by the level sets of~$u$.  Add a FIGURE for this.
 
-%{\color{gray}
-TODO: give a discrete interpretation of formula~\ref{eq:rtdef} and observe
-that the original rank transform is a particular case of this when~$\kappa$
-is a constant square.
-%}
-Our definition
+Definition~\ref{def:krt} can be adapted to the case of discrete
+images~$u:\mathbf{Z}^2\to\mathbf{R}$ by rewriting it in the measure
+space~$\mathbf{Z}^2$ instead of~$\mathbf{R}^2$.  This results in the
+following definition:
+%
+\begin{definition}\label{def:dkrt}
+Let~$u:\mathbf{Z}^2\to\mathbf{R}$ be a bounded image,
+$\kappa:\mathbf{Z}^2\to\mathbf{R}$ be a summable function
+and~$\sigma:\mathbf{R}\to\mathbf{R}$ a non-decreasing function.
+The~\emph{discrete kernel rank transform of~$u$ with kernel~$\kappa$
+and step~$\sigma$} is the
+image~$R_{\kappa,\,\sigma}(u):\mathbf{Z}^2\to\mathbf{R}$
+defined by \begin{equation}\label{eq:rtdef}
+%R_{\kappa}(u)(x) = \int\kappa(x-y)\mathbf{1}_{\left[u < u(x)\right]}(y)\mathrm{d}y
+R_{\kappa,\,\sigma}(u)(x) = \sum_{y\in\mathbf{Z}^2}\kappa(y-x)\sigma\parens{u(x)-u(y)}
+\end{equation}
+%by construction,~$R_\kappa(u)$ is an image that takes values in the
+%interval~$[0,1]$.
+\end{definition}
 
-TODO: Issue of constant patches, how is it defined?
+The original definition of the rank transform given by
+equation~(\ref{eq:rt}) is a particular case of this definition by taking
+the following~$\kappa$ and~$\sigma$:
+\[
+	\kappa=\mathbf{1}_{N_d(0)}
+	\qquad
+	\qquad
+	\sigma(t)=\begin{cases}0&t\le0\\1&t>0\end{cases}
+\]
+where~$N_d(0)$ is a~$d\times d$ neighborhood of the origin.
+
+The original definition is useful and practical, but it has a slightly
+disturbing asymmetry in its step function~$\sigma$.  While this asymmetri as
+a minor impact in practical cases, it is nonetheless very visible when
+computing the rank transform of synthetic images, or images with saturated
+regions.  Indeed, in locally constant parts of the image, the rank transform
+is zero.  Notice that this problem cannot be solved by changing the~$<$
+condition in the definition to~$\le$, in that case constant regions would
+get the value~$d^2-1$.
+(TODO: maybe point to some figure).
+
+Henceforth, when we talk about the classical rank transform we will mean the
+version with the symmetrical Heaviside~$H$ defined above.  With this choice,
+constant patches get an intermediate value of~$1/2$.
+
 
 
 \subsection{Equivalent definitions}
@@ -396,12 +433,12 @@ only when~$\sigma(t_1-t_2)$ is close to~$1$.
 
 For a smooth~$\sigma$ we can explicitly compute the variation of
 \begin{equation}
-	R_{\kappa,\,\sigma}(u)(x) = \int\kappa(x-y)\sigma\parens{u(x)-u(y)}\mathrm{d}y
+	R_{\kappa,\,\sigma}(u)(x) = \int\kappa(y-x)\sigma\parens{u(x)-u(y)}\mathrm{d}y
 \end{equation}
 along the direction~$v$ as
 \begin{equation}\label{eq:dkrt}
 	\frac{\delta R_{\kappa,\,\sigma}(u)(x)}{\delta v}
-	= \int\kappa(x-y)\sigma'\parens{u(x)-u(y)}\parens{v(y)-v(x)}\mathrm{d}y
+	= \int\kappa(y-x)\sigma'\parens{u(x)-u(y)}\parens{v(x)-v(y)}\mathrm{d}y
 \end{equation}
 where
 \begin{equation}
@@ -421,12 +458,12 @@ centered around a point~$z$.  In that case, $\frac{\delta
 R_{\kappa,\,\sigma}(u)(x)}{\delta v}$ measures how
 does~$R_{\kappa\,\sigma}u(x)$ changes when~$u(z)$ changes.
 We distinguish two cases, depending on whether~$z$ is close to~$x$ or not.
-When~$z$ is very far from~$x$, the term~$v(y)-v(x)$ is a Gaussian centered
-around~$z$, and the term~$\kappa(x-y)$ is centered around~$x$, thus their
+When~$z$ is very far from~$x$, the term~$v(x)-v(y)$ is a Gaussian centered
+around~$z$, and the term~$\kappa(y-x)$ is centered around~$x$, thus their
 product is very close to 0.  This means that the KRT is a local operator,
 with a receptive field modulated by the function~$\kappa$.  When~$z=x$, the
-term~$v(y)-v(x)$ is of the form~$a(1-e^{-b(y-x)^2})$, which vanishes
-at~$y=x$, and when multiplied by~$\kappa(x-y)$ gives a ring-shaped ``receptive
+term~$v(x)-v(y)$ is of the form~$a(1-e^{-b(y-x)^2})$, which vanishes
+at~$y=x$, and when multiplied by~$\kappa(y-x)$ gives a ring-shaped ``receptive
 field'' around~$x$.  The receptive field is further reduced after
 multiplication by~$\sigma'\parens{u(x)-u(y)}$, which is a fuzzy region
 around the level line of~$u$ through~$x$.
@@ -470,7 +507,7 @@ R^\infty_\sigma(u) := \lim_{n\to\infty}R^n_\sigma(u)
 \]
 We do not know whether these limit operators are the kernel rank transdform for a different kernel.   If that was the case, the krt of that kernel  would be idempotent.   
 
-\section{Relate constructions}
+\section{Related constructions}
 
 Retinex~\cite{land1971lightness,land1977retinex,land1985recent,kimmel2003variational,provenzi2005mathematical,morel2010pde,petro2014multiscale}.
 Histogram equalization~\cite{pizer1987adaptive,abdullah2007dynamic}.
@@ -484,6 +521,8 @@ Non-local laplacians.
 Poisson editing of normalized vectors.
 Curvature.
 ``local contrast equalization''~\cite{sapiro1997histogram}
+KRT with~$\sigma(x)=x$ is~$u-k*u$ (approximation to the laplacian).  Linear
+retinex is a particular case of this.
 
 Contrast-limited adaptive histogram equalization (!)
 
