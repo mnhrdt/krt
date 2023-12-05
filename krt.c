@@ -1,6 +1,9 @@
+#include <assert.h>
 #include <math.h>   // fabs, ceil, exp
 #include <stdio.h>  // sscanf, fprintf
 #include <stdlib.h> // malloc, free
+
+// pixel management                                                         {{{1
 
 static float pixel(float *x, int w, int h, int i, int j)
 {
@@ -20,6 +23,8 @@ static float pixel_e(float *x, int w, int h, int i, int j)
 	}
 	return x[j*w+i];
 }
+
+// construciton of the kernels                                              {{{1
 
 // find the truncation size so that the cropped land kernel has σ at least s
 static int land_truncation_for_sigma(float s)
@@ -42,7 +47,57 @@ static int land_truncation_for_sigma(float s)
 	return n;
 }
 
-static float *build_kernel_from_string(char *s, int *w, int *h)
+static float *build_kernel_from_string(char *s, int *n)
+{
+	float p; // kernel parameter
+
+	if (1 == sscanf(s, "actualsquare%g", &p))
+	{
+		int d = p;
+		fprintf(stderr, "actual square of side d = %d\n", d);
+		if (d >= 1)
+		{
+			*n = d*d;
+			float *kappa = malloc(3 * d * d * sizeof*kappa);
+			int l = 0;
+			for (int i = 0; i < d; i++)
+			for (int j = 0; j < d; j++)
+			{
+				kappa[3*l+0] = i - d/2;
+				kappa[3*l+1] = j - d/2;
+				kappa[3*l+2] = 1.0;
+				l += 1;
+			}
+			assert(l == *n);
+			return kappa;
+		}
+	}
+
+	if (1 == sscanf(s, "gauss%g", &p))
+	{
+		int d = 2*ceil(2*fabs(p)) + 1; // TODO: add this as an option?
+		fprintf(stderr, "gaussian of σ = %g (d = %d)\n", fabs(p), d);
+		float *kappa = malloc(3 * d * d * sizeof*kappa);
+
+		// fill-in gaussian kernel
+		int l = 0;
+		for (int j = 0; j < d; j++)
+		for (int i = 0; i < d; i++)
+		{
+			int x = i - d/2;
+			int y = j - d/2;
+			if (hypot(x, y) > d/2.0) continue;
+			kappa[3*l + 0] = x;
+			kappa[3*l + 1] = y;
+			kappa[3*l + 2] = exp(-(x*x + y*y)/(2*p*p));
+			l += 1;
+		}
+		*n = l;
+		return kappa;
+	}
+}
+
+static float *build_kernel_from_string_old(char *s, int *w, int *h)
 {
 	float p; // kernel parameter
 
@@ -190,11 +245,27 @@ static float *build_kernel_from_string(char *s, int *w, int *h)
 	return k;
 }
 
+// comparison functions                                                     {{{1
+
 static float discrete_heaviside(float x) // like Heaviside, but gives 0.5 at 0
 {
 	if (x < 0) return 0;
 	if (x > 0) return 1;
 	return 0.5;
+}
+
+static float heaviside_H0(float x)
+{
+	if (x < 0) return 0;
+	if (x > 0) return 1;
+	return 0;
+}
+
+static float heaviside_H1(float x)
+{
+	if (x < 0) return 0;
+	if (x > 0) return 1;
+	return 1;
 }
 
 // NOTE: the "gap" parameters are normalized so that for
@@ -236,7 +307,7 @@ static float erf_h(float x)
 	return 0.5 + 0.5 * erf;
 }
 
-static float (*build_heaviside_from_string(char *s))(float)
+static float (*get_heaviside_from_string(char *s))(float)
 {
 	float p; // parameter
 
@@ -268,60 +339,97 @@ static float (*build_heaviside_from_string(char *s))(float)
 		return erf_h;
 	}
 
+	if (1 == sscanf(s, "H%g", &p))
+	{
+		fprintf(stderr, "Heaviside H%g\n", p);
+		if (p == 1) return heaviside_H1;
+		else return heaviside_H0;
+	}
+
 	fprintf(stderr, "discrete Heaviside function\n");
 	return discrete_heaviside;
 }
 
-void kernel_rank_transform_bruteforce(
-		char *kernel_string,    // textual description of the kernel
-		char *heaviside_string, // textual description of Heaviside f.
+//void kernel_rank_transform_bruteforce(
+//		char *kernel_string,    // textual description of the kernel
+//		char *heaviside_string, // textual description of Heaviside f.
+//		float *v,               // output image data
+//		float *u,               // input image data
+//		int w,                  // image width
+//		int h                   // image height
+//		)
+//{
+//	int W, H; // kernel width, height
+//	float *k = build_kernel_from_string(kernel_string, &W, &H);
+//	float (*HH)(float) = get_heaviside_from_string(heaviside_string);
+//
+//	for (int i = 0; i < w*h; i++)
+//		v[i] = 0;
+//
+//	for (int j = 0; j < h; j++)   // image line
+//	for (int i = 0; i < w; i++)   // image column
+//	for (int q = 0; q < H; q++)   // kernel line
+//	for (int p = 0; p < W; p++)   // kernel column
+//	if (p!=W/2 || q!=H/2)
+//	{
+//		float ux = pixel(u, w, h, i, j);
+//		float uy = pixel(u, w, h, i + p - W/2, j + q - H/2);
+//		float kxy = pixel(k, W, H, p, q);
+//		v[j*w+i] += kxy * HH(ux - uy);
+//		//v[j*w+i] += kxy * discrete_heaviside(ux - uy);
+//		// TODO: verify that this is correct for asymmetric kernels
+//	}
+//
+//	free(k);
+//}
+
+// krt                                                                      {{{1
+
+void kernel_rank_transform(
+		float *kappa,           // a 3xn array with kernel positions
+		int n,                  //  and values
+		float (*sigma)(float),  // comparison function
 		float *v,               // output image data
 		float *u,               // input image data
 		int w,                  // image width
 		int h                   // image height
 		)
 {
-	int W, H; // kernel width, height
-	float *k = build_kernel_from_string(kernel_string, &W, &H);
-	float (*HH)(float) = build_heaviside_from_string(heaviside_string);
-
 	for (int i = 0; i < w*h; i++)
 		v[i] = 0;
 
-	for (int j = 0; j < h; j++)   // image line
-	for (int i = 0; i < w; i++)   // image column
-	for (int q = 0; q < H; q++)   // kernel line
-	for (int p = 0; p < W; p++)   // kernel column
-	if (p!=W/2 || q!=H/2)
+	// Definition 2.
+	for (int x1 = 0; x1 < w; x1++)   // image column
+	for (int x2 = 0; x2 < h; x2++)   // image line
+	for (int k = 0; k < n; k++)      // kernel pixel index
 	{
-		float ux = pixel(u, w, h, i, j);
-		float uy = pixel(u, w, h, i + p - W/2, j + q - H/2);
-		float kxy = pixel(k, W, H, p, q);
-		v[j*w+i] += kxy * HH(ux - uy);
-		//v[j*w+i] += kxy * discrete_heaviside(ux - uy);
-		// TODO: verify that this is correct for asymmetric kernels
+		int y1 = x1 + kappa[3*k+0];
+		int y2 = x2 + kappa[3*k+1];
+		float kappa_yx = kappa[3*k+2];
+		float ux = pixel(u, w, h, x1, x2);
+		float uy = pixel(u, w, h, y1, y2);
+		v[x1 + x2*w] += kappa_yx * sigma(ux - uy);
 	}
-
-	free(k);
 }
 
-void kernel_rank_transform_bruteforce_split(
-		char *kernel_string,    // textual description of the kernel
-		char *heaviside_string, // textual description of Heaviside f.
-		float *y,               // output image data
-		float *x,               // input image data
+void kernel_rank_transform_split(
+		float *kappa,           // a 3xn array with kernel positions
+		int n,                  //  and values
+		float (*sigma)(float),  // comparison function
+		float *v,               // output image data
+		float *u,               // input image data
 		int w,                  // image width
 		int h,                  // image height
 		int pd                  // pixel dimension
 		)
 {
 	for (int i = 0; i < pd; i++)
-		kernel_rank_transform_bruteforce(kernel_string,
-				heaviside_string,
-				y + i*w*h,
-				x + i*w*h,
-				w, h);
+		kernel_rank_transform(kappa, n, sigma,
+				v + i*w*h, u + i*w*h, w, h);
 }
+
+
+// main                                                                     {{{1
 
 #define KRT_MAIN
 
@@ -412,6 +520,10 @@ int main(int c, char *v[])
 
 	// extract_named_parameters
 	char *heaviside_string = pick_option(&c, &v, "h", "h");
+	int offset_x = atoi(pick_option(&c, &v, "ox", "0"));
+	int offset_y = atoi(pick_option(&c, &v, "oy", "0"));
+	bool normalize_kernel = !pick_option(&c, &v, "nn", NULL);
+	bool remove_kernel_center = !pick_option(&c, &v, "kc", NULL);
 
 	// process input arguments
 	if (c != 2 && c != 3 && c != 4)
@@ -421,6 +533,34 @@ int main(int c, char *v[])
 	char *kernel_string = v[1];
 	char *filename_in   = c > 2 ? v[2] : "-";
 	char *filename_out  = c > 3 ? v[3] : "-";
+	int n_kappa;
+	float *kappa = build_kernel_from_string(kernel_string, &n_kappa);
+	float (*sigma)(float) = get_heaviside_from_string(heaviside_string);
+
+	// apply kernel offsets in-place
+	for (int i = 0; i < n_kappa; i++)
+	{
+		kappa[3*i + 0] += offset_x;
+		kappa[3*i + 1] += offset_y;
+	}
+
+	// remove kernel centers in-place
+	if (remove_kernel_center)
+	{
+		for (int i = 0; i < n_kappa; i++)
+			if (kappa[3*i+0]==0 && kappa[3*i+1]==0)
+				kappa[3*i+2] = 0;
+	}
+
+	// normalize kernel in-place
+	if (normalize_kernel)
+	{
+		float K = 0;
+		for (int i = 0; i < n_kappa; i++)
+			K += kappa[3*i+2];
+		for (int i = 0; i < n_kappa; i++)
+			kappa[3*i+2] /= K;
+	}
 
 	// read input image
 	int w, h, pd;
@@ -430,11 +570,12 @@ int main(int c, char *v[])
 	float *y = malloc(w * h * pd * sizeof*y);
 
 	// run the algorithm
-	kernel_rank_transform_bruteforce_split(kernel_string,
-			heaviside_string, y, x, w, h, pd);
+	kernel_rank_transform_split(kappa, n_kappa, sigma, y, x, w, h, pd);
 
 	// write result and exit
 	setenv("IIO_REM", version, 0);
 	iio_write_image_float_split(filename_out, y, w, h, pd);
 }
 #endif//KRT_MAIN
+
+// vim:set foldmethod=marker:

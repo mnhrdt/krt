@@ -1,13 +1,15 @@
 CODE
 
+C8. add old kernels to the new kernel system
 C4. add a simple test (apart from the article compilation?)
 C5. fix interface help text
 C6. implementation by 3d convolution
+C7. implement otsu thresholding for post-processing of the krt
 
 
 ARTICLE
 
-A0. find a better name for "gap"
+A0. find a better name for "gap" -> comparison function
 A2. maybe try other effects (chubb illusion, cornsweet illusion, ...)
 A3. run mach bands with noise
 A3'. run mach bands with smooth steps
