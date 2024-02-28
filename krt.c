@@ -47,6 +47,47 @@ static int land_truncation_for_sigma(float s)
 	return n;
 }
 
+static float kernel_square(float x, float y, float p)
+{
+	return fmax(fabs(x), fabs(y)) < p ? 1 : 0;
+}
+
+static float kernel_disk(float x, float y, float p)
+{
+	return hypot(x, y) < p ? 1 : 0;
+}
+
+static float kernel_gauss(float x, float y, float p)
+{
+	return exp(-(x*x + y*y)/(2*p*p));
+}
+
+static float kernel_laplace(float x, float y, float p)
+{
+	return exp(-hypot(x, y)/p);
+}
+
+static float kernel_cauchy(float x, float y, float p)
+{
+	return p/(p + pow(hypot(x,y),2));
+}
+
+static float kernel_land(float x, float y, float p)
+{
+	return 1/hypot(x, y);
+}
+
+static float kernel_riesz(float x, float y, float p)
+{
+	return pow(hypot(x, y), -2-p);
+}
+
+typedef float (*kernel_t)(float,float,float);
+
+static float *fill_kernel_into_square(kernel_t f, float p, int d)
+{
+}
+
 // input s: string describing the kernel, like "disk3"
 // output n: number of data points in the kernel
 // output k: array of size 3*n with [x,y,k(x,y)] for each data point
@@ -105,7 +146,7 @@ static float *build_kernel_from_string(char *s, int *n)
 		fprintf(stderr, "disk of p = %g (d = %d)\n", p, d);
 		float *k = malloc(3 * d * d * sizeof*k);
 
-		// fill-in gauss kernel
+		// fill-in disk kernel
 		int l = 0;
 		for (int j = 0; j < d; j++)
 		for (int i = 0; i < d; i++)
@@ -135,7 +176,8 @@ static float *build_kernel_from_string(char *s, int *n)
 		{
 			int x = i - d/2;
 			int y = j - d/2;
-			if (hypot(x, y) > d/2.0) continue;
+			// TODO add this test back
+			//if (hypot(x, y) > d/2.0) continue;
 			k[3*l + 0] = x;
 			k[3*l + 1] = y;
 			k[3*l + 2] = exp(-(x*x + y*y)/(2*p*p));
@@ -158,7 +200,8 @@ static float *build_kernel_from_string(char *s, int *n)
 		{
 			int x = i - d/2;
 			int y = j - d/2;
-			if (hypot(x, y) > d/2.0) continue;
+			//TODO add this test back
+			//if (hypot(x, y) > d/2.0) continue;
 			k[3*l + 0] = x;
 			k[3*l + 1] = y;
 			k[3*l + 2] = exp(-hypot(x, y)/p);
@@ -181,7 +224,8 @@ static float *build_kernel_from_string(char *s, int *n)
 		{
 			int x = i - d/2;
 			int y = j - d/2;
-			if (hypot(x, y) > d/2.0) continue;
+			//TODO add this test back
+			//if (hypot(x, y) > d/2.0) continue;
 			k[3*l + 0] = x;
 			k[3*l + 1] = y;
 			k[3*l + 2] = p/(p + pow(hypot(x, y),2) );
@@ -193,7 +237,7 @@ static float *build_kernel_from_string(char *s, int *n)
 
 	if (1 == sscanf(s, "landc%g", &p)) // cut land (parameter=discrete size)
 	{
-		int d = 2*ceil(16*sqrt(p)) + 1;
+		int d = land_truncation_for_sigma(p);
 		fprintf(stderr, "land of σ = %g (d = %d)\n", p, d);
 		float *k = malloc(3 * d * d * sizeof*k);
 
@@ -204,7 +248,8 @@ static float *build_kernel_from_string(char *s, int *n)
 		{
 			int x = i - d/2;
 			int y = j - d/2;
-			if (hypot(x, y) > d/2.0) continue;
+			// TODO
+			//if (hypot(x, y) > d/2.0) continue;
 			k[3*l + 0] = x;
 			k[3*l + 1] = y;
 			k[3*l + 2] = 1/hypot(x, y); // inf at center
