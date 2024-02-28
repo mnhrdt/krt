@@ -7,6 +7,6 @@ rerun: a.tex
 
 %.pdf : %.tex
 	grep ^%SCRIPT $< | cut -c9- | sh
-	cat $< | pdflatexfilter > $@
+	cat $< | bash pdflatexfilter > $@
 
 clean : ; $(RM) $(PDF)

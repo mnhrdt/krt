@@ -176,8 +176,7 @@ static float *build_kernel_from_string(char *s, int *n)
 		{
 			int x = i - d/2;
 			int y = j - d/2;
-			// TODO add this test back
-			//if (hypot(x, y) > d/2.0) continue;
+			if (hypot(x, y) > d/2.0) continue;
 			k[3*l + 0] = x;
 			k[3*l + 1] = y;
 			k[3*l + 2] = exp(-(x*x + y*y)/(2*p*p));
@@ -200,8 +199,7 @@ static float *build_kernel_from_string(char *s, int *n)
 		{
 			int x = i - d/2;
 			int y = j - d/2;
-			//TODO add this test back
-			//if (hypot(x, y) > d/2.0) continue;
+			if (hypot(x, y) > d/2.0) continue;
 			k[3*l + 0] = x;
 			k[3*l + 1] = y;
 			k[3*l + 2] = exp(-hypot(x, y)/p);
@@ -224,8 +222,7 @@ static float *build_kernel_from_string(char *s, int *n)
 		{
 			int x = i - d/2;
 			int y = j - d/2;
-			//TODO add this test back
-			//if (hypot(x, y) > d/2.0) continue;
+			if (hypot(x, y) > d/2.0) continue;
 			k[3*l + 0] = x;
 			k[3*l + 1] = y;
 			k[3*l + 2] = p/(p + pow(hypot(x, y),2) );
@@ -248,8 +245,7 @@ static float *build_kernel_from_string(char *s, int *n)
 		{
 			int x = i - d/2;
 			int y = j - d/2;
-			// TODO
-			//if (hypot(x, y) > d/2.0) continue;
+			if (hypot(x, y) > d/2.0) continue;
 			k[3*l + 0] = x;
 			k[3*l + 1] = y;
 			k[3*l + 2] = 1/hypot(x, y); // inf at center
