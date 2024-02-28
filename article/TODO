@@ -27,6 +27,7 @@ contrast-invariant.  However, adding a "gap" parameter to H, or using a
 sigmoid, renders it non-contrast invariant.  This must be discussed in the
 article, probably with an example.  This has neural ramifications because the
 heaviside is not, so to say, trainable, but the sigmoids are.
+A13. prove that the limit when the size of the kernel is zero is the curvature
 
 
 "contrast-invariance is a non-differentiable property"

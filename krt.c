@@ -73,6 +73,29 @@ static float *build_kernel_from_string(char *s, int *n)
 		}
 	}
 
+	if (1 == sscanf(s, "square%g", &p))
+	{
+		int d = 1 + 2*round(sqrt(3)*p);
+		fprintf(stderr, "square of σ = %g, side=%d\n",
+				(d-1)/sqrt(12), d);
+		if (d >= 1 && d < 1000)
+		{
+			*n = d*d;
+			float *kappa = malloc(3 * d * d * sizeof*kappa);
+			int l = 0;
+			for (int i = 0; i < d; i++)
+			for (int j = 0; j < d; j++)
+			{
+				kappa[3*l+0] = i - d/2;
+				kappa[3*l+1] = j - d/2;
+				kappa[3*l+2] = 1.0;
+				l += 1;
+			}
+			assert(l == *n);
+			return kappa;
+		}
+	}
+
 	if (1 == sscanf(s, "gauss%g", &p))
 	{
 		int d = 2*ceil(2*fabs(p)) + 1; // TODO: add this as an option?
@@ -95,6 +118,75 @@ static float *build_kernel_from_string(char *s, int *n)
 		*n = l;
 		return kappa;
 	}
+
+	if (1 == sscanf(s, "cauchy%g", &p))
+	{
+		int d = 2*ceil(16*sqrt(p)) + 1;
+		fprintf(stderr, "cauchy of σ = %g (n = %d)\n", fabs(p), d);
+		float *kappa = malloc(3 * d * d * sizeof*kappa);
+
+		// fill-in cauchy kernel
+		int l = 0;
+		for (int j = 0; j < d; j++)
+		for (int i = 0; i < d; i++)
+		{
+			int x = i - d/2;
+			int y = j - d/2;
+			if (hypot(x, y) > d/2.0) continue;
+			kappa[3*l + 0] = x;
+			kappa[3*l + 1] = y;
+			kappa[3*l + 2] = p/(p + pow(hypot(i-n/2, j-n/2),2) );
+			l += 1;
+		}
+	}
+
+	if (1 == sscanf(s, "landc%g", &p)) // cut land (parameter=discrete size)
+	{
+		int d = 2*ceil(16*sqrt(p)) + 1;
+		fprintf(stderr, "cauchy of σ = %g (n = %d)\n", fabs(p), d);
+		float *kappa = malloc(3 * d * d * sizeof*kappa);
+
+		// fill-in cauchy kernel
+		int l = 0;
+		for (int j = 0; j < n; j++)
+		for (int i = 0; i < n; i++)
+		{
+			int x = i - d/2;
+			int y = j - d/2;
+			if (hypot(x, y) > d/2.0) continue;
+			kappa[3*l + 0] = x;
+			kappa[3*l + 1] = y;
+			kappa[3*l + 2] = p/(p + pow(hypot(i-d/2, j-d/2),2) );
+			l += 1;
+		}
+	}
+
+	if (1 == sscanf(s, "landc%g", &p)) // cut land (parameter=discrete size)
+	{
+		//int n = 2*ceil(p) + 1;
+		int n = land_truncation_for_sigma(p);
+		fprintf(stderr, "land of p = %g (n = %d)\n", fabs(p), n);
+		*w = *h = n;
+		float *k = malloc(n * n * sizeof*k);
+
+		// fill-in land kernel
+		for (int j = 0; j < n; j++)
+		for (int i = 0; i < n; i++)
+			k[n*j + i] = 1/hypot(i-n/2, j-n/2); // inf at center
+
+		// set central pixel to 0 (cf. article)
+		k[n*(n/2) + n/2] = 0;
+
+		// normalize so that the sum of k is 1
+		float K = 0;
+		for (int i = 0; i < n*n; i++)
+			K += k[i];
+		for (int i = 0; i < n*n; i++)
+			k[i] /= K;
+		return k;
+	}
+
+	exit(fprintf(stderr, "unrecognized kernel string \"%s\"\n"));
 }
 
 static float *build_kernel_from_string_old(char *s, int *w, int *h)
