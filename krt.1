@@ -21,14 +21,26 @@ The output image has the same size as the input and its values are between
 treated independently.
 .SS "Kernels:"
 .TP
-squareN
-square of size (2N+1) x (2N+1)
+actualsquareN
+discrete square of size N x N
 .TP
 diskR
 discrete disk of radius R
 .TP
-gaussS
+squareX
+square of size (2N+1) x (2N+1)
+.TP
+gaussX
 gaussian kernel of sigma S
+.TP
+cauchyX
+cauchy kernel of sigma S
+.TP
+laplaceX
+laplace kernel of sigma S
+.TP
+landcX
+truncated land kernel of sigma S
 .TP
 file.npy
 read the kernel weights from an image file
@@ -48,6 +60,25 @@ arc tangent function scaled by a factor K
 .TP
 erfK
 error function scaled by a factor K
+.SH OPTIONS
+.TP
+\fB\-\-help\fR
+print help message
+.TP
+\fB\-\-version\fR
+print version number
+.TP
+\fB\-ox\fR X
+horizontal offset X pixels the center of the kernel
+.TP
+\fB\-oy\fR X
+vertical offset X pixels the center of the kernel
+.TP
+\fB\-nn\fR
+do not normalize the kernel weights
+.TP
+\fB\-kc\fR
+keep the center of the discrete kernel
 .SH EXAMPLES
 .TP
 krt square7 h i.png o.tif

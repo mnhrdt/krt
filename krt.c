@@ -47,6 +47,9 @@ static int land_truncation_for_sigma(float s)
 	return n;
 }
 
+// input s: string describing the kernel, like "disk3"
+// output n: number of data points in the kernel
+// output k: array of size 3*n with [x,y,k(x,y)] for each data point
 static float *build_kernel_from_string(char *s, int *n)
 {
 	float p; // kernel parameter
@@ -58,18 +61,18 @@ static float *build_kernel_from_string(char *s, int *n)
 		if (d >= 1)
 		{
 			*n = d*d;
-			float *kappa = malloc(3 * d * d * sizeof*kappa);
+			float *k = malloc(3 * d * d * sizeof*k);
 			int l = 0;
 			for (int i = 0; i < d; i++)
 			for (int j = 0; j < d; j++)
 			{
-				kappa[3*l+0] = i - d/2;
-				kappa[3*l+1] = j - d/2;
-				kappa[3*l+2] = 1.0;
+				k[3*l+0] = i - d/2;
+				k[3*l+1] = j - d/2;
+				k[3*l+2] = 1.0;
 				l += 1;
 			}
 			assert(l == *n);
-			return kappa;
+			return k;
 		}
 	}
 
@@ -81,28 +84,51 @@ static float *build_kernel_from_string(char *s, int *n)
 		if (d >= 1 && d < 1000)
 		{
 			*n = d*d;
-			float *kappa = malloc(3 * d * d * sizeof*kappa);
+			float *k = malloc(3 * d * d * sizeof*k);
 			int l = 0;
 			for (int i = 0; i < d; i++)
 			for (int j = 0; j < d; j++)
 			{
-				kappa[3*l+0] = i - d/2;
-				kappa[3*l+1] = j - d/2;
-				kappa[3*l+2] = 1.0;
+				k[3*l+0] = i - d/2;
+				k[3*l+1] = j - d/2;
+				k[3*l+2] = 1.0;
 				l += 1;
 			}
 			assert(l == *n);
-			return kappa;
+			return k;
 		}
+	}
+
+	if (1 == sscanf(s, "disk%g", &p))
+	{
+		int d = 2*ceil(2*fabs(p)) + 1;
+		fprintf(stderr, "disk of p = %g (d = %d)\n", p, d);
+		float *k = malloc(3 * d * d * sizeof*k);
+
+		// fill-in gauss kernel
+		int l = 0;
+		for (int j = 0; j < d; j++)
+		for (int i = 0; i < d; i++)
+		{
+			int x = i - d/2;
+			int y = j - d/2;
+			if (hypot(x, y) >= p) continue;
+			k[3*l + 0] = x;
+			k[3*l + 1] = y;
+			k[3*l + 2] = 1;
+			l += 1;
+		}
+		*n = l;
+		return k;
 	}
 
 	if (1 == sscanf(s, "gauss%g", &p))
 	{
 		int d = 2*ceil(2*fabs(p)) + 1; // TODO: add this as an option?
-		fprintf(stderr, "gaussian of σ = %g (d = %d)\n", fabs(p), d);
-		float *kappa = malloc(3 * d * d * sizeof*kappa);
+		fprintf(stderr, "gaussian of σ = %g (d = %d)\n", p, d);
+		float *k = malloc(3 * d * d * sizeof*k);
 
-		// fill-in gaussian kernel
+		// fill-in gauss kernel
 		int l = 0;
 		for (int j = 0; j < d; j++)
 		for (int i = 0; i < d; i++)
@@ -110,20 +136,43 @@ static float *build_kernel_from_string(char *s, int *n)
 			int x = i - d/2;
 			int y = j - d/2;
 			if (hypot(x, y) > d/2.0) continue;
-			kappa[3*l + 0] = x;
-			kappa[3*l + 1] = y;
-			kappa[3*l + 2] = exp(-(x*x + y*y)/(2*p*p));
+			k[3*l + 0] = x;
+			k[3*l + 1] = y;
+			k[3*l + 2] = exp(-(x*x + y*y)/(2*p*p));
 			l += 1;
 		}
 		*n = l;
-		return kappa;
+		return k;
+	}
+
+	if (1 == sscanf(s, "laplace%g", &p))
+	{
+		int d = 2*ceil(3*fabs(p)) + 1;
+		fprintf(stderr, "laplacian of σ = %g (d = %d)\n", p, d);
+		float *k = malloc(3 * d * d * sizeof*k);
+
+		// fill-in laplace kernel
+		int l = 0;
+		for (int j = 0; j < d; j++)
+		for (int i = 0; i < d; i++)
+		{
+			int x = i - d/2;
+			int y = j - d/2;
+			if (hypot(x, y) > d/2.0) continue;
+			k[3*l + 0] = x;
+			k[3*l + 1] = y;
+			k[3*l + 2] = exp(-hypot(x, y)/p);
+			l += 1;
+		}
+		*n = l;
+		return k;
 	}
 
 	if (1 == sscanf(s, "cauchy%g", &p))
 	{
 		int d = 2*ceil(16*sqrt(p)) + 1;
-		fprintf(stderr, "cauchy of σ = %g (n = %d)\n", fabs(p), d);
-		float *kappa = malloc(3 * d * d * sizeof*kappa);
+		fprintf(stderr, "cauchy of σ = %g (d = %d)\n", p, d);
+		float *k = malloc(3 * d * d * sizeof*k);
 
 		// fill-in cauchy kernel
 		int l = 0;
@@ -133,60 +182,39 @@ static float *build_kernel_from_string(char *s, int *n)
 			int x = i - d/2;
 			int y = j - d/2;
 			if (hypot(x, y) > d/2.0) continue;
-			kappa[3*l + 0] = x;
-			kappa[3*l + 1] = y;
-			kappa[3*l + 2] = p/(p + pow(hypot(i-n/2, j-n/2),2) );
+			k[3*l + 0] = x;
+			k[3*l + 1] = y;
+			k[3*l + 2] = p/(p + pow(hypot(x, y),2) );
 			l += 1;
 		}
+		*n = l;
+		return k;
 	}
 
 	if (1 == sscanf(s, "landc%g", &p)) // cut land (parameter=discrete size)
 	{
 		int d = 2*ceil(16*sqrt(p)) + 1;
-		fprintf(stderr, "cauchy of σ = %g (n = %d)\n", fabs(p), d);
-		float *kappa = malloc(3 * d * d * sizeof*kappa);
+		fprintf(stderr, "land of σ = %g (d = %d)\n", p, d);
+		float *k = malloc(3 * d * d * sizeof*k);
 
-		// fill-in cauchy kernel
+		// fill-in land kernel
 		int l = 0;
-		for (int j = 0; j < n; j++)
-		for (int i = 0; i < n; i++)
+		for (int j = 0; j < d; j++)
+		for (int i = 0; i < d; i++)
 		{
 			int x = i - d/2;
 			int y = j - d/2;
 			if (hypot(x, y) > d/2.0) continue;
-			kappa[3*l + 0] = x;
-			kappa[3*l + 1] = y;
-			kappa[3*l + 2] = p/(p + pow(hypot(i-d/2, j-d/2),2) );
+			k[3*l + 0] = x;
+			k[3*l + 1] = y;
+			k[3*l + 2] = 1/hypot(x, y); // inf at center
 			l += 1;
 		}
-	}
-
-	if (1 == sscanf(s, "landc%g", &p)) // cut land (parameter=discrete size)
-	{
-		//int n = 2*ceil(p) + 1;
-		int n = land_truncation_for_sigma(p);
-		fprintf(stderr, "land of p = %g (n = %d)\n", fabs(p), n);
-		*w = *h = n;
-		float *k = malloc(n * n * sizeof*k);
-
-		// fill-in land kernel
-		for (int j = 0; j < n; j++)
-		for (int i = 0; i < n; i++)
-			k[n*j + i] = 1/hypot(i-n/2, j-n/2); // inf at center
-
-		// set central pixel to 0 (cf. article)
-		k[n*(n/2) + n/2] = 0;
-
-		// normalize so that the sum of k is 1
-		float K = 0;
-		for (int i = 0; i < n*n; i++)
-			K += k[i];
-		for (int i = 0; i < n*n; i++)
-			k[i] /= K;
+		*n = l;
 		return k;
 	}
 
-	exit(fprintf(stderr, "unrecognized kernel string \"%s\"\n"));
+	exit(fprintf(stderr, "unrecognized kernel string \"%s\"\n", s));
 }
 
 static float *build_kernel_from_string_old(char *s, int *w, int *h)
@@ -546,10 +574,14 @@ char *help = ""
 "\n"
 "Kernels:\n"
 // TODO: de-couple kernel type and kernel size in two separate optoins
-" squareN     square of size (2N+1) x (2N+1)\n"
-" diskR       discrete disk of radius R\n"
-" gaussS      gaussian kernel of sigma S\n"
-" file.npy    read the kernel weights from an image file\n"
+" actualsquareN  discrete square of size N x N\n"
+" diskR          discrete disk of radius R\n"
+" squareX        square of size (2N+1) x (2N+1)\n"
+" gaussX         gaussian kernel of sigma S\n"
+" cauchyX        cauchy kernel of sigma S\n"
+" laplaceX       laplace kernel of sigma S\n"
+" landcX         truncated land kernel of sigma S\n"
+" file.npy       read the kernel weights from an image file\n"
 "\n"
 "Heaviside:\n"
 " h           Discrete Heaviside function\n"
@@ -557,6 +589,14 @@ char *help = ""
 " logisticK   logistic function scaled by a factor K\n"
 " arctanK     arc tangent function scaled by a factor K\n"
 " erfK        error function scaled by a factor K\n"
+"\n"
+"Options:\n"
+" --help      print help message\n"
+" --version   print version number\n"
+" -ox X       horizontal offset X pixels the center of the kernel\n"
+" -oy X       vertical offset X pixels the center of the kernel\n"
+" -nn         do not normalize the kernel weights\n"
+" -kc         keep the center of the discrete kernel\n"
 "\n"
 "Examples:\n"
 " krt square7 h i.png o.tif   Classic rank transform of 49-pixel neighborhood\n"
