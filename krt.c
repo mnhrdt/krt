@@ -84,8 +84,24 @@ static float kernel_riesz(float x, float y, float p)
 
 typedef float (*kernel_t)(float,float,float);
 
-static float *fill_kernel_into_square(kernel_t f, float p, int d)
+// TODO: refactor the huge function below using this
+static float *fill_kernel_points(kernel_t f, float p, int d, int *n)
 {
+	float *k = malloc(3 * d * d * sizeof*k);
+	int l = 0;
+	for (int j = 0; j < d; j++)
+	for (int i = 0; i < d; i++)
+	{
+		int x = i - d/2;
+		int y = j - d/2;
+		if (hypot(x, y) > d/2.0) continue; // should this go here?
+		k[3*l + 0] = x;
+		k[3*l + 1] = y;
+		k[3*l + 2] = f(x, y, p);;
+		l += 1;
+	}
+	*n = l;
+	return k;
 }
 
 // input s: string describing the kernel, like "disk3"
