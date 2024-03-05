@@ -547,22 +547,6 @@ formula (21)~\cite{sapiro1997histogram}
 Ref. Bertalmío et al. "evidence for the intrinsically nonlinear nature of
 receptive fields in vision", formula (10) and next~\cite{bertalmio2020evidence}
 
-\subsection{Limit for a point kernel}
-
-curvature
-
-\[
-	\lim_{h\to0}
-	R_{\kappa_h}(u)(x)-u(x)
-	=h^qc_\kappa\mathrm{div}\left(\frac{\nabla u}{\left\|{\nabla
-	u}\right\|}\right)
-\]
-
-where
-\[
-	\kappa_h(x)=\frac{1}{h^2p}\kappa\left(\frac{x}{h^p}\right)
-\]
-
 
 \subsection{Bilateral}
 The accumulated histogram can be ``smoothed'' by using a smooth sigmoid instead
@@ -605,6 +589,76 @@ we can write formula~(\ref{eq:generalrank}) as
 	\label{fig:heavisides}
 \end{figure}
 
+
+\subsection{Limit for a point kernel}
+
+% Start with the case of a disk
+Case of a square kernel and a parabolic level line\\
+\includegraphics[width=0.6\linewidth]{f/pcurv.png}
+
+
+
+
+% check the term ``germ'' below
+Recall the following result: the ``germ'' of a blur is the laplacian.  Below
+we will see that the ``germ'' of the krt is the curvature of the level
+lines.
+
+\begin{definition}
+	An~\emph{isotropic kernel} is a function~$g:\mathbf{R}^2\to\mathbf{R}$
+	with the following properties:~$\int g=1$, $\int g(x)x\mathrm{d} x=0$,
+	$\int g(x)x\otimes x\mathrm{d} x=\sigma^2 I_2$ and
+	$\int \left|g(x)\right|\left\|x\right\|^3\mathrm{d} x<+\infty$.
+\end{definition}
+
+Notice that if~$g$ is an isotropic kernel, then the family of functions
+\[
+	g_h(x)=\frac1{h^2}g\left(\frac{x}{h}\right)
+\]
+is as well, for~$h>0$.
+
+\begin{proposition}[Laplacian approximation]
+	Let~$g$ be an isotropic kernel.
+	Then~$g_h-\delta$ gives a good approximation of the
+	Laplacian when~$h\to 0$.  More precisely, if~$u\in C^3(\mathbf{R}^2)$
+	is bounded and all its derivatives up to order 3 are bounded,
+	then
+	\[
+		\lim_{h\to 0}
+		\frac{g_h*u(x)-u(x)}{h^2}=\frac{\sigma^2}{2}\Delta u(x).
+	\]
+\end{proposition}
+
+The following two propositions characterize the local effect of applying the
+KRT with kernels~$g_h$.
+
+\begin{proposition}
+	Let~$g$ be a well-behaved kernel, and~$u$ a bounded function whose
+	level line is a smooth curve on a neighborhood of~$x$.  Then
+	\[
+		\lim_{h\to0} R_{g_h}(u)(x) = \frac12
+	\]
+	and
+	\[
+		\lim_{h\to0} \frac{R_{g_h}(u)(x)-\frac12}h =
+	\frac13\mathrm{curv}\left(u(x))\right)
+	\]
+
+\end{proposition}
+
+curvature
+
+\[
+	\lim_{h\to0}
+	R_{\kappa_h}(u)(x)-u(x)
+	=h^qc_\kappa\mathrm{div}\left(\frac{\nabla u}{\left\|{\nabla
+	u}\right\|}\right)
+\]
+
+where
+\[
+	\kappa_h(x)=\frac{1}{h^2p}\kappa\left(\frac{x}{h^p}\right)
+\]
 
 
 \section{Implementation}
