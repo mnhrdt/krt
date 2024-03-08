@@ -5,8 +5,10 @@ build:
 
 build: x_sq3.png x_sq10.png
 
-x_sq3.png  : x.png ; ./krt square3 $^ | qeasy 0 1 - $@
-x_sq10.png : x.png ; ./krt square10 $^ | qeasy 0 1 - $@
+#x_sq3.png  : x.png ; ./krt square3 $^ | qeasy 0 1 - $@
+#x_sq10.png : x.png ; ./krt square10 $^ | qeasy 0 1 - $@
+#x_sq40.png : x.png ; ./krt square40 $^ | qeasy 0 1 - $@
+x_sq%.png : x.png ; ./krt square$* $^ | qeasy 0 1 - $@
 
 
 #%SCRIPT ./krt square3 f/x.png  |qeasy 0 1 - f/x_sq3.png
