@@ -331,6 +331,10 @@ TODO: check whether we can write~$T(x,t)=\kappa(x)\sigma'(t)$.
 			anti-symmetric ($\sigma(-t)+\sigma(t)=\sigma(0)$),
 			and~$u$ is an affine function
 			then~$R_{\kappa,\sigma}=\sigma(0)\int\kappa$.
+		\item[\bf P5] If~$\varphi\in O(2)$ is a rigid motion
+			of~$\mathbf{R}^2$
+			then~$R_{\kappa,\sigma}\left(u\circ\varphi\right) =
+			\left(R_{\kappa,\sigma} u\right)\circ\varphi$.
 	\end{enumerate}
 \end{proposition}
 
@@ -730,6 +734,101 @@ KRT with kernels~$g_h$.
 \end{proof}
 Notice that if~$g$ is radial, then~$g_y(x,0)=0$ and the condition on the
 fourth moment is automatically satisfied.
+
+\clearpage
+Below, a version of the previous proposition for a general level line of
+the form~$Y=c(X)$.
+
+\begin{proposition}
+	Let~$u:\mathbf{R}^2\to\mathbf{R}$ such that the level
+	line~$u=u(0,0)$ is a function of
+	equation~$Y=c(X)$ with~$c(0)=c'(0)=0$.
+	Let~$g:\mathbf{R}^2\to\mathbf{R}$ be a symmetric, normalized,
+	centered kernel such that~$\int_{-\infty}^\infty x^2g(x,0)\mathrm{d}
+	x=\sigma^2<+\infty$ and~$\int_{-\infty}^\infty x^4g_y(x,0)\mathrm{d}
+	x=\gamma<+\infty$.  Then, if we
+	denote~$g_h(x,y)=\frac1{h^2}g(x/h,y/h)$,
+	\[
+		K_{g_h}(u)(0)=\frac12+\frac{c''(0)}2\sigma^2h^2+O(h^3)
+	\]
+\end{proposition}
+
+\begin{proof}
+	Let us write the definition of~$K_{g_h}(u)(0)$:
+	\[
+		K_{g_h}(u)(0)=
+		\int_{-\infty}^\infty\int_{-\infty}^{c(x)}
+		g_h(x,y)\ %
+		\mathrm{d}y
+		\mathrm{d}x
+	\]
+	\[
+		=
+		\int_{-\infty}^\infty\int_{-\infty}^{c(x)}
+		\frac1{h^2}g\left(\frac{x}{h},\frac{y}{h}\right)\ %
+		\mathrm{d}y
+		\mathrm{d}x
+	\]
+	\[
+		=
+		\int_{-\infty}^\infty\int_{-\infty}^{c\left(hx\right)}
+		g\left(x,y\right)\ %
+		\mathrm{d}y
+		\mathrm{d}x
+	\]
+	Now, this is a function of~$h$, let us call it~$f(h)$, that we can
+	develop by Taylor:~$f(h)=f(0)+f'(0)h+\frac12f''(0)h^2+\cdots$.
+	Notice that~$f(0)=\frac12$ by symmetry of~$g$.  Now
+	\[
+		f'(h)=
+		\int_{-\infty}^\infty xc'(hx)
+		\left[\vphantom{\int}g(x,y)\right]_{-\infty}^{c(hx)}
+		\ \mathrm{d}x
+		=
+		\int_{-\infty}^\infty xc'(hx)
+		g\left(x,c\left(hx\right)\right)
+		\ \mathrm{d}x
+	\]
+	thus
+	\[
+		f'(0)=0
+		%\int_{-\infty}^\infty \frac{\kappa x^2}2
+		%g(x,0)\ \mathrm{d}x
+		%=\frac{\kappa\sigma^2}2.
+	\]
+	Similarly
+	\[
+		f''(h)=
+		\int_{-\infty}^\infty
+		\left(
+			x^2c''(hx)g(x,c(hx))+\left(xc'(hx)\right)^2g_y(x,c(hx))
+		\right)
+		%f''(h)=
+		%\frac{\kappa}2
+		%\int_{-\infty}^\infty \frac{\kappa x^2}2
+		%\left[\vphantom{\int}g(x,y)\right]_{-\infty}^{\frac{\kappa hx^2}2}
+		\ \mathrm{d}x
+		%f''(0)=
+		%\frac{\kappa^2}4
+		%\int_{-\infty}^\infty x^4
+		%g_y(x,0)
+		%\ \mathrm{d}x
+		%<\gamma
+	\]
+	thus~$f''(0)=c''(0)\int x^2g(x,0)\mathrm{d}x$ and we can write
+	\[
+		K_{g_h}(u)(0)
+		=
+		\frac12
+		+
+		\frac{c''(0)\sigma^2}2h^2+\cdots
+	\]
+	to see that the remaining terms are~$O(h^3)$ we need to
+	compute~$f'''$ and bound it (possibly requiring further conditions
+	on~$c$).
+\end{proof}
+
+NOTE: compare this result with the previous one.
 
 %\clearpage
 %curvature
