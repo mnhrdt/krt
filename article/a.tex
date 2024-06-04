@@ -331,10 +331,21 @@ TODO: check whether we can write~$T(x,t)=\kappa(x)\sigma'(t)$.
 			anti-symmetric ($\sigma(-t)+\sigma(t)=\sigma(0)$),
 			and~$u$ is an affine function
 			then~$R_{\kappa,\sigma}=\sigma(0)\int\kappa$.
-		\item[\bf P5] If~$\varphi\in O(2)$ is a rigid motion
+		\item[\bf P5] If~$\varphi(x)=Ax+b$ is an affine map
 			of~$\mathbf{R}^2$
-			then~$R_{\kappa,\sigma}\left(u\circ\varphi\right) =
-			\left(R_{\kappa,\sigma} u\right)\circ\varphi$.
+			then\\
+			$\displaystyle
+			R_{\kappa,\sigma}\left(u\circ\varphi\right) =
+			R_{\frac1{|A|}\kappa\circ
+			A^{-1},\sigma}\left(u\right)\circ\varphi$.
+%		\item[\bf P5] If~$\tau$ is a translation
+%			of~$\mathbf{R}^2$
+%			then~$R_{\kappa,\sigma}\left(u\circ \tau\right) =
+%			\left(R_{\kappa,\sigma} u\right)\circ\tau$.
+%		\item[\bf P6] If~$\rho$ is a rotation
+%			of~$\mathbf{R}^2$
+%			then~$R_{\kappa,\sigma}\left(u\circ\rho\right) =
+%			\left(R_{\kappa\circ\rho,\sigma} u\right)\circ\rho$.
 	\end{enumerate}
 \end{proposition}
 
@@ -348,6 +359,12 @@ accordingly:~$R_{\kappa,\mathrm{sgn}}=2R_{\kappa,H}-\int\kappa$.  For
 normalized and symmetric kernels, the result will then take values in the
 range~$[-1,1]$, being~$0$ on flat zones or zones where the level lines are
 straight.
+
+Property~P5 says two things.  First, that the transform is covariant with
+translations~$b$ (this is the particular case when~$A$ is the identity
+matrix).  Second, that it is also covariant with linear maps~$A$, but the
+kernel~$\kappa$ must be rescaled accordingly.  This property is an immediate
+consequence of the change of variables formula.
 
 \begin{proposition}
 	When~$\sigma$ is the Heaviside step function, the kernel rank
