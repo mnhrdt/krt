@@ -5,6 +5,7 @@ C4. add a simple test (apart from the article compilation?)
 C5. fix interface help text
 C6. implementation by 3d convolution
 C7. implement otsu thresholding for post-processing of the krt
+C9. add fancier sigmas : H0 (to reproduce original RT), H1, relu, ...
 
 
 ARTICLE
