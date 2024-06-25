@@ -6,7 +6,7 @@ T=`mktemp -d /tmp/pdflatexfilter.XXXXXX`
 
 cat /dev/stdin | sed "s_PDFLATEXFILTERD_${T}_g" > $T/a.tex
 #pdflatex -shell-escape -interaction nonstopmode -output-directory=$T $T/a >$T/oo 2>$T/oe || cat $T/oo >&2
-latexmk -pdflatex="pdflatex -shell-escape -interaction nonstopmode -output-directory=$T" -outdir=$T -auxdir=$T $T/a >$T/oo 2>$T/oe || cat $T/oo >&2
+latexmk -pdf -pdflatex="pdflatex -shell-escape -interaction nonstopmode -output-directory=$T" -outdir=$T -auxdir=$T $T/a >$T/oo 2>$T/oe || cat $T/oo >&2
 cat $T/a.pdf
 
 rm -rf $T

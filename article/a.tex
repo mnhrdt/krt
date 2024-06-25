@@ -547,6 +547,54 @@ retinex is a particular case of this.
 
 Contrast-limited adaptive histogram equalization (!)
 
+\subsection{Bilateral filter}
+
+\begin{figure}[t]
+	\begin{center}
+		\includegraphics[width=0.7\linewidth]{f/bilateral-vs-krt.jpg}
+	\end{center}
+	\caption{\label{fig:bilateral-vs-krt}
+	Bilateral filter domain vs KRT domain.
+	}
+\end{figure}
+
+Using a similar notation as in our work, the bilateral
+filter~\cite{tomasi1998bilateral,durand2002fast,paris2009bilateral} is defined
+as
+\begin{equation}\label{eq:bilateral}
+\textsc{bil}_{\kappa,f}(u)(x) =
+\frac{\int u(y) \kappa(y-x) f\big(u(y)-u(x)\big) \mathrm{d} y}
+     {\int \kappa(y-x) f\big(u(y)-u(x)\big) \mathrm{d} y}
+\end{equation}
+where $\kappa$ is a spatial kernel and $f$ is a similarity function used to
+compare image gray levels.  In a typical case, both $\kappa$ and $f$ are
+Gaussian centered in zero.
+
+The are two particular cases of this filter that justifies its name.  First,
+when $f=1$, the result is the convolution of $u$ by $\kappa$, i.e. a local mean
+weighted by the kernel.  Second, when $\kappa=1$ the range filter is obtained,
+which produce a mean of similar gray levels globally allover the image.  The
+two operations combined produces a local mean of gray-levels.
+
+Formally, the denominator of Eq.~\ref{eq:bilateral} is similar to the kernel
+rank transform (with some minor differences in the order of the indexes) with
+the comparison function $\sigma$ replaced by the similarity function $f$.
+The difference in name is reflected in its definition and use.  The similarity
+function $f$ is typically symmetric with a maximal in zero, and going to
+zero at plus and minus infinity.  On the other hand, the comparison function
+$\sigma$ is typically monotonically increasing.  In both cases, the filtering
+can be interpreted as as 3D filtering in the spatial-gray-level domain (see
+section~\ref{sec:X}).
+
+Conceptually, the bilateral filter is a weighted local mean of the image in a
+domain defined as in figure~\ref{fig:bilateral-vs-krt}(left); the kernel rank
+transform is given by the integral of the kernel in a domain defined as in
+figure~\ref{fig:bilateral-vs-krt}(right).  In both cases the domain is defined
+by the level-line of the point, but in former case it is narrow region around
+the level-line (the points which have a \emph{similar} gray-level) while in the
+latter the domain it is the lower-level set.
+
+
 \subsection{Limit for a constant kernel}
 
 In the limit when~$\kappa$ is constant, the rank transform is the histogram

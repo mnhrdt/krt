@@ -10,7 +10,7 @@ C9. add fancier sigmas : H0 (to reproduce original RT), H1, relu, ...
 
 ARTICLE
 
-A0. find a better name for "gap" -> comparison function
+A0. find a better name for "gap" -> comparison function (cf. similarity function in bialteral filter)
 A2. maybe try other effects (chubb illusion, cornsweet illusion, ...)
 A3. run mach bands with noise
 A3'. run mach bands with smooth steps
@@ -29,7 +29,8 @@ sigmoid, renders it non-contrast invariant.  This must be discussed in the
 article, probably with an example.  This has neural ramifications because the
 heaviside is not, so to say, trainable, but the sigmoids are.
 A13. prove that the limit when the size of the kernel is zero is the curvature
-
+A14. link to mathematical morphology
+A15. explore non-standard kernels: asymmetric kernels, shifted kernels, non-normalized kernels...
 
 "contrast-invariance is a non-differentiable property"
 
