@@ -134,20 +134,28 @@ Let~$u:\mathbf{R}^2\to\mathbf{R}$ be a bounded grayscale image,
 $\kappa:\mathbf{R}^2\to\mathbf{R}$ be an integrable function
 and~$\sigma:\mathbf{R}\to\mathbf{R}$ a non-decreasing
 function.  The~\emph{kernel rank transform of~$u$ with kernel~$\kappa$ and
-step~$\sigma$} is the
-image~$R_{\kappa,\,\sigma}(u):\mathbf{R^2}\to\mathbf{R}$ defined by
+comparison function~$\sigma$} is the
+image~$\textsc{krt}_{\kappa,\,\sigma}(u):\mathbf{R^2}\to\mathbf{R}$ defined by
 \begin{equation}\label{eq:rtdef}
 %R_{\kappa}(u)(x) = \int\kappa(x-y)\mathbf{1}_{\left[u < u(x)\right]}(y)\mathrm{d}y
-	R_{\kappa,\,\sigma}(u)(x) = \int\kappa(y-x)\sigma\parens{u(x)-u(y)}\mathrm{d}y
+	%R_{\kappa,\,\sigma}(u)(x) = \int\kappa(y-x)\sigma\parens{u(x)-u(y)}\mathrm{d}y
+	\textsc{krt}_{\kappa,\,\sigma}(u)(x) = \int\kappa(x-y)\sigma\parens{u(x)-u(y)}\mathrm{d}y
 \end{equation}
 %by construction,~$R_\kappa(u)$ is an image that takes values in the
 %interval~$[0,1]$.
 \end{definition}
+
 In a typical setting, we will have~$\sigma=H$ and~$\kappa$ is non-negative of
 integral~$1$, in which
 case the~$R_{\kappa,\,\sigma}(u)$ takes values in the
 interval~$[0,1]$.
 %In the discrete case, this integral is readily replaced by a finite sum.
+
+% NOTE: explain that the KRT is well-defined for u,σ,κ satisfying the
+% conditions
+
+% NOTE: maybe add a comment aboud the y-x  =>  x-y  change from the previous
+% formula
 
 The rank transform can be interpreted as a local contrast equalization of
 of~$u$, where the concept of ``local'' is defined by the kernel~$\kappa$.
@@ -159,7 +167,7 @@ indicator function of a neighborhood, and~$\sigma$ is the Heaviside step
 function.  This is shown in figure~\ref{fig:figure1} for a circular
 neighborhood, where~$\kappa=\frac1{\pi r^2}\mathbf{1}_{B(r)}$.
 For a given image~$u$,
-the value of~$K_{\kappa,\sigma}(x)$ is then the proportion of the
+the value of~$\textsc{krt}_{\kappa,\sigma}(x)$ is then the proportion of the
 neighborhood of~$x$ where the values of~$u$ are larger than~$u(x)$ (the
 upper level set of~$u$ at level~$u(x)$ intersected with the neighborhood).
 
@@ -200,17 +208,18 @@ Definition~\ref{def:krt} can be adapted to the case of discrete
 images~$u:\mathbf{Z}^2\to\mathbf{R}$ by rewriting it in the measure
 space~$\mathbf{Z}^2$ instead of~$\mathbf{R}^2$.  This results in the
 following definition:
-%
+
 \begin{definition}\label{def:dkrt}
 Let~$u:\mathbf{Z}^2\to\mathbf{R}$ be a bounded image,
 $\kappa:\mathbf{Z}^2\to\mathbf{R}$ be a summable function
 and~$\sigma:\mathbf{R}\to\mathbf{R}$ a non-decreasing function.
 The~\emph{discrete kernel rank transform of~$u$ with kernel~$\kappa$
-and step~$\sigma$} is the
-image~$R_{\kappa,\,\sigma}(u):\mathbf{Z}^2\to\mathbf{R}$
+and comparison function~$\sigma$} is the
+image~$\textsc{krt}_{\kappa,\,\sigma}(u):\mathbf{Z}^2\to\mathbf{R}$
 defined by \begin{equation}\label{eq:rtdef}
 %R_{\kappa}(u)(x) = \int\kappa(x-y)\mathbf{1}_{\left[u < u(x)\right]}(y)\mathrm{d}y
-R_{\kappa,\,\sigma}(u)(x) = \sum_{y\in\mathbf{Z}^2}\kappa(y-x)\sigma\parens{u(x)-u(y)}
+%R_{\kappa,\,\sigma}(u)(x) = \sum_{y\in\mathbf{Z}^2}\kappa(y-x)\sigma\parens{u(x)-u(y)}
+	\textsc{krt}_{\kappa,\,\sigma}(u)(x) = \sum_{y\in\mathbf{Z}^2}\kappa(x-y)\sigma\parens{u(x)-u(y)}
 \end{equation}
 %by construction,~$R_\kappa(u)$ is an image that takes values in the
 %interval~$[0,1]$.
@@ -225,17 +234,17 @@ the following~$\kappa$ and~$\sigma$:
 	\qquad
 	\sigma(t)=\begin{cases}0&t\le0\\1&t>0\end{cases}
 \]
-where~$N_d(0)$ is a~$d\times d$ neighborhood of the origin.
+where~$N_d(0)$ is a symmetric~$d\times d$ neighborhood of the origin.
 
 The original definition is useful and practical, but it has a slightly
-disturbing asymmetry in its step function~$\sigma$.  While this asymmetri as
-a minor impact in practical cases, it is nonetheless very visible when
-computing the rank transform of synthetic images, or images with saturated
-regions.  Indeed, in locally constant parts of the image, the rank transform
-is zero.  Notice that this problem cannot be solved by changing the~$<$
-condition in the definition to~$\le$, in that case constant regions would
-get the value~$d^2-1$.
-(TODO: maybe point to some figure).
+disturbing asymmetry in its comparison function~$\sigma$.  While this
+asymmetry as a minor impact in practical cases, it is nonetheless very
+visible when computing the rank transform of synthetic images, or images
+with saturated regions.  Indeed, in locally constant parts of the image, the
+rank transform is zero.  Notice that this problem cannot be solved by
+changing the~$<$ condition in the definition to~$\le$, in that case constant
+regions would get the value~$d^2-1$.
+%(TODO: maybe point to some figure).
 
 Henceforth, when we talk about the classical rank transform we will mean the
 version with the symmetrical Heaviside~$H$ defined above.  With this choice,
@@ -245,20 +254,20 @@ constant patches get an intermediate value of~$1/2$.
 
 \subsection{Equivalent definitions}
 
-We can rewrite the definition above in terms of the heaviside step
-function~$H(x)=\mathbf{1}_{[0,+\infty[}(x)$:
-\begin{equation}
-R_\kappa(u)(x)=
-\int
-\kappa(x-y)
-H\left(u\left(x\right)-u\left(y\right)\right)
-\mathrm{d} y
-\end{equation}
+%We can rewrite the definition above in terms of the heaviside step
+%function~$H(x)=\mathbf{1}_{[0,+\infty[}(x)$:
+%\begin{equation}
+%R_\kappa(u)(x)=
+%\int
+%\kappa(x-y)
+%H\left(u\left(x\right)-u\left(y\right)\right)
+%\mathrm{d} y
+%\end{equation}
 
-This expression looks eerily similar to a convolution, but it isn't really.
+Definition~\ref{def:krt} looks formally similar to a convolution.
 
-In fact, it can be written as a convolution in~$(x,u)$ space.  We define the
-graph of an image~$u:\mathbf{R}^2\to\mathbf{R}$ as the
+In fact, it can be written as a convolution in~$(x,u)$ space.
+The epigraph of an image~$u:\mathbf{R}^2\to\mathbf{R}$ is the
 function~$U:\mathbf{R}^2\times\mathbf{R}\to\mathbf{R}$ defined by
 \[
 	U(x,t) = \begin{cases}
@@ -293,7 +302,7 @@ And now the convolution of~$U$ and~$K$ is
 \]
 Thus
 \begin{equation}\label{eq:convolution1}
-	R_\kappa(u)(x)=(U*K)(x,u(x))
+	\textsc{krt}_\kappa(u)(x)=(U*K)(x,u(x))
 \end{equation}
 
 Example in dimension 1 and k=interval.  Add THE FIGURE
@@ -304,7 +313,7 @@ Example in dimension 2 (image)
 Let~$U(x,t)$ be the epigraph of~$u$ as above, and let~$T=K*S$,
 where~$K(x,t)=\kappa(x)\delta(t)$ and~$S(x,t)=\delta(x)\sigma'(t)$.  Then
 \[
-	R_{\kappa,\sigma}(u)(x) = (U*T)(x,u(x))
+	\textsc{krt}_{\kappa,\sigma}(u)(x) = (U*T)(x,u(x))
 \]
 \end{proposition}
 In other words, all versions of the rank filter are obtained by
@@ -317,26 +326,26 @@ TODO: check whether we can write~$T(x,t)=\kappa(x)\sigma'(t)$.
 
 %When~$\sigma$ is the Heaviside step function, we write simply~$R_\kappa$.
 
-\begin{proposition}[structural properties of~$R_{\kappa,\sigma}$]
+\begin{proposition}[structural properties of~$\textsc{krt}_{\kappa,\sigma}$]
 	The kernel rank transform operator has the following properties:
 	\begin{enumerate}
 		\item[\bf P1] If~$u$ is a constant image,
-			then~$R_{\kappa,\sigma}(u)=\sigma(0)\int\kappa$.
+			then~$\textsc{krt}_{\kappa,\sigma}(u)=\sigma(0)\int\kappa$.
 		\item[\bf P2] Scaling and shifting of~$\sigma$:
-			$R_{\kappa,a\sigma+b}=aR_{\kappa,\sigma}+b\int\kappa$.
+			$\textsc{krt}_{\kappa,a\sigma+b}=a\textsc{krt}_{\kappa,\sigma}+b\int\kappa$.
 		\item[\bf P3] Symmetry with respect to inversion: if~$\sigma$
 			is an odd function
-			then~$R_{\kappa,\sigma}(-u)=-R_{\kappa,\sigma}(u)$.
+			then~$\textsc{krt}_{\kappa,\sigma}(-u)=-\textsc{krt}_{\kappa,\sigma}(u)$.
 		\item[\bf P4] If~$\kappa$ is symmetric and~$\sigma$ is
 			anti-symmetric ($\sigma(-t)+\sigma(t)=\sigma(0)$),
 			and~$u$ is an affine function
-			then~$R_{\kappa,\sigma}=\sigma(0)\int\kappa$.
+			then~$\textsc{krt}_{\kappa,\sigma}=\sigma(0)\int\kappa$.
 		\item[\bf P5] If~$\varphi(x)=Ax+b$ is an affine map
 			of~$\mathbf{R}^2$
 			then\\
 			$\displaystyle
-			R_{\kappa,\sigma}\left(u\circ\varphi\right) =
-			R_{\frac1{|A|}\kappa\circ
+			\textsc{krt}_{\kappa,\sigma}\left(u\circ\varphi\right) =
+			\textsc{krt}_{\frac1{|A|}\kappa\circ
 			A^{-1},\sigma}\left(u\right)\circ\varphi$.
 %		\item[\bf P5] If~$\tau$ is a translation
 %			of~$\mathbf{R}^2$
@@ -355,7 +364,7 @@ defined by the support of~$\kappa$.
 Property~P2 says that the scaling of the function~$\sigma$ is an
 essentially arbitrary convention: for example, we can replace the Heaviside
 with a sign function and the results vary
-accordingly:~$R_{\kappa,\mathrm{sgn}}=2R_{\kappa,H}-\int\kappa$.  For
+accordingly:~$\textsc{krt}_{\kappa,\mathrm{sgn}}=2\textsc{krt}_{\kappa,H}-\int\kappa$.  For
 normalized and symmetric kernels, the result will then take values in the
 range~$[-1,1]$, being~$0$ on flat zones or zones where the level lines are
 straight.
@@ -372,14 +381,15 @@ consequence of the change of variables formula.
 	\begin{enumerate}
 		\item[\bf H1] Invariance under arbitrary contrast changes: for
 			any increasing injective function~$g$, we
-			have~$R_{\kappa,H}(g\circ u)=R_{\kappa,H}(u)$.
+			have~$\textsc{krt}_{\kappa,H}(g\circ
+			u)=\textsc{krt}_{\kappa,H}(u)$.
 		\item[\bf H2] If~$x$ is the site of the strict global
 			maximum of~$u$,
-			then~$R_{\kappa,H}(u)(x)=\int\kappa$.  This is also
+			then~$\textsc{krt}_{\kappa,H}(u)(x)=\int\kappa$.  This is also
 			true if~$x$ is a strict local maximum on a
 			neighborhood defined by the support of~$\kappa$.
 		\item[\bf H3] If~$x$ is the site of the strict global
-			minimum of~$u$, then~$R_{\kappa,H}(u)(x)=0$.  This
+			minimum of~$u$, then~$\textsc{krt}_{\kappa,H}(u)(x)=0$.  This
 			is also true if~$x$ is a strict local minimum on a
 			neighborhood defined by the support of~$\kappa$.
 	\end{enumerate}
@@ -454,20 +464,20 @@ only when~$\sigma(t_1-t_2)$ is close to~$1$.
 
 For a smooth~$\sigma$ we can explicitly compute the variation of
 \begin{equation}
-	R_{\kappa,\,\sigma}(u)(x) = \int\kappa(y-x)\sigma\parens{u(x)-u(y)}\mathrm{d}y
+	\textsc{krt}_{\kappa,\,\sigma}(u)(x) = \int\kappa(y-x)\sigma\parens{u(x)-u(y)}\mathrm{d}y
 \end{equation}
 along the direction~$v$ as
 \begin{equation}\label{eq:dkrt}
-	\frac{\delta R_{\kappa,\,\sigma}(u)(x)}{\delta v}
+	\frac{\delta \textsc{krt}_{\kappa,\,\sigma}(u)(x)}{\delta v}
 	= \int\kappa(y-x)\sigma'\parens{u(x)-u(y)}\parens{v(x)-v(y)}\mathrm{d}y
 \end{equation}
 where
 \begin{equation}
-	\frac{\delta R_{\kappa,\,\sigma}(u)(x)}{\delta v}
+	\frac{\delta \textsc{krt}_{\kappa,\,\sigma}(u)(x)}{\delta v}
 	=
 	\lim_{\varepsilon\to0}
-	\frac{R_{\kappa,\,\sigma}(u+\varepsilon v)(x)
-	     -R_{\kappa,\,\sigma}(u)(x)}{\varepsilon}.
+	\frac{\textsc{krt}_{\kappa,\,\sigma}(u+\varepsilon v)(x)
+	-\textsc{krt}_{\kappa,\,\sigma}(u)(x)}{\varepsilon}.
 \end{equation}
 This derivative measures how the kernel rank transform of~$u$ changes
 when the image~$u$ is slightly deformed on the direction of an image~$v$.
@@ -476,8 +486,8 @@ which information can be backpropagated.
 
 Formula~\ref{eq:dkrt} can be interpreted easily when~$v$ is a small Gaussian
 centered around a point~$z$.  In that case, $\frac{\delta
-R_{\kappa,\,\sigma}(u)(x)}{\delta v}$ measures how
-does~$R_{\kappa\,\sigma}u(x)$ changes when~$u(z)$ changes.
+\textsc{krt}_{\kappa,\,\sigma}(u)(x)}{\delta v}$ measures how
+does~$\textsc{krt}_{\kappa\,\sigma}u(x)$ changes when~$u(z)$ changes.
 We distinguish two cases, depending on whether~$z$ is close to~$x$ or not.
 When~$z$ is very far from~$x$, the term~$v(x)-v(y)$ is a Gaussian centered
 around~$z$, and the term~$\kappa(y-x)$ is centered around~$x$, thus their
@@ -510,7 +520,7 @@ Visualization: gray-scale, signed
 
 \subsection{Iterated filtering}
 
-The kernel rank transform $R_\sigma$ is an operator that transforms images into images of the same size.
+The kernel rank transform $\textsc{krt}_\sigma$ is an operator that transforms images into images of the same size.
 What happens when we compute iterates of this operator?   Is it idempotent?  Is it a semigroup?  Do the iterates explose? (unlikely since they are always images with values on the unit interval).
 
 Some experimental observations with a Gaussian kernel of size
@@ -518,13 +528,16 @@ Some experimental observations with a Gaussian kernel of size
 
 The operator is not idempotent (show experiments with a synthetic and a small real image).
 
-The operator is not a semigroup on the parameter $\sigma$.  We built a list of a few hundred images $R_\sigma(u)$ with finely varying $\sigma$, and we compared them to $R_6(R_6(u))$.  They are all very different, the closet one being about $\sigma=4.4$.
+The operator is not a semigroup on the parameter $\sigma$.  We built a list
+of a few hundred images $\textsc{krt}_\sigma(u)$ with finely varying
+$\sigma$, and we compared them to $\textsc{krt}(\textsc{krt}_6(u))$.  They are all very different, the closet one being about $\sigma=4.4$.
 
-The iterates $R_6^n(u)$ seem to converge to a fixed point.  The fixed point does not look like any $R_\sigma(u)$, the closest one being for~$\sigma=5.4$.
+The iterates $\textsc{krt}^n(u)$ seem to converge to a fixed point.  The
+fixed point does not look like any $\textsc{krt}_\sigma(u)$, the closest one being for~$\sigma=5.4$.
 
-Apparently, we can define a limit operator~$R^\infty_\sigma$ by
+Apparently, we can define a limit operator~$\textsc{krt}^\infty_\sigma$ by
 \[
-R^\infty_\sigma(u) := \lim_{n\to\infty}R^n_\sigma(u)
+	\textsc{krt}^\infty_\sigma(u) := \lim_{n\to\infty}\textsc{krt}^n_\sigma(u)
 \]
 We do not know whether these limit operators are the kernel rank transdform for a different kernel.   If that was the case, the krt of that kernel  would be idempotent.   
 
@@ -617,7 +630,11 @@ Ref. Bertalmío et al. "evidence for the intrinsically nonlinear nature of
 receptive fields in vision", formula (10) and next~\cite{bertalmio2020evidence}
 
 
-\subsection{Bilateral}
+\subsection{Bilateral interpretation}
+
+NOTE: the piece of text below concerns the justification of the krt
+definition.  It may be removed 
+
 The accumulated histogram can be ``smoothed'' by using a smooth sigmoid instead
 of the discontinuous indicator function.  For example, let~$\sigma$ be a step
 function centered at~$0$, we can define the~$\sigma$-smoothed accumulated
@@ -627,10 +644,10 @@ H_\sigma(\lambda)=\int\sigma(u(x)-\lambda)\mathrm{d}x
 \]
 Thus, a more general version of the definition for the rank transform is
 \begin{equation}\label{eq:generalrank}
-R_{\kappa,\sigma}(u)(x)=\int \kappa(x-y)\sigma(u(x)-u(y))\mathrm{d}y
+	\textsc{krt}_{\kappa,\sigma}(u)(x)=\int \kappa(x-y)\sigma(u(x)-u(y))\mathrm{d}y
 \end{equation}
 in the limit when~$\sigma$ is the heaviside step function we recover the
-original definition~$R_\sigma(u)$.
+original definition~$\textsc{krt}_\sigma(u)$.
 
 Notice that the convolution formalism given in
 equation~(\ref{eq:convolution1}) puts the~$\sigma$ and~$\kappa$ smoothings
@@ -640,7 +657,7 @@ on an equal footing.  Indeed, by defining
 \]
 we can write formula~(\ref{eq:generalrank}) as
 \begin{equation}\label{eq:convolution2}
-	R_{\kappa,\sigma}(u)(x)=(U*K_\sigma)(x,u(x)).
+	\textsc{krt}_{\kappa,\sigma}(u)(x)=(U*K_\sigma)(x,u(x)).
 \end{equation}
 
 %SCRIPT gnuplot > f/plot_heavisides.png <<EOF
@@ -705,11 +722,11 @@ KRT with kernels~$g_h$.
 	Let~$g$ be a well-behaved kernel, and~$u$ a bounded function whose
 	level line is a smooth curve on a neighborhood of~$x$.  Then
 	\[
-		\lim_{h\to0} R_{g_h}(u)(x) = \frac12
+		\lim_{h\to0} \textsc{krt}_{g_h}(u)(x) = \frac12
 	\]
 	and
 	\[
-		\lim_{h\to0} \frac{R_{g_h}(u)(x)-\frac12}h =
+		\lim_{h\to0} \frac{\textsc{krt}_{g_h}(u)(x)-\frac12}h =
 	\frac{\gamma}{2}\mathrm{curv}\left(u(x))\right)
 	\]
 \end{proposition}
@@ -720,7 +737,7 @@ KRT with kernels~$g_h$.
 	Let~$s:\mathbf{R}\to\mathbf{R}$ be a smooth, monotonic step function
 	Then
 	\[
-		R_{g_h,s}(u)(x) = s(0) + \frac{s'(0)\sigma^2}2\Delta u(x)h^2
+		\textsc{krt}_{g_h,s}(u)(x) = s(0) + \frac{s'(0)\sigma^2}2\Delta u(x)h^2
 		+O(h^3)
 	\]
 \end{proposition}
@@ -736,7 +753,7 @@ KRT with kernels~$g_h$.
 	x=\sigma^2<+\infty$ and~$\int_{-\infty}^\infty x^4g_y(x,0)\mathrm{d}
 	x=\gamma<+\infty$.  Then
 	\[
-		K_{g_h}(u)(0)=\frac12+\frac{\kappa}2\sigma^2h+O(h^2)
+		\textsc{krt}_{g_h}(u)(0)=\frac12+\frac{\kappa}2\sigma^2h+O(h^2)
 	\]
 \end{proposition}
 
@@ -744,9 +761,9 @@ KRT with kernels~$g_h$.
 	(WARNING: the following proof is wrong, the change of coordinates of
 	y is missing a~$\sqrt{h}$ in the limit of integration)
 
-	Let us write the definition of~$K_{g_h}(u)(0)$:
+	Let us write the definition of~$\textsc{krt}_{g_h}(u)(0)$:
 	\[
-		K_{g_h}(u)(0)=
+		\textsc{krt}_{g_h}(u)(0)=
 		\int_{-\infty}^\infty\int_{-\infty}^{\frac{\kappa}2x^2}
 		g_h(x,y)\ %
 		\mathrm{d}y
@@ -802,7 +819,7 @@ KRT with kernels~$g_h$.
 	\]
 	Then we can write
 	\[
-		K_{g_h}(u)(0)
+		\textsc{krt}_{g_h}(u)(0)
 		=
 		\frac12
 		+
@@ -827,14 +844,14 @@ the form~$Y=c(X)$.
 	x<+\infty$.  Then, if we
 	denote~$g_h(x,y)=\frac1{h^2}g(x/h,y/h)$,
 	\[
-		K_{g_h}(u)(0)=\frac12+\frac{c''(0)}2\sigma^2h+O(h^2)
+		\textsc{krt}_{g_h}(u)(0)=\frac12+\frac{c''(0)}2\sigma^2h+O(h^2)
 	\]
 \end{proposition}
 
 \begin{proof}
-	Let us write the definition of~$K_{g_h}(u)(0)$:
+	Let us write the definition of~$\textsc{krt}_{g_h}(u)(0)$:
 	\[
-		K_{g_h}(u)(0)=
+		\textsc{krt}_{g_h}(u)(0)=
 		\int_{-\infty}^\infty\int_{-\infty}^{c(x)}
 		g_h(x,y)\ %
 		\mathrm{d}y
@@ -895,7 +912,7 @@ the form~$Y=c(X)$.
 	finite moments.  Then, if we
 	denote~$g_h(x,y)=\frac{1}{h^2}(x/h,y/h)$,
 	\[
-		K_{g_h}(u)(x)=\frac12+\kappa(u,x)\gamma(g)h+O(h^2)
+		\textsc{krt}_{g_h}(u)(x)=\frac12+\kappa(u,x)\gamma(g)h+O(h^2)
 	\]
 	where~$\gamma(g)=\int_{\mathbf{R}^2}\sqrt{x^2+y^2}g(x,y)dxdy$ and
 	$\kappa(u,x)=\mathrm{curv}(u)(x)=\mathrm{div}\left(\frac{\nabla
@@ -907,7 +924,7 @@ the form~$Y=c(X)$.
 	see that we can replace the effect of an arbitrary integrable
 	kernel~$g$ by a finite support kernel~$g^M=\mathbf{1}_{B_M(0)}g$.
 	Thus, given~$u$ and~$x$, $\forall\epsilon>0\exists M>0$ such
-	that~$\left|K_{g^M}(u)(x)-K_g(u)(x)\right|<\epsilon$.  (This follows
+	that~$\left|\textsc{krt}_{g^M}(u)(x)-\textsc{krt}_(u)(x)\right|<\epsilon$.  (This follows
 	by writing the definition of the KRT and using the integrability
 	of~$g$).
 
