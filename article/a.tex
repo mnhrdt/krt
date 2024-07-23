@@ -103,7 +103,7 @@ lower level set of~$u$ at level~$u(x)$.  Equivalently,
 \begin{equation}\label{eq:rtcont}
 	R(u)(x) = \int_{N(x)}H(u(x)-u(y))\mathrm{d}y
 \end{equation}
-where~$H$ is the (symmetric) Heaviside step function
+where~$H$ is the (balanced) Heaviside step function
 \begin{equation}\label{eq:heaviside}
 	H(t)=\begin{cases}
 		0,&t< 0\\
@@ -332,7 +332,7 @@ TODO: check whether we can write~$T(x,t)=\kappa(x)\sigma'(t)$.
 		\item[\bf P1] If~$u$ is a constant image,
 			then~$\textsc{krt}_{\kappa,\sigma}(u)=\sigma(0)\int\kappa$.
 		\item[\bf P2] Scaling and shifting of~$\sigma$:
-			$\textsc{krt}_{\kappa,a\sigma+b}=a\textsc{krt}_{\kappa,\sigma}+b\int\kappa$.
+			$\textsc{krt}_{\kappa,a\sigma+b}=a\,\textsc{krt}_{\kappa,\sigma}+b\int\kappa$.
 		\item[\bf P3] Symmetry with respect to inversion: if~$\sigma$
 			is an odd function
 			then~$\textsc{krt}_{\kappa,\sigma}(-u)=-\textsc{krt}_{\kappa,\sigma}(u)$.
@@ -345,8 +345,9 @@ TODO: check whether we can write~$T(x,t)=\kappa(x)\sigma'(t)$.
 			then\\
 			$\displaystyle
 			\textsc{krt}_{\kappa,\sigma}\left(u\circ\varphi\right) =
-			\textsc{krt}_{\frac1{|A|}\kappa\circ
-			A^{-1},\sigma}\left(u\right)\circ\varphi$.
+			%\textsc{krt}_{\frac1{|A|}\kappa\circ A^{-1},\sigma}\left(u\right)\circ\varphi$.
+			\textsc{krt}_{\tilde\kappa,\sigma}\left(u\right)\circ\varphi$,
+			where~$\tilde\kappa=\frac1{|A|}\kappa\circ A^{-1}$.
 %		\item[\bf P5] If~$\tau$ is a translation
 %			of~$\mathbf{R}^2$
 %			then~$R_{\kappa,\sigma}\left(u\circ \tau\right) =
@@ -361,13 +362,13 @@ TODO: check whether we can write~$T(x,t)=\kappa(x)\sigma'(t)$.
 Properties P1 and P4 also hold locally with respect to~$u$, where locality is
 defined by the support of~$\kappa$.
 
-Property~P2 says that the scaling of the function~$\sigma$ is an
-essentially arbitrary convention: for example, we can replace the Heaviside
-with a sign function and the results vary
-accordingly:~$\textsc{krt}_{\kappa,\mathrm{sgn}}=2\textsc{krt}_{\kappa,H}-\int\kappa$.  For
-normalized and symmetric kernels, the result will then take values in the
-range~$[-1,1]$, being~$0$ on flat zones or zones where the level lines are
-straight.
+Property~P2 says that the scaling of the function~$\sigma$ is an essentially
+arbitrary convention: for example, we can replace the Heaviside with a sign
+function and the results vary
+accordingly:~$\textsc{krt}_{\kappa,\mathrm{sgn}}=2\,\textsc{krt}_{\kappa,H}-\int\kappa$.
+For normalized and symmetric kernels, the result will then take values in
+the range~$[-1,1]$, being~$0$ on flat zones or zones where the level lines
+are straight.
 
 Property~P5 says two things.  First, that the transform is covariant with
 translations~$b$ (this is the particular case when~$A$ is the identity
@@ -394,6 +395,10 @@ consequence of the change of variables formula.
 			neighborhood defined by the support of~$\kappa$.
 	\end{enumerate}
 \end{proposition}
+
+Note: all the properties above except P5 are valid for both the continuous
+and the discrete versions of the KRT (definitions~\ref{def:krt}
+and~\ref{def:dkrt}).  Property~P5 makes sense only in the continuous case.
 
 
 %Fundamental property: invariance under arbitrary contrast changes (without
@@ -691,9 +696,10 @@ we will see that the ``germ'' of the krt is the curvature of the level
 lines.
 
 \begin{definition}
-	A~\emph{laplacian-consistent} is a function~$g:\mathbf{R}^2\to\mathbf{R}$
-	with the following properties:~$\int g=1$, $\int g(x)x\mathrm{d} x=0$,
-	$\int g(x)x\otimes x\mathrm{d} x=\sigma^2 I_2$ and
+	A~\emph{laplacian-consistent kernel of size~$\rho>0$} is a
+	function~$g:\mathbf{R}^2\to\mathbf{R}$ with the following
+	properties:~$\int g=1$, $\int g(x)x\mathrm{d} x=0$,
+	$\int g(x)x\otimes x\mathrm{d} x=\rho^2 I_2$ and
 	$\int \left|g(x)\right|\left\|x\right\|^3\mathrm{d} x<+\infty$.
 \end{definition}
 
@@ -710,13 +716,18 @@ is as well, for~$h>0$.
 	is bounded and all its derivatives up to order 3 are bounded,
 	then
 	\[
-		\lim_{h\to 0}
-		\frac{g_h*u(x)-u(x)}{h^2}=\frac{\sigma^2}{2}\Delta u(x).
+		%\lim_{h\to 0}
+		%\frac{g_h*u(x)-u(x)}{h^2}=\frac{\rho^2}{2}\Delta u(x).
+		g_h*u(x)=u(x)+\frac{\rho^2}{2}\Delta u(x) h^2 + O(h^3).
 	\]
 \end{proposition}
 
 The following two propositions characterize the local effect of applying the
 KRT with kernels~$g_h$.
+
+% NOTE: normalize the meaning of h in the propositions below (proposition 7
+% uses a different scaling, not according to that after the definition of
+% laplacina consistency.
 
 \begin{proposition}[Local effect of KRT with Heaviside step]
 	Let~$g$ be a well-behaved kernel, and~$u$ a bounded function whose
@@ -726,8 +737,11 @@ KRT with kernels~$g_h$.
 	\]
 	and
 	\[
-		\lim_{h\to0} \frac{\textsc{krt}_{g_h}(u)(x)-\frac12}h =
-	\frac{\gamma}{2}\mathrm{curv}\left(u(x))\right)
+		%\lim_{h\to0}
+		%\frac{\textsc{krt}_{g_h}(u)(x)-\frac12}h =
+		%\frac{\gamma}{2}\mathrm{curv}\left(u(x))\right)
+		\textsc{krt}_{g_h,H}(u)(x) = \frac12 +
+	\frac{\gamma}{2}\mathrm{curv}\left(u(x)\right)h + O(h^2)
 	\]
 \end{proposition}
 
@@ -753,7 +767,7 @@ KRT with kernels~$g_h$.
 	x=\sigma^2<+\infty$ and~$\int_{-\infty}^\infty x^4g_y(x,0)\mathrm{d}
 	x=\gamma<+\infty$.  Then
 	\[
-		\textsc{krt}_{g_h}(u)(0)=\frac12+\frac{\kappa}2\sigma^2h+O(h^2)
+		\textsc{krt}_{g_h,H}(u)(0)=\frac12+\frac{\kappa}2\sigma^2h+O(h^2)
 	\]
 \end{proposition}
 
@@ -761,9 +775,9 @@ KRT with kernels~$g_h$.
 	(WARNING: the following proof is wrong, the change of coordinates of
 	y is missing a~$\sqrt{h}$ in the limit of integration)
 
-	Let us write the definition of~$\textsc{krt}_{g_h}(u)(0)$:
+	Let us write the definition of~$\textsc{krt}_{g_h,H}(u)(0)$:
 	\[
-		\textsc{krt}_{g_h}(u)(0)=
+		\textsc{krt}_{g_h,H}(u)(0)=
 		\int_{-\infty}^\infty\int_{-\infty}^{\frac{\kappa}2x^2}
 		g_h(x,y)\ %
 		\mathrm{d}y
@@ -819,7 +833,7 @@ KRT with kernels~$g_h$.
 	\]
 	Then we can write
 	\[
-		\textsc{krt}_{g_h}(u)(0)
+		\textsc{krt}_{g_h,H}(u)(0)
 		=
 		\frac12
 		+
@@ -844,14 +858,14 @@ the form~$Y=c(X)$.
 	x<+\infty$.  Then, if we
 	denote~$g_h(x,y)=\frac1{h^2}g(x/h,y/h)$,
 	\[
-		\textsc{krt}_{g_h}(u)(0)=\frac12+\frac{c''(0)}2\sigma^2h+O(h^2)
+		\textsc{krt}_{g_h,H}(u)(0)=\frac12+\frac{c''(0)}2\sigma^2h+O(h^2)
 	\]
 \end{proposition}
 
 \begin{proof}
-	Let us write the definition of~$\textsc{krt}_{g_h}(u)(0)$:
+	Let us write the definition of~$\textsc{krt}_{g_h,H}(u)(0)$:
 	\[
-		\textsc{krt}_{g_h}(u)(0)=
+		\textsc{krt}_{g_h,H}(u)(0)=
 		\int_{-\infty}^\infty\int_{-\infty}^{c(x)}
 		g_h(x,y)\ %
 		\mathrm{d}y
@@ -912,7 +926,7 @@ the form~$Y=c(X)$.
 	finite moments.  Then, if we
 	denote~$g_h(x,y)=\frac{1}{h^2}(x/h,y/h)$,
 	\[
-		\textsc{krt}_{g_h}(u)(x)=\frac12+\kappa(u,x)\gamma(g)h+O(h^2)
+		\textsc{krt}_{g_h,H}(u)(x)=\frac12+\kappa(u,x)\gamma(g)h+O(h^2)
 	\]
 	where~$\gamma(g)=\int_{\mathbf{R}^2}\sqrt{x^2+y^2}g(x,y)dxdy$ and
 	$\kappa(u,x)=\mathrm{curv}(u)(x)=\mathrm{div}\left(\frac{\nabla
@@ -924,7 +938,7 @@ the form~$Y=c(X)$.
 	see that we can replace the effect of an arbitrary integrable
 	kernel~$g$ by a finite support kernel~$g^M=\mathbf{1}_{B_M(0)}g$.
 	Thus, given~$u$ and~$x$, $\forall\epsilon>0\exists M>0$ such
-	that~$\left|\textsc{krt}_{g^M}(u)(x)-\textsc{krt}_(u)(x)\right|<\epsilon$.  (This follows
+	that~$\left|\textsc{krt}_{g^M,H}(u)(x)-\textsc{krt}_{g,H}(u)(x)\right|<\epsilon$.  (This follows
 	by writing the definition of the KRT and using the integrability
 	of~$g$).
 
@@ -1325,4 +1339,4 @@ rank transform allows to compare them directly.
 \end{document}
 
 
-% vim:set tw=76 filetype=tex spell spelllang=en:
+% vim:set tw=76 filetype=tex spell spelllang=en ts=2 sw=2:
