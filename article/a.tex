@@ -103,7 +103,7 @@ lower level set of~$u$ at level~$u(x)$.  Equivalently,
 \begin{equation}\label{eq:rtcont}
 	R(u)(x) = \int_{N(x)}H(u(x)-u(y))\mathrm{d}y
 \end{equation}
-where~$H$ is the (balanced) Heaviside step function
+where~$H$ is the balanced Heaviside step function
 \begin{equation}\label{eq:heaviside}
 	H(t)=\begin{cases}
 		0,&t< 0\\
@@ -113,14 +113,14 @@ where~$H$ is the (balanced) Heaviside step function
 \end{equation}
 This expression can in turn be rewritten as an integral over the whole plane
 \begin{equation}\label{eq:rtcont2}
-	R(u)(x) = \int\mathbf{1}_{N(0)}(y-x)H(u(x)-u(y))\mathrm{d}y
+	R(u)(x) = \int\mathbf{1}_{N(0)}(x-y)H(u(x)-u(y))\mathrm{d}y
 \end{equation}
 In this article we propose and study a generalization of the classical rank
 transform~(\ref{eq:rtcont2}), where we replace the indicator function of a
 square~$\mathbf{1}_{N(0)}$ by an arbitrary integration kernel.
 We also propose to replace
 %On a later section, we will also
-replace the discontinuous Heaviside function by a smooth sigmoid.
+replace the discontinuous Heaviside function by a possibly smooth sigmoid.
 We will see that this general construction includes many other operations in
 image processing as particular cases (bilateral filtering, retinex).
 Notice that, when the integration kernel and the sigmoid are smooth, the
@@ -247,7 +247,7 @@ regions would get the value~$d^2-1$.
 %(TODO: maybe point to some figure).
 
 Henceforth, when we talk about the classical rank transform we will mean the
-version with the symmetrical Heaviside~$H$ defined above.  With this choice,
+version with the balanced Heaviside~$H$ defined above.  With this choice,
 constant patches get an intermediate value of~$1/2$.
 
 
@@ -316,11 +316,13 @@ where~$K(x,t)=\kappa(x)\delta(t)$ and~$S(x,t)=\delta(x)\sigma'(t)$.  Then
 	\textsc{krt}_{\kappa,\sigma}(u)(x) = (U*T)(x,u(x))
 \]
 \end{proposition}
-In other words, all versions of the rank filter are obtained by
+In other words, the~$\textsc{krt}$ is obtained by
 linear-filtering the epigraph of~$u$ and evaluating the resulting filtered
 3D image along the graph of~$u$.
 
 TODO: check whether we can write~$T(x,t)=\kappa(x)\sigma'(t)$.
+
+TODO: write the proof of the proposition above
 
 \subsection{Formal properties}
 
@@ -332,7 +334,7 @@ TODO: check whether we can write~$T(x,t)=\kappa(x)\sigma'(t)$.
 		\item[\bf P1] If~$u$ is a constant image,
 			then~$\textsc{krt}_{\kappa,\sigma}(u)=\sigma(0)\int\kappa$.
 		\item[\bf P2] Scaling and shifting of~$\sigma$:
-			$\textsc{krt}_{\kappa,a\sigma+b}=a\,\textsc{krt}_{\kappa,\sigma}+b\int\kappa$.
+			$\textsc{krt}_{\kappa,\,a\sigma+b}=a\,\textsc{krt}_{\kappa,\sigma}+b\int\kappa$.
 		\item[\bf P3] Symmetry with respect to inversion: if~$\sigma$
 			is an odd function
 			then~$\textsc{krt}_{\kappa,\sigma}(-u)=-\textsc{krt}_{\kappa,\sigma}(u)$.
@@ -356,6 +358,15 @@ TODO: check whether we can write~$T(x,t)=\kappa(x)\sigma'(t)$.
 %			of~$\mathbf{R}^2$
 %			then~$R_{\kappa,\sigma}\left(u\circ\rho\right) =
 %			\left(R_{\kappa\circ\rho,\sigma} u\right)\circ\rho$.
+		\item[\bf P6] The value of~$\textsc{krt}_{\kappa,\sigma}(u)(x)$
+			only depends on the values of~$u$ on the
+			set~$\left\{x+y\ |\ y\in\mathrm{supp}(\kappa)\right\}$.
+		\item[\bf P7] Quasi-invariance under affine contrast changes:
+		$\textsc{krt}_{\kappa,\sigma}(\alpha u+\beta)(x)
+		=
+		\textsc{krt}_{\kappa,\tilde\sigma}(u)(x)
+		$
+		with~$\tilde\sigma(t)=\sigma(\alpha t)$.
 	\end{enumerate}
 \end{proposition}
 
@@ -376,8 +387,13 @@ matrix).  Second, that it is also covariant with linear maps~$A$, but the
 kernel~$\kappa$ must be rescaled accordingly.  This property is an immediate
 consequence of the change of variables formula.
 
+The localization property~P6 becomes clear when one notices that the
+integral defining $\textsc{krt}_{\kappa,\sigma}(u)(x)$ can be reduced to an
+integral over the support of~$\kappa$ centered around~$x$.
+
 \begin{proposition}
-	When~$\sigma$ is the Heaviside step function, the kernel rank
+	When~$\sigma$ is the balanced Heaviside step function (eq.\ref{eq:heaviside}),
+	the kernel rank
 	transform has these further properties:
 	\begin{enumerate}
 		\item[\bf H1] Invariance under arbitrary contrast changes: for
@@ -425,7 +441,8 @@ The experiments on figures~\ref{fig:machup} and~\ref{fig:machdown} show that
 the kernel rank transform (without step) is a~\emph{discontinuous}
 transformation of the original gray-levels.  The figure shows that two
 images that are nearly identical have very different rank transforms.  This
-is a general phenomenon: any contrast-invariant operator will be likewise
+is a general phenomenon: contrast invariance is a non-differentiable
+property.  In other words, any contrast-invariant operator will be likewise
 discontinuous:
 
 \begin{definition}[contrast-invariant filter]
@@ -521,166 +538,6 @@ Typical ranges: $[1,N^2]$, $[0,1]$, $[-1,1]$
 Visualization: gray-scale, signed
 %(point to a later section where the link to curvature is explained)
 
-
-
-\subsection{Iterated filtering}
-
-The kernel rank transform $\textsc{krt}_\sigma$ is an operator that transforms images into images of the same size.
-What happens when we compute iterates of this operator?   Is it idempotent?  Is it a semigroup?  Do the iterates explose? (unlikely since they are always images with values on the unit interval).
-
-Some experimental observations with a Gaussian kernel of size
-6:
-
-The operator is not idempotent (show experiments with a synthetic and a small real image).
-
-The operator is not a semigroup on the parameter $\sigma$.  We built a list
-of a few hundred images $\textsc{krt}_\sigma(u)$ with finely varying
-$\sigma$, and we compared them to $\textsc{krt}(\textsc{krt}_6(u))$.  They are all very different, the closet one being about $\sigma=4.4$.
-
-The iterates $\textsc{krt}^n(u)$ seem to converge to a fixed point.  The
-fixed point does not look like any $\textsc{krt}_\sigma(u)$, the closest one being for~$\sigma=5.4$.
-
-Apparently, we can define a limit operator~$\textsc{krt}^\infty_\sigma$ by
-\[
-	\textsc{krt}^\infty_\sigma(u) := \lim_{n\to\infty}\textsc{krt}^n_\sigma(u)
-\]
-We do not know whether these limit operators are the kernel rank transdform for a different kernel.   If that was the case, the krt of that kernel  would be idempotent.   
-
-\section{Related constructions}
-
-Retinex~\cite{land1971lightness,land1977retinex,land1985recent,kimmel2003variational,provenzi2005mathematical,morel2010pde,petro2014multiscale}.
-Histogram equalization~\cite{pizer1987adaptive,abdullah2007dynamic}.
-Guided filters~\cite{he2012guided}.
-Integral transforms~\cite{bradley2007adaptive}.
-Bilateral filtering~\cite{tomasi1998bilateral,durand2002fast,paris2009bilateral}.
-Rank filters~\cite{rankfilters1985}.
-Morphological rank~\cite{soille2002morphological}.
-Census~\cite{ZW,stein2004efficient,whycensus2013}.
-Non-local laplacians.
-Poisson editing of normalized vectors.
-Curvature.
-``local contrast equalization''~\cite{sapiro1997histogram}
-KRT with~$\sigma(x)=x$ is~$u-k*u$ (approximation to the laplacian).  Linear
-retinex is a particular case of this.
-
-Contrast-limited adaptive histogram equalization (!)
-
-\subsection{Bilateral filter}
-
-\begin{figure}[t]
-	\begin{center}
-		\includegraphics[width=0.7\linewidth]{f/bilateral-vs-krt.jpg}
-	\end{center}
-	\caption{\label{fig:bilateral-vs-krt}
-	Bilateral filter domain vs KRT domain.
-	}
-\end{figure}
-
-Using a similar notation as in our work, the bilateral
-filter~\cite{tomasi1998bilateral,durand2002fast,paris2009bilateral} is defined
-as
-\begin{equation}\label{eq:bilateral}
-\textsc{bil}_{\kappa,f}(u)(x) =
-\frac{\int u(y) \kappa(y-x) f\big(u(y)-u(x)\big) \mathrm{d} y}
-     {\int \kappa(y-x) f\big(u(y)-u(x)\big) \mathrm{d} y}
-\end{equation}
-where $\kappa$ is a spatial kernel and $f$ is a similarity function used to
-compare image gray levels.  In a typical case, both $\kappa$ and $f$ are
-Gaussian centered in zero.
-
-The are two particular cases of this filter that justifies its name.  First,
-when $f=1$, the result is the convolution of $u$ by $\kappa$, i.e. a local mean
-weighted by the kernel.  Second, when $\kappa=1$ the range filter is obtained,
-which produce a mean of similar gray levels globally allover the image.  The
-two operations combined produces a local mean of gray-levels.
-
-Formally, the denominator of Eq.~\ref{eq:bilateral} is similar to the kernel
-rank transform (with some minor differences in the order of the indexes) with
-the comparison function $\sigma$ replaced by the similarity function $f$.
-The difference in name is reflected in its definition and use.  The similarity
-function $f$ is typically symmetric with a maximal in zero, and going to
-zero at plus and minus infinity.  On the other hand, the comparison function
-$\sigma$ is typically monotonically increasing.  In both cases, the filtering
-can be interpreted as as 3D filtering in the spatial-gray-level domain (see
-section~\ref{sec:X}).
-
-Conceptually, the bilateral filter is a weighted local mean of the image in a
-domain defined as in figure~\ref{fig:bilateral-vs-krt}(left); the kernel rank
-transform is given by the integral of the kernel in a domain defined as in
-figure~\ref{fig:bilateral-vs-krt}(right).  In both cases the domain is defined
-by the level-line of the point, but in former case it is narrow region around
-the level-line (the points which have a \emph{similar} gray-level) while in the
-latter the domain it is the lower-level set.
-
-
-\subsection{Limit for a constant kernel}
-
-In the limit when~$\kappa$ is constant, the rank transform is the histogram
-equalization of~$u$.  To see this, notice that the function
-\[
-H(\lambda) = \int\mathbf{1}_{[u\ge\lambda]}
-\]
-is the (reverse) accumulated histogram of~$u$.  This is, the area of the domain
-where~$u$ has a value larger than~$\lambda$.  The derivative of~$H$ is thus the
-histogram of~$u$.
-
-Notice that this global/local relation is the same as found in local
-histogram normalization techniques.
-The following two formulations are really similar:
-
-Ref. Sapiro, Caselles,  "Histogram modification via Differential Equations",
-formula (21)~\cite{sapiro1997histogram}
-
-Ref. Bertalmío et al. "evidence for the intrinsically nonlinear nature of
-receptive fields in vision", formula (10) and next~\cite{bertalmio2020evidence}
-
-
-\subsection{Bilateral interpretation}
-
-NOTE: the piece of text below concerns the justification of the krt
-definition.  It may be removed 
-
-The accumulated histogram can be ``smoothed'' by using a smooth sigmoid instead
-of the discontinuous indicator function.  For example, let~$\sigma$ be a step
-function centered at~$0$, we can define the~$\sigma$-smoothed accumulated
-histogram of~$u$ by
-\[
-H_\sigma(\lambda)=\int\sigma(u(x)-\lambda)\mathrm{d}x
-\]
-Thus, a more general version of the definition for the rank transform is
-\begin{equation}\label{eq:generalrank}
-	\textsc{krt}_{\kappa,\sigma}(u)(x)=\int \kappa(x-y)\sigma(u(x)-u(y))\mathrm{d}y
-\end{equation}
-in the limit when~$\sigma$ is the heaviside step function we recover the
-original definition~$\textsc{krt}_\sigma(u)$.
-
-Notice that the convolution formalism given in
-equation~(\ref{eq:convolution1}) puts the~$\sigma$ and~$\kappa$ smoothings
-on an equal footing.  Indeed, by defining
-\[
-	K_\sigma(x,t)=\kappa(x)\sigma'(t)
-\]
-we can write formula~(\ref{eq:generalrank}) as
-\begin{equation}\label{eq:convolution2}
-	\textsc{krt}_{\kappa,\sigma}(u)(x)=(U*K_\sigma)(x,u(x)).
-\end{equation}
-
-%SCRIPT gnuplot > f/plot_heavisides.png <<EOF
-%SCRIPT set term pngcairo size 500,400
-%SCRIPT gap(x)=x>1?1:(x<-1?0:(0.5*(x+1)))
-%SCRIPT plot [-1.5:1.5] [-0.25:1.75] 0.5+atan(x*pi)/pi,1/(1+exp(-4*x)),gap(2*x),0.5+erf(x*sqrt(pi))/2
-%SCRIPT EOF
-
-\begin{figure}
-	\centering
-	\includegraphics[width=0.5\linewidth]{f/plot_heavisides.png}
-	\caption{Plots of the ``smooth heavisides''~$\sigma$ implemented in
-	our program.  In all cases the parameter is set to~$1$, which
-	corresponds to a slope of~$1$ at the origin.}
-	\label{fig:heavisides}
-\end{figure}
-
-
 \subsection{Limit for a point kernel}
 
 % Start with the case of a disk
@@ -703,7 +560,8 @@ lines.
 	$\int \left|g(x)\right|\left\|x\right\|^3\mathrm{d} x<+\infty$.
 \end{definition}
 
-Notice that if~$g$ is an isotropic kernel, then the family of functions
+Notice that if~$g$ is a laplacian-consistent kernel, then each function of
+the family
 \[
 	g_h(x)=\frac1{h^2}g\left(\frac{x}{h}\right)
 \]
@@ -721,6 +579,9 @@ is as well, for~$h>0$.
 		g_h*u(x)=u(x)+\frac{\rho^2}{2}\Delta u(x) h^2 + O(h^3).
 	\]
 \end{proposition}
+
+NOTE: cite Alvarez, Morel, Florack regarding this definition and the result
+below
 
 The following two propositions characterize the local effect of applying the
 KRT with kernels~$g_h$.
@@ -928,22 +789,228 @@ the form~$Y=c(X)$.
 	\[
 		\textsc{krt}_{g_h,H}(u)(x)=\frac12+\kappa(u,x)\gamma(g)h+O(h^2)
 	\]
-	where~$\gamma(g)=\int_{\mathbf{R}^2}\sqrt{x^2+y^2}g(x,y)dxdy$ and
+	where~$\gamma(g)=\int_{\mathbf{R}^2}\left|g(x)\right|\|x\|^2dx$ and
 	$\kappa(u,x)=\mathrm{curv}(u)(x)=\mathrm{div}\left(\frac{\nabla
 	u}{\left\|\nabla u\right\|}\right)$.
 \end{theorem}
 
 \begin{proof}
-	This is a consequence of the previous proposition.  On one side, we
-	see that we can replace the effect of an arbitrary integrable
-	kernel~$g$ by a finite support kernel~$g^M=\mathbf{1}_{B_M(0)}g$.
-	Thus, given~$u$ and~$x$, $\forall\epsilon>0\exists M>0$ such
-	that~$\left|\textsc{krt}_{g^M,H}(u)(x)-\textsc{krt}_{g,H}(u)(x)\right|<\epsilon$.  (This follows
-	by writing the definition of the KRT and using the integrability
-	of~$g$).
+	This is a consequence of the previous proposition.
+	There are several localization steps that allow us to reduce this theorem
+	to the previous result.
 
-	etc
+	First, thanks to property P5, the domain can be translated and rotated so
+	that~$x=(0,0)$ and the level line through that point is horizontal.  This
+	transformation does not change the curvature of the level line.
+
+	By the hypotheses, we can assume that the level curve
+	is of the form~$t\mapsto(t,c(t))$ inside~$B_R(0)$ for some~$R>0$.
+	So, without loss of generality we can assume that~$c(0)=0$ and~$c'(0)=0$.
+	Notice that~$c''(0)$ is the curvature of the curve at the point~$(0,0)$.
+
+	Now,
+	we will prove that we can approximate the effect of the
+	kernel~$g$ by a finite-support kernel~$g^M=\mathbf{1}_{B_M(0)}g$.
+	More precisely $\forall\epsilon>0\exists M>0$ such
+	that~$\left|\textsc{krt}_{g,H}(u)(x)-\textsc{krt}_{g^M,H}(u)(x)\right|<\epsilon$.
+
+	By the triangle inequality:
+	\[
+		\left|
+		\int g(x-y)H(u(x)-u(y))dy
+		-
+		\int g^M(x-y)H(u(x)-u(y))dy
+		\right|
+		\le
+		\int
+		\left|
+		g
+		-g^M
+		\right|
+	\]
+	This error term is the ``tail'' of~$g$ which can be controlled because the
+	second moment of~$\left|g\right|$ is finite:
+	\[
+		\int
+		\left|
+		g
+		-g^M
+		\right|
+		=
+		\int_{|y|\ge M} \left|g\right|
+		\le
+		\int_{|y|\ge M} \left|g(y)\right|\frac{\|y\|^2}{M^2}dy
+		\le
+		\frac{\gamma(g)}{M^2}
+	\]
+
+	Thanks to this, there is an~$h_0>0$ such
+	that~$\mathrm{supp}\left(g^M_h\right)$
+
+
+
+	%etc
 \end{proof}
+
+
+
+\subsection{Iterated filtering}
+
+The kernel rank transform $\textsc{krt}_\sigma$ is an operator that transforms images into images of the same size.
+What happens when we compute iterates of this operator?   Is it idempotent?  Is it a semigroup?  Do the iterates explose? (unlikely since they are always images with values on the unit interval).
+
+Some experimental observations with a Gaussian kernel of size
+6:
+
+The operator is not idempotent (show experiments with a synthetic and a small real image).
+
+The operator is not a semigroup on the parameter $\sigma$.  We built a list
+of a few hundred images $\textsc{krt}_\sigma(u)$ with finely varying
+$\sigma$, and we compared them to $\textsc{krt}(\textsc{krt}_6(u))$.  They are all very different, the closet one being about $\sigma=4.4$.
+
+The iterates $\textsc{krt}^n(u)$ seem to converge to a fixed point.  The
+fixed point does not look like any $\textsc{krt}_\sigma(u)$, the closest one being for~$\sigma=5.4$.
+
+Apparently, we can define a limit operator~$\textsc{krt}^\infty_\sigma$ by
+\[
+	\textsc{krt}^\infty_\sigma(u) := \lim_{n\to\infty}\textsc{krt}^n_\sigma(u)
+\]
+We do not know whether these limit operators are the kernel rank transdform for a different kernel.   If that was the case, the krt of that kernel  would be idempotent.   
+
+\section{Related constructions}
+
+Retinex~\cite{land1971lightness,land1977retinex,land1985recent,kimmel2003variational,provenzi2005mathematical,morel2010pde,petro2014multiscale}.
+Histogram equalization~\cite{pizer1987adaptive,abdullah2007dynamic}.
+Guided filters~\cite{he2012guided}.
+Integral transforms~\cite{bradley2007adaptive}.
+Bilateral filtering~\cite{tomasi1998bilateral,durand2002fast,paris2009bilateral}.
+Rank filters~\cite{rankfilters1985}.
+Morphological rank~\cite{soille2002morphological}.
+Census~\cite{ZW,stein2004efficient,whycensus2013}.
+Non-local laplacians.
+Poisson editing of normalized vectors.
+Curvature.
+``local contrast equalization''~\cite{sapiro1997histogram}
+KRT with~$\sigma(x)=x$ is~$u-k*u$ (approximation to the laplacian).  Linear
+retinex is a particular case of this.
+
+Contrast-limited adaptive histogram equalization (!)
+
+\subsection{Bilateral filter}
+
+\begin{figure}[t]
+	\begin{center}
+		\includegraphics[width=0.7\linewidth]{f/bilateral-vs-krt.jpg}
+	\end{center}
+	\caption{\label{fig:bilateral-vs-krt}
+	Bilateral filter domain vs KRT domain.
+	}
+\end{figure}
+
+Using a similar notation as in our work, the bilateral
+filter~\cite{tomasi1998bilateral,durand2002fast,paris2009bilateral} is defined
+as
+\begin{equation}\label{eq:bilateral}
+\textsc{bil}_{\kappa,f}(u)(x) =
+\frac{\int u(y) \kappa(y-x) f\big(u(y)-u(x)\big) \mathrm{d} y}
+     {\int \kappa(y-x) f\big(u(y)-u(x)\big) \mathrm{d} y}
+\end{equation}
+where $\kappa$ is a spatial kernel and $f$ is a similarity function used to
+compare image gray levels.  In a typical case, both $\kappa$ and $f$ are
+Gaussian centered in zero.
+
+The are two particular cases of this filter that justifies its name.  First,
+when $f=1$, the result is the convolution of $u$ by $\kappa$, i.e. a local mean
+weighted by the kernel.  Second, when $\kappa=1$ the range filter is obtained,
+which produce a mean of similar gray levels globally allover the image.  The
+two operations combined produces a local mean of gray-levels.
+
+Formally, the denominator of Eq.~\ref{eq:bilateral} is similar to the kernel
+rank transform (with some minor differences in the order of the indexes) with
+the comparison function $\sigma$ replaced by the similarity function $f$.
+The difference in name is reflected in its definition and use.  The similarity
+function $f$ is typically symmetric with a maximal in zero, and going to
+zero at plus and minus infinity.  On the other hand, the comparison function
+$\sigma$ is typically monotonically increasing.  In both cases, the filtering
+can be interpreted as as 3D filtering in the spatial-gray-level domain (see
+section~\ref{sec:X}).
+
+Conceptually, the bilateral filter is a weighted local mean of the image in a
+domain defined as in figure~\ref{fig:bilateral-vs-krt}(left); the kernel rank
+transform is given by the integral of the kernel in a domain defined as in
+figure~\ref{fig:bilateral-vs-krt}(right).  In both cases the domain is defined
+by the level-line of the point, but in former case it is narrow region around
+the level-line (the points which have a \emph{similar} gray-level) while in the
+latter the domain it is the lower-level set.
+
+
+\subsection{Limit for a constant kernel}
+
+In the limit when~$\kappa$ is constant, the rank transform is the histogram
+equalization of~$u$.  To see this, notice that the function
+\[
+H(\lambda) = \int\mathbf{1}_{[u\ge\lambda]}
+\]
+is the (reverse) accumulated histogram of~$u$.  This is, the area of the domain
+where~$u$ has a value larger than~$\lambda$.  The derivative of~$H$ is thus the
+histogram of~$u$.
+
+Notice that this global/local relation is the same as found in local
+histogram normalization techniques.
+The following two formulations are really similar:
+
+Ref. Sapiro, Caselles,  "Histogram modification via Differential Equations",
+formula (21)~\cite{sapiro1997histogram}
+
+Ref. Bertalmío et al. "evidence for the intrinsically nonlinear nature of
+receptive fields in vision", formula (10) and next~\cite{bertalmio2020evidence}
+
+
+\subsection{Bilateral interpretation}
+
+NOTE: the piece of text below concerns the justification of the krt
+definition.  It may be removed 
+
+The accumulated histogram can be ``smoothed'' by using a smooth sigmoid instead
+of the discontinuous indicator function.  For example, let~$\sigma$ be a step
+function centered at~$0$, we can define the~$\sigma$-smoothed accumulated
+histogram of~$u$ by
+\[
+H_\sigma(\lambda)=\int\sigma(u(x)-\lambda)\mathrm{d}x
+\]
+Thus, a more general version of the definition for the rank transform is
+\begin{equation}\label{eq:generalrank}
+	\textsc{krt}_{\kappa,\sigma}(u)(x)=\int \kappa(x-y)\sigma(u(x)-u(y))\mathrm{d}y
+\end{equation}
+in the limit when~$\sigma$ is the heaviside step function we recover the
+original definition~$\textsc{krt}_\sigma(u)$.
+
+Notice that the convolution formalism given in
+equation~(\ref{eq:convolution1}) puts the~$\sigma$ and~$\kappa$ smoothings
+on an equal footing.  Indeed, by defining
+\[
+	K_\sigma(x,t)=\kappa(x)\sigma'(t)
+\]
+we can write formula~(\ref{eq:generalrank}) as
+\begin{equation}\label{eq:convolution2}
+	\textsc{krt}_{\kappa,\sigma}(u)(x)=(U*K_\sigma)(x,u(x)).
+\end{equation}
+
+%SCRIPT gnuplot > f/plot_heavisides.png <<EOF
+%SCRIPT set term pngcairo size 500,400
+%SCRIPT gap(x)=x>1?1:(x<-1?0:(0.5*(x+1)))
+%SCRIPT plot [-1.5:1.5] [-0.25:1.75] 0.5+atan(x*pi)/pi,1/(1+exp(-4*x)),gap(2*x),0.5+erf(x*sqrt(pi))/2
+%SCRIPT EOF
+
+\begin{figure}
+	\centering
+	\includegraphics[width=0.5\linewidth]{f/plot_heavisides.png}
+	\caption{Plots of the ``smooth heavisides''~$\sigma$ implemented in
+	our program.  In all cases the parameter is set to~$1$, which
+	corresponds to a slope of~$1$ at the origin.}
+	\label{fig:heavisides}
+\end{figure}
+
 
 
 \section{Implementation}
