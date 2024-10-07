@@ -590,22 +590,6 @@ KRT with kernels~$g_h$.
 % uses a different scaling, not according to that after the definition of
 % laplacina consistency.
 
-\begin{proposition}[Local effect of KRT with Heaviside step]
-	Let~$g$ be a well-behaved kernel, and~$u$ a bounded function whose
-	level line is a smooth curve on a neighborhood of~$x$.  Then
-	\[
-		\lim_{h\to0} \textsc{krt}_{g_h}(u)(x) = \frac12
-	\]
-	and
-	\[
-		%\lim_{h\to0}
-		%\frac{\textsc{krt}_{g_h}(u)(x)-\frac12}h =
-		%\frac{\gamma}{2}\mathrm{curv}\left(u(x))\right)
-		\textsc{krt}_{g_h,H}(u)(x) = \frac12 +
-	\frac{\gamma}{2}\mathrm{curv}\left(u(x)\right)h + O(h^2)
-	\]
-\end{proposition}
-
 \begin{proposition}[Local effect of KRT with continuous step]
 	Let~$g$ be a well-behaved kernel, and~$u$ a bounded function whose
 	level line is a smooth curve on a neighborhood of~$x$.
@@ -617,109 +601,21 @@ KRT with kernels~$g_h$.
 	\]
 \end{proposition}
 
-\clearpage
-
-\begin{proposition}
-	Let~$u:\mathbf{R}^2\to\mathbf{R}$ such that the level
-	line~$u=u(0,0)$ is the parabola of
-	equation~$Y=\displaystyle\frac{\kappa}2X^2$.
-	Let~$g:\mathbf{R}^2\to\mathbf{R}$ be a symmetric, normalized,
-	centered kernel such that~$\int_{-\infty}^\infty x^2g(x,0)\mathrm{d}
-	x=\sigma^2<+\infty$ and~$\int_{-\infty}^\infty x^4g_y(x,0)\mathrm{d}
-	x=\gamma<+\infty$.  Then
-	\[
-		\textsc{krt}_{g_h,H}(u)(0)=\frac12+\frac{\kappa}2\sigma^2h+O(h^2)
-	\]
-\end{proposition}
-
-\begin{proof}
-	(WARNING: the following proof is wrong, the change of coordinates of
-	y is missing a~$\sqrt{h}$ in the limit of integration)
-
-	Let us write the definition of~$\textsc{krt}_{g_h,H}(u)(0)$:
-	\[
-		\textsc{krt}_{g_h,H}(u)(0)=
-		\int_{-\infty}^\infty\int_{-\infty}^{\frac{\kappa}2x^2}
-		g_h(x,y)\ %
-		\mathrm{d}y
-		\mathrm{d}x
-	\]
-	\[
-		=
-		\int_{-\infty}^\infty\int_{-\infty}^{\frac{\kappa}2x^2}
-		\frac1hg\left(\frac{x}{\sqrt{h}},\frac{y}{\sqrt{h}}\right)\ %
-		\mathrm{d}y
-		\mathrm{d}x
-	\]
-	\[
-		=
-		\int_{-\infty}^\infty\int_{-\infty}^{\frac{\kappa}2hx^2}
-		g\left(x,y\right)\ %
-		\mathrm{d}y
-		\mathrm{d}x
-	\]
-	Now, this is a function of~$h$, let us call it~$f(h)$, that we can
-	develop by Taylor:~$f(h)=f(0)+f'(0)h+\frac12f''(0)h^2+\cdots$.
-	Notice that~$f(0)=\frac12$ by symmetry of~$g$.  Now
-	\[
-		f'(h)=
-		\int_{-\infty}^\infty \frac{\kappa x^2}2
-		\left[\vphantom{\int}g(x,y)\right]_{-\infty}^{\frac{\kappa hx^2}2}
-		\ \mathrm{d}x
-		=
-		\int_{-\infty}^\infty \frac{\kappa x^2}2
-		g\left(x,\frac{\kappa h x^2}2\right)
-		\ \mathrm{d}x
-	\]
-	thus
-	\[
-		f'(0)=
-		\int_{-\infty}^\infty \frac{\kappa x^2}2
-		g(x,0)\ \mathrm{d}x
-		=\frac{\kappa\sigma^2}2.
-	\]
-	Similarly
-	\[
-		%f''(h)=
-		%\frac{\kappa}2
-		%\int_{-\infty}^\infty \frac{\kappa x^2}2
-		%\left[\vphantom{\int}g(x,y)\right]_{-\infty}^{\frac{\kappa hx^2}2}
-		%\ \mathrm{d}x
-		f''(0)=
-		\frac{\kappa^2}4
-		\int_{-\infty}^\infty x^4
-		g_y(x,0)
-		\ \mathrm{d}x
-		<\gamma
-	\]
-	Then we can write
-	\[
-		\textsc{krt}_{g_h,H}(u)(0)
-		=
-		\frac12
-		+
-		\frac{\kappa\sigma^2}2h
-		+O(h^2)
-	\]
-\end{proof}
-Notice that if~$g$ is radial, then~$g_y(x,0)=0$ and the condition on the
-fourth moment is automatically satisfied.
+Missing proposition: local effect of KRT with Heaviside step when the level
+line has a kink or angle.
 
 \clearpage
-Below, a version of the previous proposition for a general level line of
-the form~$Y=c(X)$.
-
 \begin{proposition}\label{prp:curv1}
-	Let~$u:\mathbf{R}^2\to\mathbf{R}$ such that the level
-	line~$u=u(0,0)$ is a function of
-	equation~$y=c(x)$ with~$c(0)=c'(0)=0$.
+	Let~$u:\mathbf{R}^2\to\mathbf{R}$ such that the level line~$u=u(0,0)$ is a
+	function of equation~$Y=c(X)$, smooth in a neighborhood of the origin,
+	with~$c(0)=c'(0)=0$.
 	Let~$g:\mathbf{R}^2\to\mathbf{R}$ be a symmetric, normalized,
-	eventually decreasing kernel such that~$\int_{-\infty}^\infty x^2g(x,0)\mathrm{d}
-	x=\sigma^2<+\infty$, $\int_{-\infty}^\infty x^3g(x,0)dx<+\infty$ and~$\int_{-\infty}^\infty x^4g_y(x,0)\mathrm{d}
+	eventually decreasing kernel such that~$\rho=\int_{-\infty}^\infty
+	x^2g(x,0)\mathrm{d} x<+\infty$, $\int_{-\infty}^\infty x^3g(x,0)dx<+\infty$ and~$\int_{-\infty}^\infty x^4g_y(x,0)\mathrm{d}
 	x<+\infty$.  Then, if we
 	denote~$g_h(x,y)=\frac1{h^2}g(x/h,y/h)$,
 	\[
-		\textsc{krt}_{g_h,H}(u)(0)=\frac12+\frac{c''(0)}2\sigma^2h+O(h^2)
+		\textsc{krt}_{g_h,H}(u)(0)=\frac12+\frac{c''(0)}2\rho h+O(h^2)
 	\]
 \end{proposition}
 
@@ -763,7 +659,7 @@ the form~$Y=c(X)$.
 	\]
 	thus
 	\[
-		f'(0)=\frac{c''(0)\sigma^2}2
+		f'(0)=\frac{c''(0)\rho}2
 		%\int_{-\infty}^\infty \frac{\kappa x^2}2
 		%g(x,0)\ \mathrm{d}x
 		%=\frac{\kappa\sigma^2}2.
@@ -779,7 +675,7 @@ the form~$Y=c(X)$.
 \end{proof}
 
 
-\begin{theorem}[behavior of the KRT at smooth points]
+\begin{theorem}[behavior of the KRT with Heaviside step]
 	Let~$u:\mathbf{R}^2\to\mathbf{R}$ and~$x\in\mathbf{R}^2$ such that
 	the level line~$[u=u(x)]$ is a smooth curve on a neighborhood
 	of~$x$.  Let~$g:\mathbf{R}^2\to\mathbf{R}$ be a radial,
@@ -787,17 +683,18 @@ the form~$Y=c(X)$.
 	finite moments.  Then, if we
 	denote~$g_h(x)=\frac{1}{h^2}g(x/h)$,
 	\[
-		\textsc{krt}_{g_h,H}(u)(x)=\frac12+\frac1\pi\kappa(u,x)\gamma(g)h+O(h^2)
+		\textsc{krt}_{g_h,H}(u)(x)=\frac12+\frac\gamma{4\pi}\mathrm{curv}(u)(x) h+O(h^2)
 	\]
-	where~$\gamma(g)=\int_{\mathbf{R}^2}\left|g(x)\right|\|x\|dx$ and
-	$\kappa(u,x)=\mathrm{curv}(u)(x)=\mathrm{div}\left(\frac{\nabla
+	where~$\gamma=\int_{\mathbf{R}^2}g(x)\|x\|dx$ and
+	$\mathrm{curv}(u)(x)=\mathrm{div}\left(\frac{\nabla
 	u}{\left\|\nabla u\right\|}\right)$.
 \end{theorem}
 
 \begin{proof}
 	This is a consequence of the previous proposition.
 	There are several localization steps that allow us to reduce this theorem
-	to the previous result.
+	to the previous result.  The main problem is that the level line
+	through~$u(x)$ need not be the graph of a function, as required.
 
 	First, thanks to property P5, the domain can be translated and rotated so
 	that~$x=(0,0)$ and the level line through that point is horizontal.  This
@@ -806,16 +703,33 @@ the form~$Y=c(X)$.
 	By the hypotheses, we can assume that the level curve
 	is of the form~$t\mapsto(t,c(t))$ inside~$B_R(0)$ for some~$R>0$.
 	So, without loss of generality we can assume that~$c(0)=0$ and~$c'(0)=0$.
-	Notice that~$c''(0)$ is the curvature of the curve at the point~$(0,0)$.
+	Notice that~$c''(0)=\mathrm{curv}(u)(0)$ is the curvature of the curve at
+	the point~$(0,0)$.
 
-	Explain the plan: we will extend the function~$u$ outside of~$B_R(0)$ so
-	that the level line is the graph of a function~$\mathbr{R}\to\mathbf{R}$,
-	and we will see that this leads to a controlled approximation of the KRT,
-	upon which we will apply the previous result.
+	To apply the previous proposition, we will extend the function~$u$ outside
+	of~$B_R(0)$ so that the level line is the graph of a
+	function~$\mathbf{R}\to\mathbf{R}$.  For example, we can set~$\tilde
+	u(y)=\begin{cases}u(y)&\textrm{if }\|y\|\le
+	R\\u\left(\frac{Ry}{\|y\|}\right)&\textrm{otherwise}\end{cases}$.
+	We define as well the finite-support kernel~$g_h^R=\mathbf{1}_{B_R(0)}g_h$.
 
-	Now,
-	we will prove that we can approximate the effect of the kernel~$g_h$ by
-	the finite-support kernel~$g_h^R=\mathbf{1}_{B_R(0)}g_h$.  Indeed, the
+	We will now show a chain of approximations
+	\[
+	 \textsc{krt}_{g_h,H}(u)(x)
+	 \approx
+	 \textsc{krt}_{g^R_h,H}(u)(x)
+	 =
+	 \textsc{krt}_{g^R_h,H}(\tilde u)(x)
+	 \approx
+	 \textsc{krt}_{g_h,H}(\tilde u)(x)
+	\]
+	The middle equality is a direct consequence of localization property~P6.
+	We will prove that the error of the two remaining approximations is
+	bounded by~$\frac{h^2 m_2(g)}{R^2}$,
+	where~$m_2(g)$ is the second moment of~$|g|$ which is finite by
+	hypothesis.
+
+	Indeed, the
 	error $\left|\textsc{krt}_{g_h,H}(u)(x)-\textsc{krt}_{g_h^R,H}(u)(x)\right|$
 	can be bounded.
 	By the triangle inequality:
@@ -846,28 +760,25 @@ the form~$Y=c(X)$.
 		=
 		\int_{|z|\ge R/h} h^2\left|g(z)\right|\frac{\|z\|^2}{R^2}dz
 		\le
-		\frac{h^2m_2(g)}{R^2}
+		\frac{h^2m_2(g)}{R^2}.
 	\]
-	where~$m_2(g)$ is the second moment of~$|g|$ which is finite by
-	hypothesis.
+	And the same argument proves that~$\left|\textsc{krt}_{g_h,H}(\tilde
+	u)(x)-\textsc{krt}_{g_h^R,H}(\tilde u)(x)\right|\le\frac{h^2m_2(g)}{R^2}$.
+	This means that the errors of each approximation are~$O(h^2)$.
 
-	Since~$\mathrm{supp}\left(g^R_h\right)\subseteq B_R(0)$,
-	by property~$P6$, the values of~$u$ outside~$B_R(0)$ do not matter,
-	and~$u$ can be extended in an arbitrary way to satisfy the hypotheses of
-	proposition~\ref{prp:curv1}.  Applying this proposition to any such
-	extended~$u$ and~$g_h^R$, we have
-
-	To complete the argument: deal with the following four terms, that happen
-	to be close to each other (thanks to triangle inequality):\\
-	$ \textsc{krt}_{g_h,H}(u)(x) $\\
-	$ \textsc{krt}_{g^R_h,H}(u)(x) $\\
-	$ \textsc{krt}_{g_h,H}(\tilde u)(x) $\\
-	$ \textsc{krt}_{g^R_h,H}(\tilde u)(x) $\\
-	where~$\tilde u$ is the function~$u$ extended outside of~$B_R(x)$ in such
-	a way that the level curve through~$x$ is the graph of a function~$c$.
-
-
-	%etc
+	Now we can apply the previous proposition to the kernel~$g$ and
+	function~$\tilde u$ at point~$x=0$.  Notice that~$\rho$, as defined in the
+	previous proposition is equal to~$\frac{\gamma}{2\pi}$.  Then, the
+	proposition reads
+	\[
+		\textsc{krt}_{g_h,H}(\tilde
+		u)(x)=\frac12+\frac{\gamma}{4\pi}\mathrm{curv}(u)(x)h + O(h^2)
+	\]
+	which, together with the approximation
+	\(
+		\textsc{krt}_{g_h,H}(u)=\textsc{krt}_{g_h,H}(\tilde u)+O(h^2)
+	\)
+	concludes the proof.
 \end{proof}
 
 
