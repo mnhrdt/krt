@@ -808,50 +808,64 @@ the form~$Y=c(X)$.
 	So, without loss of generality we can assume that~$c(0)=0$ and~$c'(0)=0$.
 	Notice that~$c''(0)$ is the curvature of the curve at the point~$(0,0)$.
 
-	Now,
-	we will prove that we can approximate the effect of the
-	kernel~$g$ by a finite-support kernel~$g^M=\mathbf{1}_{B_M(0)}g$.
-	More precisely $\forall\epsilon>0\exists M>0$ such
-	that~$\left|\textsc{krt}_{g,H}(u)(x)-\textsc{krt}_{g^M,H}(u)(x)\right|<\epsilon$.
+	Explain the plan: we will extend the function~$u$ outside of~$B_R(0)$ so
+	that the level line is the graph of a function~$\mathbr{R}\to\mathbf{R}$,
+	and we will see that this leads to a controlled approximation of the KRT,
+	upon which we will apply the previous result.
 
+	Now,
+	we will prove that we can approximate the effect of the kernel~$g_h$ by
+	the finite-support kernel~$g_h^R=\mathbf{1}_{B_R(0)}g_h$.  Indeed, the
+	error $\left|\textsc{krt}_{g_h,H}(u)(x)-\textsc{krt}_{g_h^R,H}(u)(x)\right|$
+	can be bounded.
 	By the triangle inequality:
 	\[
 		\left|
-		\int g(x-y)H(u(x)-u(y))dy
+		\int g_h(x-y)H(u(x)-u(y))dy
 		-
-		\int g^M(x-y)H(u(x)-u(y))dy
+		\int g_h^R(x-y)H(u(x)-u(y))dy
 		\right|
 		\le
 		\int
 		\left|
-		g
-		-g^M
+		g_h
+		-g_h^R
 		\right|
 	\]
-	This error term is the ``tail'' of~$g$ which can be controlled because the
-	second moment of~$\left|g\right|$ is finite:
+	This error term is the ``tail'' of~$g_h$ which can be controlled because
 	\[
 		\int
 		\left|
-		g
-		-g^M
+		g_h
+		-g_h^R
 		\right|
 		=
-		\int_{|y|\ge M} \left|g\right|
+		\int_{|y|\ge R} \left|g_h\right|
 		\le
-		\int_{|y|\ge M} \left|g(y)\right|\frac{\|y\|^2}{M^2}dy
+		\int_{|y|\ge R} \left|g_h(y)\right|\frac{\|y\|^2}{R^2}dy
+		=
+		\int_{|z|\ge R/h} h^2\left|g(z)\right|\frac{\|z\|^2}{R^2}dz
 		\le
-		\frac{m_2(g)}{M^2}
+		\frac{h^2m_2(g)}{R^2}
 	\]
 	where~$m_2(g)$ is the second moment of~$|g|$ which is finite by
 	hypothesis.
 
-	Since~$g^M$ is of bounded support, there is an~$h_0>0$ such
-	that~$\mathrm{supp}\left(g^M_h\right)\subseteq B_R(0)\ \forall h\le h_0$.
-	By property~$P6$, the values of~$u$ outside~$B_R(0)$ do not matter,
+	Since~$\mathrm{supp}\left(g^R_h\right)\subseteq B_R(0)$,
+	by property~$P6$, the values of~$u$ outside~$B_R(0)$ do not matter,
 	and~$u$ can be extended in an arbitrary way to satisfy the hypotheses of
-	proposition~\ref{prp:curv1}.  Applying this proposition to the
-	extended~$u$ and~$g^M$, we have
+	proposition~\ref{prp:curv1}.  Applying this proposition to any such
+	extended~$u$ and~$g_h^R$, we have
+
+	To complete the argument: deal with the following four terms, that happen
+	to be close to each other (thanks to triangle inequality):\\
+	$ \textsc{krt}_{g_h,H}(u)(x) $\\
+	$ \textsc{krt}_{g^R_h,H}(u)(x) $\\
+	$ \textsc{krt}_{g_h,H}(\tilde u)(x) $\\
+	$ \textsc{krt}_{g^R_h,H}(\tilde u)(x) $\\
+	where~$\tilde u$ is the function~$u$ extended outside of~$B_R(x)$ in such
+	a way that the level curve through~$x$ is the graph of a function~$c$.
+
 
 	%etc
 \end{proof}
