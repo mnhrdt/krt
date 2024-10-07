@@ -709,7 +709,7 @@ fourth moment is automatically satisfied.
 Below, a version of the previous proposition for a general level line of
 the form~$Y=c(X)$.
 
-\begin{proposition}
+\begin{proposition}\label{prp:curv1}
 	Let~$u:\mathbf{R}^2\to\mathbf{R}$ such that the level
 	line~$u=u(0,0)$ is a function of
 	equation~$y=c(x)$ with~$c(0)=c'(0)=0$.
@@ -782,14 +782,14 @@ the form~$Y=c(X)$.
 \begin{theorem}[behavior of the KRT at smooth points]
 	Let~$u:\mathbf{R}^2\to\mathbf{R}$ and~$x\in\mathbf{R}^2$ such that
 	the level line~$[u=u(x)]$ is a smooth curve on a neighborhood
-	of~$x$.  Let~$g:\mathbf{R}^2\to\mathbf{R}$ a radial,
-	normalized kernel, such that~$\lim_{\|x\|\to\infty}g(x)=0$, and with
+	of~$x$.  Let~$g:\mathbf{R}^2\to\mathbf{R}$ be a radial,
+	normalized kernel with
 	finite moments.  Then, if we
-	denote~$g_h(x,y)=\frac{1}{h^2}(x/h,y/h)$,
+	denote~$g_h(x)=\frac{1}{h^2}g(x/h)$,
 	\[
-		\textsc{krt}_{g_h,H}(u)(x)=\frac12+\kappa(u,x)\gamma(g)h+O(h^2)
+		\textsc{krt}_{g_h,H}(u)(x)=\frac12+\frac1\pi\kappa(u,x)\gamma(g)h+O(h^2)
 	\]
-	where~$\gamma(g)=\int_{\mathbf{R}^2}\left|g(x)\right|\|x\|^2dx$ and
+	where~$\gamma(g)=\int_{\mathbf{R}^2}\left|g(x)\right|\|x\|dx$ and
 	$\kappa(u,x)=\mathrm{curv}(u)(x)=\mathrm{div}\left(\frac{\nabla
 	u}{\left\|\nabla u\right\|}\right)$.
 \end{theorem}
@@ -841,13 +841,17 @@ the form~$Y=c(X)$.
 		\le
 		\int_{|y|\ge M} \left|g(y)\right|\frac{\|y\|^2}{M^2}dy
 		\le
-		\frac{\gamma(g)}{M^2}
+		\frac{m_2(g)}{M^2}
 	\]
+	where~$m_2(g)$ is the second moment of~$|g|$ which is finite by
+	hypothesis.
 
-	Thanks to this, there is an~$h_0>0$ such
-	that~$\mathrm{supp}\left(g^M_h\right)$
-
-
+	Since~$g^M$ is of bounded support, there is an~$h_0>0$ such
+	that~$\mathrm{supp}\left(g^M_h\right)\subseteq B_R(0)\ \forall h\le h_0$.
+	By property~$P6$, the values of~$u$ outside~$B_R(0)$ do not matter,
+	and~$u$ can be extended in an arbitrary way to satisfy the hypotheses of
+	proposition~\ref{prp:curv1}.  Applying this proposition to the
+	extended~$u$ and~$g^M$, we have
 
 	%etc
 \end{proof}
