@@ -1,0 +1,391 @@
+\documentclass[t]{beamer}
+%\usepackage[utf8]{inputenc}  % to be able to type unicode text directly
+%\usepackage[french]{babel}   % french typographical conventions
+\usepackage{inconsolata}     % for a nicer (e.g. non-courier) tt family font
+%\usepackage{amsthm,amsmath}  % fancier mathematics
+%\usepackage{array} % to fine-tune tabular spacing
+\usepackage{bbm} % for blackboard 1
+
+\usepackage{graphicx}        % to include images
+%\usepackage{animate}         % to include animated images
+\usepackage{soul}            % for colored strikethrough
+%\usepackage{bbding}          % for Checkmark and XSolidBrush
+\usepackage{hyperref,url}
+
+\colorlet{darkgreen}{black!50!green}  % used for page numbers
+\definecolor{term}{rgb}{.9,.9,.9}     % used for code insets
+
+\setlength{\parindent}{0em}
+\setlength{\parskip}{1em}
+
+
+% coco's macros
+\def\R{\mathbf{R}}
+\def\F{\mathcal{F}}
+\def\x{\mathbf{x}}
+\def\y{\mathbf{y}}
+\def\u{\mathbf{u}}
+\def\Z{\mathbf{Z}}
+\def\ud{\mathrm{d}}
+\DeclareMathOperator*{\argmin}{arg\,min}
+\DeclareMathOperator*{\argmax}{arg\,max}
+\newcommand{\reference}[1] {{\scriptsize \color{gray}  #1 }}
+\newcommand{\referencep}[1] {{\tiny \color{gray}  #1 }}
+\newcommand{\unit}[1] {{\tiny \color{gray}  #1 }}
+
+% disable spacing around verbatim
+\usepackage{etoolbox}
+\makeatletter\preto{\@verbatim}{\topsep=0pt \partopsep=0pt }\makeatother
+
+% disable headings, set slide numbers in green
+\mode<all>\setbeamertemplate{navigation symbols}{}
+\defbeamertemplate*{footline}{pagecount}{\leavevmode\hfill\color{darkgreen}
+   \insertframenumber{} / \inserttotalframenumber\hspace*{2ex}\vskip0pt}
+
+%% select red color for strikethrough
+\makeatletter
+\newcommand\SoulColor{%
+  \let\set@color\beamerorig@set@color
+  \let\reset@color\beamerorig@reset@color}
+\makeatother
+\newcommand<>{\St}[1]{\only#2{\SoulColor\st{#1}}}
+\setstcolor{red}
+
+% make everything monospace
+\renewcommand*\familydefault{\ttdefault}
+
+% define a font size tinier than tiny
+\makeatletter
+\newcommand{\srcsize}{\@setfontsize{\srcsize}{5pt}{5pt}}
+\makeatother
+
+
+\begin{document}
+
+\addtocounter{framenumber}{-1}
+\begin{frame}[plain,fragile]
+\LARGE\begin{verbatim}
+
+
+
+
+
+     The Kernel Rank Transform
+
+
+
+
+rafa & enric
+gtti 21/11/2024
+\end{verbatim}
+\end{frame}
+
+
+\begin{frame}
+EVERYTHING IN ONE SLIDE\\
+=======================
+
+{\bf Definition:}
+	\fbox{\(\displaystyle
+	\textsc{KRT}_{\kappa,\sigma}(u)(y) := \int \kappa(x-y)\sigma(u(x)-u(y))\ud x
+	\)}
+
+{\bf Examples:}
+
+\vfill
+
+\vfill
+
+{\bf Applications:}\\
+$\qquad$* image normalization\\
+$\qquad$* color balance\\
+$\qquad$* cool math\\
+$\qquad$* ...?
+\end{frame}
+
+\begin{frame}
+GOOGLE TRENDS\\
+=============
+
+	(the joke about popularity being the opposite of originality, with some
+	related graphs of google trends)
+\end{frame}
+
+
+\begin{frame}
+OUTLINE\\
+=======
+
+\vfill
+
+1. Rank Transform\\
+$\ \quad${\color{gray}($\approx$ 5min)}
+
+2. Kernel Rank Transform\\
+$\ \quad${\color{gray}($\approx$ 15min)}
+
+\vfill
+
+\end{frame}
+
+
+\begin{frame}[plain,noframenumbering]%
+
+\vfill
+\begin{center}
+\Huge
+--1--\\Rank Transform
+\end{center}
+\vfill
+\small
+\centering
+{A classical tool in statistics and image processing}
+\end{frame}
+
+
+% 4. rank transform in statistics
+\begin{frame}
+THE RANK TRANSFORM IN STATISTICS\\
+================================
+\end{frame}
+
+% 5. rank transform in image processing (definitions)
+\begin{frame}
+THE RANK TRANSFORM IN IMAGE PROCESSING\\
+======================================
+\end{frame}
+
+% 6. visualization of the rank transform of various images and window sizes
+\begin{frame}
+EFFECT OF THE WINDOW SIZE\\
+=========================
+\end{frame}
+
+% 7. first observation: small window=curvature, large window=histogram equaliz.
+\begin{frame}
+LIMIT FOR INFINITELY LARGE OR SMALL WINDOWS\\
+===========================================
+\end{frame}
+
+% 8. integral formulation of the classical rank transform
+\begin{frame}
+INTEGRAL FORMULATION OF THE RANK TRANSFORM\\
+==========================================
+\end{frame}
+
+% 9. generalization: the KRT
+\begin{frame}
+GENERALIZATION OF THE INTEGRAL FORMULATION\\
+==========================================
+\end{frame}
+
+
+\begin{frame}[plain,noframenumbering]%
+
+\vfill
+\begin{center}
+\Huge
+--2--\\Kernel Rank Transform
+\end{center}
+\vfill
+\small
+\centering
+{the subject of our study}
+\end{frame}
+
+% 10. formal definition, common gaussian/heaviside cases, generalizes RT
+% 11. first formal properties (extreme cases of the parameters)
+% 12. visual exploration of the parameters
+% 13. first implementation (c code)
+% 14. structural properties
+% 15. theorem about contrast invariance being a non-differentiable property
+% 16. limit for a large kernel
+% 17. limit for a vanishingly small kernel, link with curvature (thm)
+% 18. ref. alvarez guichard lions evans
+% 19. implementation as a convolution in 3D
+
+% 20. particular cases of the KRT, common operators, applications
+%   20.1. retinex
+%   20.2. dsm/depth image exploration
+%   20.3. bilateral filtering
+%   20.4. normalizatoin prior to matching (examples w/ cross-correlation scores)
+% 21. comparison with other ``whitening'' transforms
+%   21.1. laplacian
+%   21.2. gradient direction image
+%   21.3. integrated gradient direction image
+%   21.4. phase image
+%   21.5. x-blurred(x)
+%   21.6. x-denoised(x)
+% 22. summary of particular cases as a 2d table
+% 23. choice of implementation depending on parameters
+% 24. comparison with perceptron layers / implementation in npu ?
+
+% 25. colophon: source code of the article and the presentation
+
+
+
+
+
+% 10. formal definition, common gaussian/heaviside cases, generalizes RT
+\begin{frame}
+DEFINITION OF THE KRT\\
+=====================
+\end{frame}
+
+% 11. first formal properties (extreme cases of the parameters)
+\begin{frame}
+FORMAL PROPERTIES (I)\\
+=====================
+\end{frame}
+
+\begin{frame}
+FORMAL PROPERTIES (II)\\
+======================
+\end{frame}
+
+% 12. visual exploration of the parameters
+\begin{frame}
+EXPLORATION OF THE PARAMETERS\\
+=============================
+\end{frame}
+
+% 13. first implementation (c code)
+\begin{frame}
+IMPLEMENTATION\\
+==============
+\end{frame}
+
+% 14. structural properties
+\begin{frame}
+STRUCTURAL PROPERTIES\\
+=====================
+\end{frame}
+
+% 15. theorem about contrast invariance being a non-differentiable property
+\begin{frame}
+CONTRAST INVARIANCE\\
+===================
+\end{frame}
+
+% 16. limit for a large kernel
+\begin{frame}
+LIMIT FOR LARGE KERNELS\\
+=======================
+\end{frame}
+
+% 17. limit for a vanishingly small kernel, link with curvature (thm)
+\begin{frame}
+LIMIT FOR SMALL KERNELS\\
+=======================
+
+	(maybe separate the cases into two or three slides)
+\end{frame}
+
+% 18. ref. alvarez guichard lions evans
+\begin{frame}
+	(ref. alvarez guichard lions evans)
+\end{frame}
+
+% 19. implementation as a convolution in 3D
+\begin{frame}
+INTERPRETATION IN 3D\\
+====================
+\end{frame}
+
+
+% 20. particular cases of the KRT, common operators, applications
+\begin{frame}
+PARTICULAR CASES OF THE KRT\\
+===========================
+\end{frame}
+
+%   20.1. retinex
+\begin{frame}
+=============
+\end{frame}
+
+%   20.2. dsm/depth image exploration
+\begin{frame}
+=============
+\end{frame}
+
+%   20.3. bilateral filtering
+\begin{frame}
+=============
+\end{frame}
+
+%   20.4. normalizatoin prior to matching (examples w/ cross-correlation scores)
+\begin{frame}
+=============
+\end{frame}
+
+% 21. comparison with other ``whitening'' transforms
+\begin{frame}
+COMPARISON WITH OTHER ``WHITENING'' TRANSFORMS\\
+==============================================
+\end{frame}
+
+%%   21.1. laplacian
+%\begin{frame}
+%=============
+%\end{frame}
+%
+%%   21.2. gradient direction image
+%\begin{frame}
+%=============
+%\end{frame}
+%
+%%   21.3. integrated gradient direction image
+%\begin{frame}
+%=============
+%\end{frame}
+%
+%%   21.4. phase image
+%\begin{frame}
+%=============
+%\end{frame}
+%
+%%   21.5. x-blurred(x)
+%\begin{frame}
+%=============
+%\end{frame}
+%
+%%   21.6. x-denoised(x)
+%\begin{frame}
+%=============
+%\end{frame}
+
+% 22. summary of particular cases as a 2d table
+\begin{frame}
+PARTICULAR CASES OF THE KRT\\
+===========================
+\end{frame}
+
+% 23. choice of implementation depending on parameters
+\begin{frame}
+CHOICE OF IMPLEMENTATION DEPENDING ON THE PARAMETERS\\
+====================================================
+\end{frame}
+
+% 24. comparison with perceptron layers / implementation in npu ?
+\begin{frame}
+COMPARISON WITH A PERCEPTRON LAYER\\
+==================================
+\end{frame}
+
+
+% 25. colophon: source code of the article and the presentation
+\begin{frame}
+COLOPHON\\
+========
+\end{frame}
+
+
+
+
+
+
+\end{document}
+
+
+% vim:sw=2 ts=2 :
