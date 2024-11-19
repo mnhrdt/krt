@@ -1,5 +1,6 @@
 \documentclass[t]{beamer}
-%\usepackage[utf8]{inputenc}  % to be able to type unicode text directly
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}  % to be able to type unicode text directly
 %\usepackage[french]{babel}   % french typographical conventions
 \usepackage{inconsolata}     % for a nicer (e.g. non-courier) tt family font
 %\usepackage{amsthm,amsmath}  % fancier mathematics
@@ -190,24 +191,108 @@ $\ \quad${\color{gray}($\approx$ 15min)}
 \begin{frame}
 THE RANK TRANSFORM IN STATISTICS\\
 ================================
+
+	\begin{tabular}{ll}
+		\includegraphics[height=0.3\textheight]{i/indian1.jpg}&
+		\includegraphics[height=0.3\textheight]{i/indian2.jpg}\\
+	\end{tabular}\\
+	$ $ Source: {\color{blue}http://www.youtube.com}
+
+
+	\vfill
+	\bigskip
+	\vfill
+
+	\pause
+	\color{gray}\small
+
+	[0] D.~Quade\\
+	{\bf Rank analysis of covariance}\\
+	{Journal of the American Statistical Association}, 1967
+
+
+	[1]  W.~J.~Conover, R.~L.~Iman\\
+	{\bf Analysis of covariance using the rank transformation}\\
+	{Biometrics}, 1982
+
+
+
 \end{frame}
 
 % 5. rank transform in image processing (definitions)
 \begin{frame}
 THE RANK TRANSFORM IN IMAGE PROCESSING\\
 ======================================
+
+{\scriptsize\color{gray}
+	[2] R.~Zabih, J.~Woodfill\\
+	{\bf Non-parametric Local Transforms for Computing Visual Correspondence}\\
+	{ECCV, 1994}\\
+}
+\vspace{-0.5em}
+\begin{center}
+	\includegraphics[width=0.7\textwidth]{i/rtdef87.png}
+\end{center}
+
+\vfill
+\pause
+
+{\scriptsize\color{gray}
+	[3] O.~Demetz, D.~Hafner, J.~Weickert\\
+	{\bf The Complete Rank Transform}\\
+	{BMVC}, 2013\\
+}
+\vspace{-0.5em}
+\begin{center}
+\includegraphics[width=0.7\textwidth]{i/rtfig13.png}
+\end{center}
+
+
+
 \end{frame}
 
-% 6. visualization of the rank transform of various images and window sizes
+% (no)6. visualization of the rank transform of various images and window sizes
 \begin{frame}
-EFFECT OF THE WINDOW SIZE\\
-=========================
+PROPERTIES OF THE RANK TRANSFORM\\
+================================
+
+{\bf 1. Contrast-invariance.}
+	For increasing~$g:\mathbf{R}\to\mathbf{R}$:
+	\[
+		\textsc{RT}_d(u) = \textsc{RT}_d(g\circ u)
+	\]
+
+	{\bf 2. Histogram equalization.}
+	\[\displaystyle\lim_{d\to\infty}\textsc{RT}_d(u)=\varphi\circ u\]
+	where~$\varphi$ is the cumulative distribution function of~$u$.
+
+	{\bf 3. Visual effect of the parameter }$d$
+
 \end{frame}
 
+% (no)
 % 7. first observation: small window=curvature, large window=histogram equaliz.
 \begin{frame}
-LIMIT FOR INFINITELY LARGE OR SMALL WINDOWS\\
-===========================================
+FIRST MYSTERY: LINK WITH CURVATURE?
+===================================
+
+%MAKE all: o/fujik.png  o/fujikd.png
+%MAKE all: o/fujir5.png o/fujir5d.png
+%MAKE o/fujik.png: i/fuji.tif; plambda $^ 'x,g dup vnorm /'|plambda 'x,d -1 *'|palette -1.3 1.3 nice -l OVERLAY - $@
+%MAKE o/fujir5.png: i/fuji.tif; ./krt actualsquare5 $^ |palette 0 1 nice -l OVERLAY - $@
+%MAKE o/fujikd.png: o/fujik.png; plambda TRANS[x=311,y=194,w=200,h=150]:$^ x|ntiply 4 - $@
+%MAKE o/fujir5d.png: o/fujir5.png; plambda TRANS[x=311,y=194,w=200,h=150]:$^ x|ntiply 4 - $@
+
+\begin{tabular}{cc}
+	\small$\mathrm{div}\left(\frac{\nabla u}{\left\|\nabla u\right\|}\right)$ &
+	$\textsc{RT}_5(u)$ \\
+	\includegraphics[height=0.38\textheight]{o/fujik.png}&
+	\includegraphics[height=0.38\textheight]{o/fujir5.png}\\
+	\includegraphics[height=0.38\textheight]{o/fujikd.png}&
+	\includegraphics[height=0.38\textheight]{o/fujir5d.png}\\
+\end{tabular}
+
+
 \end{frame}
 
 % 8. integral formulation of the classical rank transform
