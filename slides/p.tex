@@ -82,25 +82,68 @@ gtti 21/11/2024
 
 
 \begin{frame}
-EVERYTHING IN ONE SLIDE\\
-=======================
+THE KERNEL RANK TRANSFORM IN ONE SLIDE\\
+======================================
 
 {\bf Definition:}
-	\fbox{\(\displaystyle
-	\textsc{KRT}_{\kappa,\sigma}(u)(y) := \int \kappa(x-y)\sigma(u(x)-u(y))\ud x
-	\)}
+{\color{blue}
+	\fbox{
+		\color{black}
+		\(\displaystyle
+		\textsc{KRT}_{{\color{red}\kappa},{\color{red}\sigma}}({\color{blue}u})({\color{blue}x})
+		:=
+		\int {\color{red}\kappa}({\color{blue}x}-y)\,{\color{red}\sigma}({\color{blue}u(x)}-{\color{blue}u}(y))\,\ud y
+		\)
+	}
+}
+
+\vspace{-0.5em}
 
 {\bf Examples:}
 
-\vfill
+\vspace{-1em}
 
-\vfill
+%MAKE all: o/introex5.png o/introex30.png o/introex99.png o/introex190.png
+%MAKE o/introex%.png:  i/barbsquare.png; ./krt actualsquare$* $^|qauto -i - $@
+\begin{tabular}{cccc}
+	\includegraphics[width=0.2\linewidth]{i/barbara.png}&
+	\includegraphics[width=0.2\linewidth]{o/introex5.png}&
+	\includegraphics[width=0.2\linewidth]{o/introex30.png}&
+	\includegraphics[width=0.2\linewidth]{o/introex190.png}\\
+	$u$ &
+	$\footnotesize\textsc{KRT}_{{\color{red}g_5},H}(u)$ &
+	$\footnotesize\textsc{KRT}_{{\color{red}g_{30}},H}(u)$ &
+	$\footnotesize\textsc{KRT}_{{\color{red}g_{200}},H}(u)$
+\end{tabular}
 
-{\bf Applications:}\\
-$\qquad$* image normalization\\
-$\qquad$* color balance\\
-$\qquad$* cool math\\
-$\qquad$* ...?
+
+%MAKE all: o/fujishadow.png o/fujikrt.png
+%MAKE o/fujishadow.png: i/fuji.tif; GETPIXEL=symmetric SHADOWX=-1 SHADOWY=0 plambda $^ 'x,S x,Z 60 * +'|qauto -p 0.1 - $@
+%MAKE o/fujikrt.png: i/fuji.tif; ./krt gauss15 -h gap100 $^|plambda '0.5 - 2 *'|downsa v 2|PLEGEND_BGCOLOR=0xaaaaaa palette -1 1 nice -l OVERLAY - $@
+
+%\vspace{-1em}
+\vspace{-0.5em}
+{\bf Applications:}
+
+	\begin{columns}[b]
+		\begin{column}{0.31\textwidth}\scriptsize
+$\quad$ * dem visualization \\
+$\quad$ * image normalization \\
+$\quad$ * color balance \\
+$\quad$ * cool math\\
+%$\quad$ * ...?\\
+		\end{column}
+		\begin{column}{0.69\textwidth}
+			\tiny%\raisebox{5em}{
+			\begin{tabular}{cc}
+				\includegraphics[width=0.45\linewidth]{o/fujishadow.png}&
+				\includegraphics[width=0.45\linewidth]{o/fujikrt.png}\\
+				shading(fuji) &
+				krt(fuji)
+			\end{tabular}
+		%}
+		\end{column}
+	\end{columns}
 \end{frame}
 
 \begin{frame}
@@ -253,6 +296,9 @@ EXPLORATION OF THE PARAMETERS\\
 \begin{frame}
 IMPLEMENTATION\\
 ==============
+
+	\includegraphics[width=\textwidth]{i/krtcode.png}
+
 \end{frame}
 
 % 14. structural properties
@@ -301,21 +347,25 @@ PARTICULAR CASES OF THE KRT\\
 
 %   20.1. retinex
 \begin{frame}
+	retinex\\
 =============
 \end{frame}
 
 %   20.2. dsm/depth image exploration
 \begin{frame}
+	dsm/depth image exploration\\
 =============
 \end{frame}
 
 %   20.3. bilateral filtering
 \begin{frame}
+	bilateral filtering\\
 =============
 \end{frame}
 
 %   20.4. normalizatoin prior to matching (examples w/ cross-correlation scores)
 \begin{frame}
+	normalization prior to matching\\
 =============
 \end{frame}
 
