@@ -104,6 +104,8 @@ THE KERNEL RANK TRANSFORM IN ONE SLIDE\\
 
 \vspace{-1em}
 
+%MAKE SHELL=/bin/bash
+
 %MAKE all: o/introex5.png o/introex30.png o/introex99.png o/introex190.png
 %MAKE o/introex%.png:  i/barbsquare.png; ./krt actualsquare$* $^|qauto -i - $@
 \begin{tabular}{cccc}
@@ -230,6 +232,30 @@ THE RANK TRANSFORM IN STATISTICS\\
 
 \end{frame}
 
+
+
+\begin{frame}
+RANK TRANSFORM OF AN IMAGE = HISTOGRAM EQUALIZATION\\
+===================================================
+
+%MAKE all: o/bgrayhist.png o/bgrayeq.png o/bgrayeqhist.png
+%MAKE o/bgrayhist.png:  i/bgra.png; cat $^|ghisto|gnuplot -e 'set term pngcairo size 400,250' ->$@
+%MAKE o/bgrayeq.png:  i/bgra.png; cat $^|histeq8|qeasy 0 1 - $@
+%MAKE o/bgrayeqhist.png:  i/bgra.png; cat $^|histeq8|blur l 0.6|qeasy 0 1|ghisto|gnuplot -e 'set term pngcairo size 400,250' ->$@
+
+\begin{tabular}{cc}
+	$u$ &
+	$RT_{\infty}(u) = \textrm{histeq}(u)$\\
+	\includegraphics[width=0.47\linewidth]{i/bgra.png}&
+	\includegraphics[width=0.47\linewidth]{o/bgrayeq.png}\\
+	\includegraphics[width=0.47\linewidth]{o/bgrayhist.png}&
+	\includegraphics[width=0.47\linewidth]{o/bgrayeqhist.png}\\
+\end{tabular}
+
+\end{frame}
+
+
+
 % 5. rank transform in image processing (definitions)
 \begin{frame}
 THE RANK TRANSFORM IN IMAGE PROCESSING\\
@@ -277,8 +303,51 @@ PROPERTIES OF THE RANK TRANSFORM\\
 	\[\displaystyle\lim_{d\to\infty}\textsc{RT}_d(u)=\varphi\circ u\]
 	where~$\varphi$ is the cumulative distribution function of~$u$.
 
-	{\bf 3. Visual effect of the parameter }$d$
+	{\bf 3. Extrema localization: }\\
+	$\qquad\textsc{RT}_d(u)(x)=1$ at local minima, $=d^2$ at local maxima.
 
+	{\bf 4. Visual effect of the parameter }$d$
+
+%MAKE all: o/introex3.png o/introex66.png
+\tiny
+\begin{tabular}{ccccccc}
+	\includegraphics[width=0.1\linewidth]{i/barbara.png}&
+	\includegraphics[width=0.1\linewidth]{o/introex3.png}&
+	\includegraphics[width=0.1\linewidth]{o/introex5.png}&
+	\includegraphics[width=0.1\linewidth]{o/introex30.png}&
+	\includegraphics[width=0.1\linewidth]{o/introex66.png}&
+	\includegraphics[width=0.1\linewidth]{o/introex99.png}&
+	\includegraphics[width=0.1\linewidth]{o/introex190.png}\\
+	$u$ &
+	$d=3$ &
+	$d=5$ &
+	$d=30$ &
+	$d=66$ &
+	$d=99$ &
+	$d=200$
+\end{tabular}
+
+
+\end{frame}
+
+
+
+
+\begin{frame}
+EFFECT OF THE RANK TRANSFORM ON ELEVATION MAPS\\
+==============================================
+
+%MAKE all: o/fuji.png o/fujirg5.png o/fujirg20.png o/fujirg50.png
+%MAKE o/fuji.png: i/fuji.tif; palette 0 4000 gray $^ -l OVERLAY $@
+%MAKE o/fujirg%.png: i/fuji.tif; krt actualsquare$* $^|plambda '$* 2 ^ 1 - * 1 +'|palette 1 $$[$* * $*] gray -l OVERLAY - $@
+
+
+\begin{tabular}{cc}
+	\includegraphics[height=0.38\textheight]{o/fuji.png}&
+	\includegraphics[height=0.38\textheight]{o/fujirg5.png}\\
+	\includegraphics[height=0.38\textheight]{o/fujirg20.png}&
+	\includegraphics[height=0.38\textheight]{o/fujirg50.png}\\
+\end{tabular}
 \end{frame}
 
 % (no)
@@ -290,7 +359,7 @@ FIRST MYSTERY: LINK WITH CURVATURE?
 %MAKE all: o/fujik.png  o/fujikd.png
 %MAKE all: o/fujir5.png o/fujir5d.png
 %MAKE o/fujik.png: i/fuji.tif; plambda $^ 'x,g dup vnorm /'|plambda 'x,d -1 *'|palette -1.3 1.3 nice -l OVERLAY - $@
-%MAKE o/fujir5.png: i/fuji.tif; ./krt actualsquare5 $^ |palette 0 1 nice -l OVERLAY - $@
+%MAKE o/fujir5.png: i/fuji.tif; ./krt actualsquare5 $^ |plambda '24 * 1 +'|palette 1 25 nice -l OVERLAY - $@
 %MAKE o/fujikd.png: o/fujik.png; plambda TRANS[x=311,y=194,w=200,h=150]:$^ x|ntiply 4 - $@
 %MAKE o/fujir5d.png: o/fujir5.png; plambda TRANS[x=311,y=194,w=200,h=150]:$^ x|ntiply 4 - $@
 
@@ -306,19 +375,6 @@ FIRST MYSTERY: LINK WITH CURVATURE?
 
 \end{frame}
 
-% 8. integral formulation of the classical rank transform
-\begin{frame}
-INTEGRAL FORMULATION OF THE RANK TRANSFORM\\
-==========================================
-\end{frame}
-
-% 9. generalization: the KRT
-\begin{frame}
-GENERALIZATION OF THE INTEGRAL FORMULATION\\
-==========================================
-\end{frame}
-
-
 \begin{frame}[plain,noframenumbering]%
 
 \vfill
@@ -331,6 +387,20 @@ GENERALIZATION OF THE INTEGRAL FORMULATION\\
 \centering
 {the subject of our study}
 \end{frame}
+
+
+% 8. integral formulation of the classical rank transform
+\begin{frame}
+INTEGRAL FORMULATION OF THE RANK TRANSFORM\\
+==========================================
+\end{frame}
+
+% 9. generalization: the KRT
+\begin{frame}
+GENERALIZATION OF THE INTEGRAL FORMULATION\\
+==========================================
+\end{frame}
+
 
 % 10. formal definition, common gaussian/heaviside cases, generalizes RT
 % 11. first formal properties (extreme cases of the parameters)
