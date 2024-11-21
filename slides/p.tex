@@ -393,13 +393,43 @@ FIRST MYSTERY: LINK WITH CURVATURE?
 \begin{frame}
 INTEGRAL FORMULATION OF THE RANK TRANSFORM\\
 ==========================================
+
+\begin{center}
+	\includegraphics[width=0.7\textwidth]{i/rtdef87c.png}
+\end{center}
+
+\begin{center}
+\includegraphics[width=0.7\textwidth]{i/rtfig13.png}
+\end{center}
+
+\pause
+
+{\bf Integral formulation:}
+%\[
+%	R(u)(x) = \int_{N(x)}\textbf{1}_{\left[u < u(x)\right]}(y)\mathrm{d}y
+%\]
+\[
+R({\color{blue}u})({\color{blue}x}) = \int_{N({\color{blue}x})}H({\color{blue}u(x)}-{\color{blue}u}(y))\mathrm{d}y
+\qquad
+\qquad
+\color{gray}H=\textrm{\tiny Heaviside step function}
+\]
+\pause
+\fbox{
+\(
+	\displaystyle
+	\only<3>{R(u)(x) = \int{\color{red}\textbf{1}_{N(0)}}(x-y){\color{red}H}(u(x)-u(y))\mathrm{d}y}
+\only<4>{R_{\color{red}\kappa,\sigma}(u)(x) = \int{\color{red}\kappa}(x-y){\color{red}\sigma}(u(x)-u(y))\mathrm{d}y}
+\)
+}
+
 \end{frame}
 
 % 9. generalization: the KRT
-\begin{frame}
-GENERALIZATION OF THE INTEGRAL FORMULATION\\
-==========================================
-\end{frame}
+%\begin{frame}
+%GENERALIZATION OF THE INTEGRAL FORMULATION\\
+%==========================================
+%\end{frame}
 
 
 % 10. formal definition, common gaussian/heaviside cases, generalizes RT
@@ -439,23 +469,119 @@ GENERALIZATION OF THE INTEGRAL FORMULATION\\
 \begin{frame}
 DEFINITION OF THE KRT\\
 =====================
+
+{\bf Definition.} (Kernel Rank Transform)
+For~$u:\textbf{R}^2\to\textbf{R}$,
+\[
+	R_{\color{red}\kappa,\sigma}(u)(x) = \int{\color{red}\kappa}(x-y){\color{red}\sigma}(u(x)-u(y))\mathrm{d}y
+\]
+where
+\[
+	{\color{red}\kappa}:\textbf{R}^2\to\textbf{R}\qquad\qquad\textrm{``the kernel''}
+\]
+\[
+	{\color{red}\sigma}:\textbf{R}\to\textbf{R}\ \ \qquad\qquad\textrm{``the gap''}
+\]
+
+\pause
+
+{\bf Typical kernels:}\\
+$g_s=$ gaussian of size~$s$, $N_d=$ square of side~$d$
+
+{\bf Typical gaps:} $H=$ Heaviside step function,\\
+\includegraphics[width=0.3\linewidth]{f/plot_heavisides.png}
+
+
 \end{frame}
+
+\begin{frame}
+DISCRETE KRT\\
+============
+
+\[
+	KRT_{\kappa,\,\sigma}(u)(x) = \sum_{y\in\textbf{Z}^2}\kappa(x-y)\sigma(u(x)-u(y))
+\]
+
+\end{frame}
+
 
 % 11. first formal properties (extreme cases of the parameters)
 \begin{frame}
-FORMAL PROPERTIES (I)\\
-=====================
+GENERAL PROPERTIES OF THE KRT\\
+=============================
+
+{\bf P1.} If~$u$ is constant then~$R_{\kappa,\sigma}(u)=\sigma(0)\int\kappa$
+
+{\bf P2.} Scaling and shifting:
+$R_{\kappa,\,{\color{red}a}\sigma+{\color{red}b}}={\color{red}a}\,R_{\kappa,\sigma}+{\color{red}b}\int\kappa$.
+
+{\bf P3.} Symmetry: $\R_{\kappa,\sigma}({\color{red}-}u)={\color{red}-}R_{\kappa,\sigma}(u)\quad$ (if~$\sigma$ is odd)
+
+{\bf P5.} Affine covariance:
+\( R_{\kappa,\sigma}\left(u\circ{\color{red}\varphi}\right) =
+R_{{\color{red}\tilde\kappa},\sigma}\left(u\right)\circ\color{red}\varphi\)
+		where~$\varphi(x)=Ax+b$ and $\tilde\kappa=\frac1{|A|}\kappa\circ A^{-1}$.
+
+		{\bf P6.} Locality: $R_{\kappa,\sigma}(u)(x)$ only depends on~$u|_{\{x+y:y\in\mathrm{supp}(\kappa)\}}$
+
+
 \end{frame}
 
 \begin{frame}
-FORMAL PROPERTIES (II)\\
-======================
+PROPERTIES FOR THE HEAVISIDE CASE\\
+=================================
+
+{\bf H1.} Contrast-invariance:
+for any increasing~$\color{red}g$
+$$R_{\kappa,H}({\color{red}g}\circ u)=R_{\kappa,H}(u)$$
+\pause
+
+{\bf H2.} For~$x=\mathrm{argmax}(u)$, $R_{\kappa,H}(u)(x)=\int\kappa$.
+
+{\bf H3.} For~$x=\mathrm{argmin}(u)$, $R_{\kappa,H}(u)(x)=0$.
 \end{frame}
 
 % 12. visual exploration of the parameters
 \begin{frame}
 EXPLORATION OF THE PARAMETERS\\
 =============================
+
+%MAKE: all: o/starsr5.png o/starsr50.png o/bstars.png o/bstarsr5.png o/bstarsr50.png
+%MAKE: o/bstars.npy: i/stars.png; blur l 0.61 $^ $@
+%MAKE: o/bstars.png: o/bstars.npy; qauto -p 0 $^ $@
+%MAKE: o/starsr%.png: i/stars.png; ./krt gauss$* $^|qauto -p 0 - $@
+%MAKE: o/bstarsr%.png: o/bstars.npy; ./krt gauss$* $^|qauto -p 0 - $@
+%MAKE: o/bstarsgr%.png: o/bstars.npy; ./krt -h gap0.01 gauss$* $^|qauto -p 0 - $@
+%MAKE: all: o/bstarsgr5.png o/bstarsgr50.png
+
+\scriptsize
+\begin{tabular}{ccc}
+	\includegraphics[width=0.3\linewidth]{i/stars.png}&
+	\includegraphics[width=0.3\linewidth]{o/starsr5.png}&
+	\includegraphics[width=0.3\linewidth]{o/starsr50.png}\\
+	$u$ &
+	$R_{g_5,H}(u)$ &
+	$R_{g_{50},H}(u)$ \\
+	&&\\
+	\pause
+	\only<2>{
+	\includegraphics[width=0.3\linewidth]{o/bstars.png}&
+	\includegraphics[width=0.3\linewidth]{o/bstarsr5.png}&
+	\includegraphics[width=0.3\linewidth]{o/bstarsr50.png}\\
+	$g_\epsilon*u$ &
+	$R_{g_5,\color{red}H}(g_\epsilon*u)$ &
+	$R_{g_{50},\color{red}H}(g_\epsilon*u)$ \\
+}\only<3>{
+	\includegraphics[width=0.3\linewidth]{o/bstars.png}&
+	\includegraphics[width=0.3\linewidth]{o/bstarsgr5.png}&
+	\includegraphics[width=0.3\linewidth]{o/bstarsgr50.png}\\
+	$g_\epsilon*u$ &
+	$R_{g_5,\color{red}\sigma_{0.001}}(g_\epsilon*u)$ &
+	$R_{g_{50},\color{red}\sigma_{0.001}}(g_\epsilon*u)$ \\
+}
+\end{tabular}
+
+
 \end{frame}
 
 % 13. first implementation (c code)
