@@ -580,9 +580,212 @@ EXPLORATION OF THE PARAMETERS\\
 	$R_{g_{50},\color{red}\sigma_{0.001}}(g_\epsilon*u)$ \\
 }
 \end{tabular}
+\end{frame}
+
+\begin{frame}
+CONTRAST-INVARIANCE VS. DIFFERENTIABILITY\\
+=========================================
+
+{\bf Definition.}
+An image operator~$T:u\mapsto T(u)$ is {\color{blue}contrast-invariant}
+if~$T(g\circ u)=T(u)$ for any increasing~$g$.
+
+{\bf Proposition 1.}
+If~$T$ is continuous and contrast-invariant then it is trivial: $T(u)=T(0)$ for
+any~$u$).
+
+\pause
+
+{\color{gray}
+Proof: the path~$\lambda\mapsto\lambda u$ links any image $u$ to~$0$.
+}
+
+\pause
+\vfill
+\color{red}
+\fbox{
+\fbox{
+Contrast-invariance is a non-differentiable property
+}}
+\vfill
+
+\end{frame}
+
+
+
+
+\begin{frame}
+EXTREME CASES\\
+=============
+
+{\color{blue}
+	\fbox{
+		\color{black}
+		\(\displaystyle
+		R_{{\color{red}\kappa},{\color{red}\sigma}}({\color{blue}u})({\color{blue}x})
+		:=
+		\int {\color{red}\kappa}({\color{blue}x}-y)\,{\color{red}\sigma}({\color{blue}u(x)}-{\color{blue}u}(y))\,\ud y
+		\)
+	}
+}
+
+When~$\sigma\to id$:
+\[
+	R_{\kappa, id}(u) = u - k*u
+\]
+{\color{gray}This is a good approximation of~$-\Delta u$ for small~$\kappa$.}
+
+\pause
+{\bf Proposition 2.}
+Let $\sigma$ be a smooth gap and~$\kappa$ be a normalized kernel.
+Set~$\kappa_h(x)=\kappa(x/h)/h^2$, then
+\[
+	R_{\kappa_{\color{red}h},\sigma}(u)(x)
+	=
+	s(0)
+	-\frac{s'(0)}2\Delta u(x){\color{red}h}^2
+	+O({\color{red}h}^3)
+\]
+
+\pause
+\color{red}
+\fbox{\fbox{
+		$\displaystyle\lim_{t\to0}R_{g_t,\color{blue}\sigma}(u)= -\Delta u$
+}}
+\pause
+\fbox{\fbox{
+		$\displaystyle\lim_{t\to0}R_{g_t,\color{blue}H}(u)= \color{black}???$
+}}
+
+\end{frame}
+
+
+
+
+\begin{frame}
+WHY DO WE FIND THE CURVATURE\\
+============================
+
+\only<1>{
+\includegraphics[width=\textwidth]{f/figure1.png}
+}
+\only<2>{
+	\includegraphics[width=0.6\textwidth]{f/figure1.png}
+
+	\vfill
+
+$R_{g_\epsilon,H}(u)({\color{red}b})=\frac12$
+
+$R_{g_\epsilon,H}(u)({\color{red}a})\to\frac12$
+
+$R_{g_\epsilon,H}(u)({\color{red}c})\to\frac12$
+
+$R_{g_\epsilon,H}(u)({\color{red}d})\to\frac{\mathrm{angle}}{2\pi}$
+}
+\only<3>{\includegraphics[height=0.8\textheight]{f/pcurv.png}}
+\only<4>{\includegraphics[height=0.5\textheight]{f/pcurv.png}
+
+	\vfill
+
+	{\bf Proposition 3.}
+	If the level curve of~$u$ through~$x$ is smooth;
+set~$\kappa_h(x)=\kappa(x/h)/h^2$, then
+\[
+	R_{\kappa_{\color{red}h},H}(u)(x)
+	=
+	\frac12
+	+\frac1{4\pi}\mathrm{curv}(u)(x){\color{red}h}+O({\color{red}h}^2)
+\]
+with~$\mathrm{curv}(u)=\mathrm{div}\left(\frac{\nabla u}{\left\|\nabla u\right\|}\right)$
+}
 
 
 \end{frame}
+
+\begin{frame}
+MYSTERY EXPLAINED!\\
+==================
+
+
+\begin{tabular}{cc}
+	\small$\mathrm{div}\left(\frac{\nabla u}{\left\|\nabla u\right\|}\right)$ &
+	$\textsc{R}_{g_3,H}(u)$ \\
+	\includegraphics[height=0.38\textheight]{o/fujik.png}&
+	\includegraphics[height=0.38\textheight]{o/fujir5.png}\\
+	\includegraphics[height=0.38\textheight]{o/fujikd.png}&
+	\includegraphics[height=0.38\textheight]{o/fujir5d.png}\\
+\end{tabular}
+
+
+\end{frame}
+
+
+
+
+\begin{frame}
+APPLICATION: SIMULATION OF PERCEPTION (retinex)\\
+===============================================
+
+\vfill
+
+\only<1>{
+\begin{tabular}{cc}
+	\includegraphics[width=0.43\linewidth]{f/adelson.png} &
+	\includegraphics[width=0.43\linewidth]{f/adelson_l25_gap200.png} \\
+\end{tabular}
+}\only<2>{
+	\includegraphics[height=0.83\textheight]{f/machs.png}
+}
+
+\vfill
+
+\end{frame}
+
+
+\begin{frame}
+APPLICATION: CLEANER CROSS-CORRELATIONS\\
+=======================================
+
+\begin{tabular}{cc}
+	\includegraphics[width=0.43\linewidth]{f/i12345.png} &
+	\includegraphics[width=0.43\linewidth]{f/t12345.jpg} \\
+	\includegraphics[width=0.43\linewidth]{f/plaincorr_i_t.png} &
+	\includegraphics[width=0.43\linewidth]{f/croscorr_i_t.png} \\
+\end{tabular}
+
+\end{frame}
+
+
+\begin{frame}
+PERSPECTIVE: A NEW KIND OF PERCEPTRON?\\
+======================================
+
+Typical perceptron layer:
+\[
+	u'_i \gets {\color{red}\sigma}\left(\sum_j k_{ij}u_j\right)
+\]
+
+\pause
+
+Contrast-invariant perceptron:
+\[
+	u'_i \gets \sum_j k_{ij}{\color{red}\sigma}(u_i-u_j)
+\]
+
+\end{frame}
+
+
+
+\begin{frame}
+COLOPHON\\
+========
+
+
+\end{frame}
+
+
+
+\end{document}
 
 % 13. first implementation (c code)
 \begin{frame}
