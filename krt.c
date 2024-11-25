@@ -429,6 +429,9 @@ void kernel_rank_transform(
 		v[i] = 0;
 
 	// Definition 2.
+#ifdef _OPENMP
+#pragma omp parallel for
+#endif
 	for (int x1 = 0; x1 < w; x1++)   // image column
 	for (int x2 = 0; x2 < h; x2++)   // image line
 	for (int k = 0; k < n; k++)      // kernel pixel index
