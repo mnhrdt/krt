@@ -339,7 +339,7 @@ EFFECT OF THE RANK TRANSFORM ON ELEVATION MAPS\\
 
 %MAKE all: o/fuji.png o/fujirg5.png o/fujirg20.png o/fujirg50.png
 %MAKE o/fuji.png: i/fuji.tif; palette 0 4000 gray $^ -l OVERLAY $@
-%MAKE o/fujirg%.png: i/fuji.tif; krt actualsquare$* $^|plambda '$* 2 ^ 1 - * 1 +'|palette 1 $$[$* * $*] gray -l OVERLAY - $@
+%MAKE o/fujirg%.png: i/fuji.tif; ./krt actualsquare$* $^|plambda '$* 2 ^ 1 - * 1 +'|palette 1 $$[$* * $*] gray -l OVERLAY - $@
 
 
 \begin{tabular}{cc}
@@ -489,7 +489,13 @@ where
 $g_s=$ gaussian of size~$s$, $N_d=$ square of side~$d$
 
 {\bf Typical gaps:} $H=$ Heaviside step function,\\
-\includegraphics[width=0.3\linewidth]{f/plot_heavisides.png}
+\includegraphics[height=0.25\textheight]{f/plot_heavisides.png}
+%SCRIPT gnuplot > f/plot_heavisides.png <<EOF
+%SCRIPT set term pngcairo size 600,300
+%SCRIPT set key top left
+%SCRIPT gap(x)=x>1?1:(x<-1?0:(0.5*(x+1)))
+%SCRIPT plot [-1.5:1.5] [-0.25:1.75] 0.5+atan(x*pi)/pi,1/(1+exp(-4*x)),gap(2*x),0.5+erf(x*sqrt(pi))/2
+%SCRIPT EOF
 
 
 \end{frame}
