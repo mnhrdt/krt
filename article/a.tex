@@ -565,7 +565,8 @@ the family
 \[
 	g_h(x)=\frac1{h^2}g\left(\frac{x}{h}\right)
 \]
-is as well, for~$h>0$.
+is as well, for~$h>0$.  Let us recall first the following classical result (cf. 
+Alvarez, Morel, Florack )
 
 \begin{proposition}[Laplacian approximation]
 	Let~$g$ be a laplacian-consistent kernel.
@@ -579,9 +580,35 @@ is as well, for~$h>0$.
 		g_h*u(x)=u(x)+\frac{\rho^2}{2}\Delta u(x) h^2 + O(h^3).
 	\]
 \end{proposition}
+\begin{proof}
+	Write down~$g_h*u(x)$:
+	\[
+		g_h*u(x)
+		=\int \frac1{h^2}g(t/h)u(x-t)d t
+		=\int g(y)u(x-hy)d y
+	\]
+	and develop~$u(x-hy)$ by
+	Taylor
+	\[
+		g_h*u(x)
+		=
+		\int
+		\left(
+		u(x)
+		-hDu(x)\cdot y
+		+\frac{h^2}2D^2u(x)(y,y)
+		+O(h^3\|y\|^3)
+		\right)
+		g(y)
+		dy
+	\]
+	now, since~$x$ is fixed, the first three integrals can be computed thanks
+	to the firs three properties of laplacian consistency, to
+	obtain~$u(x)+0+\frac{\rho^2}{2}\Delta u(x)$.  The remaining term can be
+	written as~$O(h^3)$ thanks to the hypotheses $\int|g(y)|\|y^3\|dy<+\infty$
+	and~$|D^3u|<M$.
+\end{proof}
 
-NOTE: cite Alvarez, Morel, Florack regarding this definition and the result
-below
 
 The following two propositions characterize the local effect of applying the
 KRT with kernels~$g_h$.
@@ -591,15 +618,49 @@ KRT with kernels~$g_h$.
 % laplacina consistency.
 
 \begin{proposition}[Local effect of KRT with continuous step]
-	Let~$g$ be a well-behaved kernel, and~$u$ a bounded function whose
-	level line is a smooth curve on a neighborhood of~$x$.
-	Let~$s:\mathbf{R}\to\mathbf{R}$ be a smooth, monotonic step function
+	Let~$g$ be a laplacian-consistent kernel, and~$u$ be~$C^3$ with bounded
+	derivatives up to order~$3$.
+	Let~$s:\mathbf{R}\to\mathbf{R}$ be a~$C^2$ function with bounded
+	derivatives up to order~$2$.
 	Then
 	\[
-		\textsc{krt}_{g_h,s}(u)(x) = s(0) + \frac{s'(0)\sigma^2}2\Delta u(x)h^2
+		\textsc{krt}_{g_h,s}(u)(x) = s(0) + \frac{s'(0)\rho^2}2\Delta u(x)h^2
 		+O(h^3)
 	\]
 \end{proposition}
+\begin{proof}
+	By the hypotheses on~$s$ we can write
+	\[s(r)=s(0)+s'(0)r+\frac12s''(\xi)r^2\]
+	for some~$\xi\in[0,r]$.  Replacing this into the definition of the Kernel
+	Rank Transform:
+	\[
+		\textsc{krt}_{g_h,s}(u)(x) = \int g_h(x-y)s(u(x)-u(y))dy
+	\]
+	\[
+		\textsc{krt}_{g_h,s}(u)(x) =
+		\int
+		g_h(x-y)
+		\left(
+		s(0)
+		+(u(x)-u(y))s'(0)
+		+\frac{s''(\xi)}2(u(x)-u(y))^2
+		\right)
+		dy
+	\]
+	the first term is equal to~$s(0)$; by the previous result, the second term
+	is equal to~$\frac{s'(0)\rho^2}2\Delta u(x)h^2+O(h^3)$.  It remains to
+	prove that~$\int g_h(x-y)(u(x)-u(y))^2dy\in O(h^3)$.
+
+	By linear change of variable, we write this integral as
+	\[
+		\int g(t)(u(x)-u(x-th))^2dt
+	\]
+
+\end{proof}
+
+
+
+
 
 Missing proposition: local effect of KRT with Heaviside step when the level
 line has a kink or angle.
