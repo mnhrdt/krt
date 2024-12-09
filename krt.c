@@ -310,6 +310,57 @@ static float gap_heaviside(float x)
 	return 0.5 * (2*x + gap_heaviside_parameter) / gap_heaviside_parameter;
 }
 
+static float gap_linear_parameter;
+static float gap_linear(float x)
+{
+	return gap_linear_parameter * x;
+}
+
+static float gap_door_parameter;
+static float gap_door(float x)
+{
+	return fabs(x) > gap_door_parameter ? 1 : 0;
+}
+
+static float gap_steps_parameter;
+static float gap_steps(float x)
+{
+	return round(x/gap_steps_parameter);
+}
+
+static float gap_doors_parameter;
+static float gap_doors(float x)
+{
+	return round(fabs(x)/gap_doors_parameter);
+}
+
+
+static float gap_quadratic_parameter;
+static float gap_quadratic(float x)
+{
+	float r = x*x;
+	if (x < 0) r *= -1;
+	return gap_quadratic_parameter * r;
+}
+
+static float gap_parabola_parameter;
+static float gap_parabola(float x)
+{
+	return gap_parabola_parameter * x*x;
+}
+
+static float gap_abs_parameter;
+static float gap_abs(float x)
+{
+	return gap_abs_parameter * fabs(x);
+}
+
+static float gap_cubic_parameter;
+static float gap_cubic(float x)
+{
+	return gap_cubic_parameter * x*x*x;
+}
+
 static float logistic_h_parameter;
 static float logistic_h(float x)
 {
@@ -343,7 +394,7 @@ static float (*get_heaviside_from_string(char *s))(float)
 
 	if (1 == sscanf(s, "gap%g", &p))
 	{
-		fprintf(stderr, "Heaviside with gap of radius = %g\n", fabs(p));
+		fprintf(stderr, "heaviside with gap of radius = %g\n", fabs(p));
 		gap_heaviside_parameter = fabs(p);
 		return gap_heaviside;
 	}
@@ -353,6 +404,27 @@ static float (*get_heaviside_from_string(char *s))(float)
 		fprintf(stderr, "logistic 'Heaviside' scaled by %g\n", fabs(p));
 		logistic_h_parameter = fabs(p);
 		return logistic_h;
+	}
+
+	if (1 == sscanf(s, "door%g", &p))
+	{
+		fprintf(stderr, "door of band %g\n", fabs(p));
+		gap_door_parameter = fabs(p);
+		return gap_door;
+	}
+
+	if (1 == sscanf(s, "steps%g", &p))
+	{
+		fprintf(stderr, "steps of band %g\n", fabs(p));
+		gap_steps_parameter = fabs(p);
+		return gap_steps;
+	}
+
+	if (1 == sscanf(s, "doors%g", &p))
+	{
+		fprintf(stderr, "doors of band %g\n", fabs(p));
+		gap_doors_parameter = fabs(p);
+		return gap_doors;
 	}
 
 	if (1 == sscanf(s, "arctan%g", &p))
@@ -368,6 +440,43 @@ static float (*get_heaviside_from_string(char *s))(float)
 		erf_h_parameter = fabs(p);
 		return erf_h;
 	}
+
+	if (1 == sscanf(s, "linear%g", &p))
+	{
+		fprintf(stderr, "gap σ(t)=%g*t\n", fabs(p));
+		gap_linear_parameter = fabs(p);
+		return gap_linear;
+	}
+
+	if (1 == sscanf(s, "quadratic%g", &p))
+	{
+		fprintf(stderr, "gap σ(t)=%g*t^2\n", fabs(p));
+		gap_quadratic_parameter = fabs(p);
+		return gap_quadratic;
+	}
+
+	if (1 == sscanf(s, "cubic%g", &p))
+	{
+		fprintf(stderr, "gap σ(t)=%g*t^3\n", fabs(p));
+		gap_cubic_parameter = fabs(p);
+		return gap_cubic;
+	}
+
+	if (1 == sscanf(s, "parabola%g", &p))
+	{
+		fprintf(stderr, "gap σ(t)=%g*t^3\n", fabs(p));
+		gap_parabola_parameter = fabs(p);
+		return gap_parabola;
+	}
+
+	if (1 == sscanf(s, "abs%g", &p))
+	{
+		fprintf(stderr, "gap σ(t)=%g*t^3\n", fabs(p));
+		gap_abs_parameter = fabs(p);
+		return gap_abs;
+	}
+
+
 
 	if (1 == sscanf(s, "H%g", &p))
 	{
