@@ -624,7 +624,8 @@ KRT with kernels~$g_h$.
 	derivatives up to order~$2$.
 	Then
 	\[
-		\textsc{krt}_{g_h,s}(u)(x) = s(0) + \frac{s'(0)\rho^2}2\Delta u(x)h^2
+		\textsc{krt}_{g_h,s}(u)(x) = s(0) + \frac{\rho^2}2\left(
+		s'(0)\Delta u(x) + s''(0)\|\nabla u(x)\|^2\right)h^2
 		+O(h^3)
 	\]
 \end{proposition}
