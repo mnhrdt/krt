@@ -560,6 +560,14 @@ lines.
 	$\int \left|g(x)\right|\left\|x\right\|^3\mathrm{d} x<+\infty$.
 \end{definition}
 
+\begin{remark}
+	The condition of laplacian consistency can be written using the following
+	notation for the momnets.  If we define the~$p$ moment of~$g$
+	as~$M_p(g)=\int g(x)x^{\otimes p}dx$ (a tensor of order~$p$).  Then~$g$ is
+	laplacian-consistent when~$M_0(g)=1$, $M_1(g)=0$, $M_2(g)=\rho^2I_2$
+	and~$M_3(g)<+\infty$.
+\end{remark}
+
 Notice that if~$g$ is a laplacian-consistent kernel, then each function of
 the family
 \[
@@ -603,10 +611,45 @@ Alvarez, Morel, Florack )
 		dy
 	\]
 	now, since~$x$ is fixed, the first three integrals can be computed thanks
-	to the firs three properties of laplacian consistency, to
+	to the first three properties of laplacian consistency, to
 	obtain~$u(x)+0+\frac{\rho^2}{2}\Delta u(x)$.  The remaining term can be
 	written as~$O(h^3)$ thanks to the hypotheses $\int|g(y)|\|y^3\|dy<+\infty$
 	and~$|D^3u|<M$.
+\end{proof}
+
+\begin{lemma}(local effect of KRT with polynomial step)
+	Let~$g$ be a kernel with finite moments up to order~$p$, $M_p(g)=\int
+	g(x)x^{\otimes p}dx$ and~$u\in C^2$ with bounded second derivatives.  Then
+\[
+	\textsc{krt}_{g_h,s^p}(u)(x)=h^pM_p(g)\left(\nabla u(x)\right)^p  +
+	O(h^{p+1})
+\]
+where~$M_p(g)(v)^p=M_p(g)(v,\cdots,v)$ means the~$p$-dimensional tensor~$M_p(g)$ applied
+to~$p$ copies of the vector~$v$.
+\end{lemma}
+
+\begin{proof}
+	First, notice that
+	\[
+		\int g(t)(v\cdot t)^pdt=M_p(g)(v)^p
+	\]
+	as can be readily checked using Einstein notation.
+
+	Now,
+	\begin{align*}
+		\textsc{krt}_{g_h,s^p}(u)(x)
+		&=\int g_h(x-y)\big(u(x)-u(y)\big)^pdx\\
+		&=\int g(t)\big(u(x)-u(x-ht)\big)^pdt\\
+	\end{align*}
+	and, by Taylor expansion of~$u$ we have
+	$u(x)-u(x-ht)=h\nabla u(x)\cdot t + O(h^2)$, thus
+	\begin{align*}
+		\textsc{krt}_{g_h,s^p}(u)(x)
+		&=\int g(t)\big(h\nabla u(x)\cdot t+O(h^2)\big)^pdt\\
+		&=\int g(t)\big(h^p(\nabla u(x)\cdot t)^p+O(h^{p+1})\big)dt\\
+		&=h^p\int g(t)(\nabla u(x)\cdot t)^pdt + O(h^{p+1})\\
+		&=h^pM_p(g)(\nabla u(x))^p+O(h^{p+1})
+	\end{align*}
 \end{proof}
 
 
@@ -621,42 +664,57 @@ KRT with kernels~$g_h$.
 	Let~$g$ be a laplacian-consistent kernel, and~$u$ be~$C^3$ with bounded
 	derivatives up to order~$3$.
 	Let~$s:\mathbf{R}\to\mathbf{R}$ be a~$C^2$ function with bounded
-	derivatives up to order~$2$.
+	derivatives up to order~$3$.
 	Then
 	\[
-		\textsc{krt}_{g_h,s}(u)(x) = s(0) + \frac{\rho^2}2\left(
-		s'(0)\Delta u(x) + s''(0)\|\nabla u(x)\|^2\right)h^2
+		\textsc{krt}_{g_h,s}(u)(x) = s(0)
+		+
+		\frac{
+			s'(0)\Delta u(x)
+			+
+			s''(0)\left\|\nabla u(x)\right\|^2
+		}2
+		\rho^2 h^2
 		+O(h^3)
 	\]
 \end{proposition}
 \begin{proof}
-	By the hypotheses on~$s$ we can write
-	\[s(r)=s(0)+s'(0)r+\frac12s''(\xi)r^2\]
-	for some~$\xi\in[0,r]$.  Replacing this into the definition of the Kernel
-	Rank Transform:
+	The result is obtained by linearity of~$\textsc{krt}_{g_h,s}(u)$ with
+	respect to~$s$ and the Taylor expansion of~$s$:
 	\[
-		\textsc{krt}_{g_h,s}(u)(x) = \int g_h(x-y)s(u(x)-u(y))dy
+		s(r)=s(0)+s'(0)r+\frac{s''(0)}2r^2+\frac{s'''(\xi)}{3!}r^3
 	\]
-	\[
-		\textsc{krt}_{g_h,s}(u)(x) =
-		\int
-		g_h(x-y)
-		\left(
-		s(0)
-		+(u(x)-u(y))s'(0)
-		+\frac{s''(\xi)}2(u(x)-u(y))^2
-		\right)
-		dy
-	\]
-	the first term is equal to~$s(0)$; by the previous result, the second term
-	is equal to~$\frac{s'(0)\rho^2}2\Delta u(x)h^2+O(h^3)$.  It remains to
-	prove that~$\int g_h(x-y)(u(x)-u(y))^2dy\in O(h^3)$.
+	for some~$\xi\in[0,r]$, and the last term can be bounded by a constant
+	by the hypotheses.  
 
-	By linear change of variable, we write this integral as
-	\[
-		\int g(t)(u(x)-u(x-th))^2dt
-	\]
 
+%	By the hypotheses on~$s$ we can write
+%	\[s(r)=s(0)+s'(0)r+\frac12s''(\xi)r^2\]
+%	for some~$\xi\in[0,r]$.  Replacing this into the definition of the Kernel
+%	Rank Transform:
+%	\[
+%		\textsc{krt}_{g_h,s}(u)(x) = \int g_h(x-y)s(u(x)-u(y))dy
+%	\]
+%	\[
+%		\textsc{krt}_{g_h,s}(u)(x) =
+%		\int
+%		g_h(x-y)
+%		\left(
+%		s(0)
+%		+(u(x)-u(y))s'(0)
+%		+\frac{s''(\xi)}2(u(x)-u(y))^2
+%		\right)
+%		dy
+%	\]
+%	the first term is equal to~$s(0)$; by the previous result, the second term
+%	is equal to~$\frac{s'(0)\rho^2}2\Delta u(x)h^2+O(h^3)$.  It remains to
+%	prove that~$\int g_h(x-y)(u(x)-u(y))^2dy\in O(h^3)$.
+%
+%	By linear change of variable, we write this integral as
+%	\[
+%		\int g(t)(u(x)-u(x-th))^2dt
+%	\]
+%
 \end{proof}
 
 
