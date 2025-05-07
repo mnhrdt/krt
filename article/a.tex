@@ -721,9 +721,6 @@ KRT with kernels~$g_h$.
 
 
 
-Missing proposition: local effect of KRT with Heaviside step when the level
-line has a kink or angle.
-
 \clearpage
 \begin{proposition}\label{prp:curv1}
 	Let~$u:\mathbf{R}^2\to\mathbf{R}$ such that the level line~$u=u(0,0)$ is a
@@ -901,6 +898,40 @@ line has a kink or angle.
 	concludes the proof.
 \end{proof}
 
+The previous theorem % TODO add ref?
+describes the local behavior of the KRT with Heaviside step.
+It can be stated as ``the infinitessimal generator of the KRT is the
+curvature operator~$\mathrm{div}\left(\frac{\nabla u}{\left\|\nabla
+u\right\|}\right)$''.
+This is analogous to theorem  % TODO add ref?
+which can be stated as ``the infinitessimal generator of Gaussian blur is
+the laplacian operator~$\Delta u$.''
+These two results deal with the case where~$u$ is smooth, otherwise the
+derivatives don't make sense.  In the case of the KRT with Heaviside step,
+the result above has a stronger requirement than the level lines of~$u$ are
+smooth (which will not be the case in general, even for $u\in C^\infty$).  The
+next proposition describes the behaviour of the KRT with Heaviside step
+at a critical point where the level lines meet at an angle or at a cusp.
+
+
+
+\begin{theorem}[Heaviside KRT with an angle]
+	Let~$u:\mathbf{R}^2\to\mathbf{R}$ and~$x\in\mathbf{R}^2$ such that
+	the level line~$[u=u(x)]$ is a piecewise smooth curve with an
+	angle~$\alpha$ at~$x$.
+	Let~$g:\mathbf{R}^2\to\mathbf{R}$ be a radial,
+	normalized kernel with
+	finite moments.  Then, if we
+	denote~$g_h(x)=\frac{1}{h^2}g(x/h)$,
+	\[
+		\textsc{krt}_{g_h,H}(u)(x)=\frac\alpha{2\pi}
+		+
+		\frac\gamma{4\pi}\left(\frac{\kappa_1+\kappa_2}2\right) h+O(h^2)
+	\]
+	where~$\gamma=\int_{\mathbf{R}^2}g(x)\|x\|dx$ and
+	$k_1$ and~$k_2$ are the curvatures of the level line at each side of the
+	angle (see Figure).
+\end{theorem}
 
 
 \subsection{Iterated filtering}

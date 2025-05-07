@@ -1,6 +1,6 @@
 # user-editable configuration
 CFLAGS  = -g -Wall -Wextra
-CFLAGS  = -march=native -O3
+CFLAGS  = -march=native -O3 -fopenmp
 
 # required libraries
 LDLIBS  = -lm -lfftw3 -lpng -ljpeg -ltiff
