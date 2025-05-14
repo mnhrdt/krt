@@ -962,6 +962,11 @@ at a critical point where the level lines meet at an angle or at a cusp.
 	angle (see Figure).
 \end{theorem}
 
+Observation: the previous theorem is not completely general, as level lines
+may have more complex behavior (for example, at a saddle point of~$u$ the
+level lines will have an intersection).  This result can be generalized to
+these situations.
+
 
 \subsection{Iterated filtering}
 
@@ -984,7 +989,27 @@ Apparently, we can define a limit operator~$\textsc{krt}^\infty_\sigma$ by
 \[
 	\textsc{krt}^\infty_\sigma(u) := \lim_{n\to\infty}\textsc{krt}^n_\sigma(u)
 \]
-We do not know whether these limit operators are the kernel rank transdform for a different kernel.   If that was the case, the krt of that kernel  would be idempotent.   
+We do not know whether these limit operators are the kernel rank transdform
+for a different kernel.   If that was the case, the krt of that kernel
+would be idempotent.
+
+\subsection{Discretization artifacts}
+
+some experiments with krt in a discrete setting using a heaviside step.
+We observe that certain behaviours of the continuous case are not directly
+inherited in the discrete case.
+
+for~$u(x,y)=px+qy$ the level lines are straight lines.  Thus the krt is
+constant equal to~$1/2$.  This behaviour is observed exactly in the discrete
+case.  It can be seen also from the definition of the discrete krt (by
+symmetry of the kernel).
+
+if~$u$ is a distance function~$u(x)=\|x\|$ then its level lines are circles
+of curvature~$1/\|x\|$.  for a kernel~$g_h$ with~$h\to 0$, the krt of this
+function goes to~$1/2+1/(2\|x\|)$.  In the discrete case, the observed
+behaviour is very different, especially for a kernel of small support.  Far
+from the origin, most of the transformed image is equal to $1/2$, and the
+other, higher values are concentrated at straight lines at 45 degrees, etc.
 
 \section{Related constructions}
 
