@@ -540,6 +540,31 @@ Visualization: gray-scale, signed
 
 \subsection{Limit for a point kernel}
 
+In this section we study the effect of the kernel rank
+transform~$\textsc{krt}_{G_h,\sigma}$ for Gaussian kernels
+$G_h(x)=\frac1{2\pi h^2}\exp\frac{-\|x\|^2}{2h^2}$ as~$h\to 0$.
+We will see that there are two different behaviours depending on the
+regularity of~$\sigma$ at~$0$.  If~$\sigma$ is smooth around 0, then the
+local effect of the KRT is equivalent to a convolution, whose infinitesimal
+generator is the Laplacian operator:
+\begin{equation}\label{eq:localsmooth}
+	\textsc{krt}_{G_h,\sigma}(u)(x)=\sigma(0)+\sigma'(0)\Delta u(x)\frac{h^2}2+O(h^3)
+\end{equation}
+On the other hand, if~$\sigma$ is discontinuous around 0, like
+the centered Heaviside function~$\sigma=H$, then the generator is the curvature
+operator
+\begin{equation}\label{eq:localheaviside}
+	\textsc{krt}_{G_h,H}(u)(x)=\frac12+\frac1{4\sqrt{2\pi}}\mathrm{curv}(u)(x)h+O(h^2)
+\end{equation}
+where~$\mathrm{curv}(u)(x)=\mathrm{div}\left(\frac{\nabla u}{\|\nabla
+u\|}\right)$.  
+Propositions~\ref{thm:contistep} and~\ref{thm:krtheaviside}
+below give full statements and proofs of these two results, where the kernel
+is not necessarily Gaussian.
+
+
+
+
 % Start with the case of a disk
 Case of a square kernel and a parabolic level line\\
 \includegraphics[width=0.6\linewidth]{f/pcurv.png}
@@ -553,10 +578,12 @@ we will see that the ``germ'' of the krt is the curvature of the level
 lines.
 
 \begin{definition}
-	A~\emph{laplacian-consistent kernel of size~$\rho>0$} is a
+	A~\emph{laplacian-consistent kernel} is a
 	function~$g:\mathbf{R}^2\to\mathbf{R}$ with the following
-	properties:~$\int g=1$, $\int g(x)x\mathrm{d} x=0$,
-	$\int g(x)x\otimes x\mathrm{d} x=\rho^2 I_2$ and
+	properties:~$\int g=1$, $\int g(x)x\mathrm{d} x=
+	\left(\begin{smallmatrix}0\\0\end{smallmatrix}\right) $,
+	$\int g(x)x\otimes x\mathrm{d}
+	x=\left(\begin{smallmatrix}1&0\\0&1\end{smallmatrix}\right)$ and
 	$\int \left|g(x)\right|\left\|x\right\|^3\mathrm{d} x<+\infty$.
 \end{definition}
 
@@ -564,7 +591,7 @@ lines.
 	The condition of laplacian consistency can be written using the following
 	notation for the momnets.  If we define the~$p$ moment of~$g$
 	as~$M_p(g)=\int g(x)x^{\otimes p}dx$ (a tensor of order~$p$).  Then~$g$ is
-	laplacian-consistent when~$M_0(g)=1$, $M_1(g)=0$, $M_2(g)=\rho^2I_2$
+	laplacian-consistent when~$M_0(g)=1$, $M_1(g)=0$, $M_2(g)=I_2$
 	and~$M_3(g)<+\infty$.
 \end{remark}
 
@@ -585,7 +612,7 @@ Alvarez, Morel, Florack )
 	\[
 		%\lim_{h\to 0}
 		%\frac{g_h*u(x)-u(x)}{h^2}=\frac{\rho^2}{2}\Delta u(x).
-		g_h*u(x)=u(x)+\frac{\rho^2}{2}\Delta u(x) h^2 + O(h^3).
+		g_h*u(x)=u(x)+\Delta u(x) \frac{h^2}{2} + O(h^3).
 	\]
 \end{proposition}
 \begin{proof}
@@ -612,12 +639,13 @@ Alvarez, Morel, Florack )
 	\]
 	now, since~$x$ is fixed, the first three integrals can be computed thanks
 	to the first three properties of laplacian consistency, to
-	obtain~$u(x)+0+\frac{\rho^2}{2}\Delta u(x)$.  The remaining term can be
+	obtain~$u(x)+0+\frac{h^2}2\Delta u(x)$.  The remaining term can be
 	written as~$O(h^3)$ thanks to the hypotheses $\int|g(y)|\|y^3\|dy<+\infty$
 	and~$|D^3u|<M$.
 \end{proof}
 
 \begin{lemma}(local effect of KRT with polynomial step)
+	\label{lem:polystep}
 	Let~$g$ be a kernel with finite moments up to order~$p$, $M_p(g)=\int
 	g(x)x^{\otimes p}dx$ and~$u\in C^2$ with bounded second derivatives.  Then
 \[
@@ -660,34 +688,33 @@ KRT with kernels~$g_h$.
 % uses a different scaling, not according to that after the definition of
 % laplacina consistency.
 
-\begin{proposition}[Local effect of KRT with continuous step]
+\begin{theorem}[Local effect of KRT with continuous step]
+	\label{thm:contistep}
 	Let~$g$ be a laplacian-consistent kernel, and~$u$ be~$C^3$ with bounded
 	derivatives up to order~$3$.
-	Let~$s:\mathbf{R}\to\mathbf{R}$ be a~$C^2$ function with bounded
+	Let~$\sigma:\mathbf{R}\to\mathbf{R}$ be a~$C^2$ function with bounded
 	derivatives up to order~$3$.
 	Then
 	\[
-		\textsc{krt}_{g_h,s}(u)(x) = s(0)
+		\textsc{krt}_{g_h,\sigma}(u)(x) = \sigma(0)
 		+
 		\frac{
-			s'(0)\Delta u(x)
+			\sigma'(0)\Delta u(x)
 			+
-			s''(0)\left\|\nabla u(x)\right\|^2
+			\sigma''(0)\left\|\nabla u(x)\right\|^2
 		}2
-		\rho^2 h^2
+		h^2
 		+O(h^3)
 	\]
-\end{proposition}
+\end{theorem}
 \begin{proof}
-	The result is obtained by linearity of~$\textsc{krt}_{g_h,s}(u)$ with
-	respect to~$s$ and the Taylor expansion of~$s$:
+	The result is obtained by linearity of~$\textsc{krt}_{g_h,\sigma}(u)$ with
+	respect to~$\sigma$ and the Taylor expansion of~$\sigma$:
 	\[
-		s(r)=s(0)+s'(0)r+\frac{s''(0)}2r^2+\frac{s'''(\xi)}{3!}r^3
+		\sigma(r)=\sigma(0)+\sigma'(0)r+\frac{\sigma''(0)}2r^2+\frac{\sigma'''(\xi)}{3!}r^3
 	\]
 	for some~$\xi\in[0,r]$, and the last term can be bounded by a constant
-	by the hypotheses.  
-
-
+	by the hypotheses.
 %	By the hypotheses on~$s$ we can write
 %	\[s(r)=s(0)+s'(0)r+\frac12s''(\xi)r^2\]
 %	for some~$\xi\in[0,r]$.  Replacing this into the definition of the Kernel
@@ -722,7 +749,7 @@ KRT with kernels~$g_h$.
 
 
 \clearpage
-\begin{proposition}\label{prp:curv1}
+\begin{lemma}\label{lem:curv1}
 	Let~$u:\mathbf{R}^2\to\mathbf{R}$ such that the level line~$u=u(0,0)$ is a
 	function of equation~$Y=c(X)$, smooth in a neighborhood of the origin,
 	with~$c(0)=c'(0)=0$.
@@ -734,7 +761,7 @@ KRT with kernels~$g_h$.
 	\[
 		\textsc{krt}_{g_h,H}(u)(0)=\frac12+\frac{c''(0)}2\rho h+O(h^2)
 	\]
-\end{proposition}
+\end{lemma}
 
 \begin{proof}
 	Let us write the definition of~$\textsc{krt}_{g_h,H}(u)(0)$:
@@ -793,6 +820,7 @@ KRT with kernels~$g_h$.
 
 
 \begin{theorem}[behavior of the KRT with Heaviside step]
+	\label{thm:krtheaviside}
 	Let~$u:\mathbf{R}^2\to\mathbf{R}$ and~$x\in\mathbf{R}^2$ such that
 	the level line~$[u=u(x)]$ is a smooth curve on a neighborhood
 	of~$x$.  Let~$g:\mathbf{R}^2\to\mathbf{R}$ be a radial,
@@ -885,7 +913,8 @@ KRT with kernels~$g_h$.
 
 	Now we can apply the previous proposition to the kernel~$g$ and
 	function~$\tilde u$ at point~$x=0$.  Notice that~$\rho$, as defined in the
-	previous proposition is equal to~$\frac{\gamma}{2\pi}$.  Then, the
+	previous proposition is equal to~$\frac{\gamma}{2\pi}$ since the kernel is
+	radial (otherwise,~$\rho$ would depend on the angle of rotation).  Then, the
 	proposition reads
 	\[
 		\textsc{krt}_{g_h,H}(\tilde
