@@ -1536,6 +1536,50 @@ rank transform allows to compare them directly.
 \bibliographystyle{plain}
 \bibliography{refs}
 
+\section*{Appendix: one-parameter operators}
+
+We consider one-parameter families of operators~$T_s$ acting upon
+functions~$u:\mathbf{R}^2\to\mathbf{R}$ of whatever regularity is required
+for the definitions to make sense.  The operators do not necessarily satisfy
+a semigroup property (thus $T_aT_b$ is not necessarily of the form~$T_c$ for
+any~$c$), and they are not necessarily the identity for~$s=0$.
+
+\begin{tabular}{l|l|l}
+	name & $T_s(u)(x)$ & $T_0(u)(x)+A[u]s+\cdots$ \\
+	\hline
+	heat &
+	$\displaystyle (G_s*u)(x)$ &
+	$\displaystyle u(x)-\Delta u(x)\frac{s^2}2+O(s^3)$ \\
+	reverse heat &
+	$\displaystyle (G_s^{-1}*u)(x)$ &
+	$\displaystyle u(x)+\Delta u(x)\frac{s^2}2+O(s^3)$ \\
+	$a$-shift &
+	$\displaystyle u(x-sa)$ &
+	$\displaystyle u(x)-a\cdot\nabla u(x) s +O(s^2)$ \\
+	dilation &
+	$\displaystyle \sup_{y\in B_s(x)}u(y)$ &
+	$\displaystyle u(x)+\left\|\nabla u(x)\right\| s +O(s^2)$ \\
+	erosion &
+	$\displaystyle \inf_{y\in B_s(x)}u(y)$ &
+	$\displaystyle u(x)-\left\|\nabla u(x)\right\| s +O(s^2)$ \\
+	median &
+	$\displaystyle \mathrm{med}_{y\in B_s(x)}u(y)$ &
+	$\displaystyle u(x)-\left\|\nabla u(x)\right\|\mathrm{div}\left(
+	\frac{\nabla u(x)}{\left\|\nabla u(x)\right\|}
+	\right)s +O(s^2)$ \\
+	rof &
+	$\displaystyle \arg\min_{v}\left\{\int\left\|\nabla
+	v\right\|+\frac1{2s}\int(u-v)^2\right\}$ &
+	$\displaystyle u(x)-\mathrm{div}\left(
+	\frac{\nabla u(x)}{\left\|\nabla u(x)\right\|}
+	\right)s +O(s^2)$ \\
+	krt &
+	$\displaystyle \int G_s(x-y)H(u(x)-u(y))\mathrm{d}y$ &
+	$\frac12+\mathrm{div}\left(
+	\frac{\nabla u(x)}{\left\|\nabla u(x)\right\|}
+	\right)s +O(s^2)$ \\
+\end{tabular}
+
 
 \end{document}
 
