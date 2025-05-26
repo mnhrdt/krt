@@ -2,6 +2,7 @@
 #include <math.h>   // fabs, ceil, exp
 #include <stdio.h>  // sscanf, fprintf
 #include <stdlib.h> // malloc, free
+#include <string.h> // strcmp
 
 // pixel management                                                         {{{1
 
@@ -368,6 +369,22 @@ static float gap_cbrt(float x)
 	return cbrtf(x/gap_cbrt_parameter);
 }
 
+static float gap_pow_parameter;
+static float gap_pow(float x)
+{
+	if (x == 0)
+		return 0;
+	float r = pow(fabs(x), gap_pow_parameter);
+	return x>0?r:-r;
+}
+
+static float gap_relu(float x)
+{
+	return x>0?x:0;
+}
+
+
+
 static float logistic_h_parameter;
 static float logistic_h(float x)
 {
@@ -469,6 +486,13 @@ static float (*get_heaviside_from_string(char *s))(float)
 		return gap_cubic;
 	}
 
+	if (1 == sscanf(s, "pow%g", &p))
+	{
+		fprintf(stderr, "gap σ(t)=t^%g\n", p);
+		gap_pow_parameter = p;
+		return gap_pow;
+	}
+
 	if (1 == sscanf(s, "parabola%g", &p))
 	{
 		fprintf(stderr, "gap σ(t/%g)=t^2\n", fabs(p));
@@ -491,13 +515,17 @@ static float (*get_heaviside_from_string(char *s))(float)
 		return gap_abs;
 	}
 
-
-
 	if (1 == sscanf(s, "H%g", &p))
 	{
 		fprintf(stderr, "Heaviside H%g\n", p);
 		if (p == 1) return heaviside_H1;
 		else return heaviside_H0;
+	}
+
+	if (0 == strcmp(s, "relu"))
+	{
+		fprintf(stderr, "Heaviside relu\n");
+		return gap_relu;
 	}
 
 	fprintf(stderr, "discrete Heaviside function\n");
