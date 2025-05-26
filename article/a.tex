@@ -1536,6 +1536,10 @@ rank transform allows to compare them directly.
 \bibliographystyle{plain}
 \bibliography{refs}
 
+
+
+\clearpage
+
 \section*{Appendix: one-parameter operators}
 
 We consider one-parameter families of operators~$T_s$ acting upon
@@ -1621,6 +1625,91 @@ any~$c$), and they are not necessarily the identity for~$s=0$.
 %
 % These provide rigorous frameworks for generators beyond classical linear
 % semigroups.
+
+In the ideal case, we have a one-parameter semigroup of operators~$T_s$,
+defined for~$s\ge 0$ over functions~$u:\mathbf{R}^2\to\mathbf{R}$.
+This family of operators is such that~$T_0$ is the identity (or, at
+least tends to the identity as~$s\to 0^+$) and satisfy the semigroup
+property~$T_rT_s=T_{r+s}$.  In that case, we can define the infinitesimal
+generator of~$T$ as the operator
+\[
+	Au = \lim_{s\to0}\frac{T_su-u}s
+\]
+and then we can write the asymptotic expansion of~$T_s$
+\[
+	T_su = u + sAu + \frac{s^2}2 A^2u + \frac{s^3}6 A^3u+\cdots
+\]
+
+Notice that the family~$T_s$ can be recovered from its infinitesimal
+generator~$A$ by means of the exponential:
+\[
+	T_su := e^{sA}u
+	\equiv
+	\lim_{n\to\infty}\left(I+\frac1nA\right)^nu
+	\equiv
+	\lim_{N\to\infty}\sum_{n=0}^N \frac{s^n}{n!}A^nu
+\]
+This allows to build a one-parameter semigroup from a single, moderately
+well-behaved, operator~$A$.
+
+Another way to recover~$T_s$ from~$A$ is by solving the following PDE
+for~$v(t,x)$
+\[
+	\begin{cases}
+		v_t = Av  \\
+		v(0,x)=u(x)
+	\end{cases}
+\]
+and then set~$T_s(u)(x)=v(s,x)$.
+
+The canonical example of all of this is the translation-semigroup of a
+constant
+speed~$a\in\mathbf{R}^2$.  We have~$T_su(x)=u(x-sa)$, whose infinitessimal
+generator is~$Au=a\cdot\nabla u$ and satisfies the linear transport
+equation~$u_t=a\cdot\nabla u$.
+
+Another famous example is the heat semigroup~$T_su=G_{s^2} * u$
+where~$G_{s^2}$ is the gaussian kernel of size~$s$ (maybe missing a constant
+2 somewhere...).  The infinitesimal generator is the laplacian and it
+satisfies the heat equation.
+
+A simple variation of the heat semigroup:  anisotropic
+diffusion~$u_t=\mathrm{div}\left(D\nabla u\right)$ where~$D$ is a (possibly
+position-varying) diffusion matrix.  The PDE and infinitesimal generator are
+just as clear as for the Gaussian case, but here the semigroup~$T_s$ does not
+admit a closed-form solution when~$D$ is not constant.
+
+If~$T_s$ is shift-covariant and linear then it is given by some fourier
+multiplier~$T_su=\mathcal{F}^{-1}(m(s,\xi)\hat{u}(\xi))$.  In that case~$Au$
+is not necessarily a differential operator on~$u$, but a more general
+pseudo-differential operator.
+
+\bigskip
+
+When~$T_s$ is not a semigroup, some of the constructions above break down,
+but not all.  For example, we can still write the Taylor development
+\[
+	T_su = A_0u + A_1us+A_2u\frac{s^2}2+A_3u\frac{s^3}{3!}+\cdots
+\]
+but the operators~$A_i$ are in general unrelated, and not powers of a single
+operator operator~$A$.
+
+An easy example of that is to take some operator~$A$ and
+define~$T_su=u+sAu$.  This is not a semigroup, but still you can say that
+its ``first order generator'' is~$A$.  Obviously these construcitons are not
+unique: there will be many one-parmeter families of operators whose
+first-order generator is~$A$, for example~$T_su=\frac{1}{1-sAu}$ and so on.
+Among all of these, there is a particularly interesting one, which is the
+semigroup~$T_su=e^{sA}u$.
+
+The act of building a semigroup from a non-semigroup~$T_s$, by
+taking~$e^{sA}$ where~$A$ is the first-order generator of~$T$ is apparently
+called the Moreau-Yosida projection.
+
+
+
+
+
 
 
 \end{document}
