@@ -338,27 +338,34 @@ static float gap_doors(float x)
 static float gap_quadratic_parameter;
 static float gap_quadratic(float x)
 {
-	float r = x*x;
-	if (x < 0) r *= -1;
-	return gap_quadratic_parameter * r;
+	float r = x / gap_quadratic_parameter;
+	return x < 0 ? -r*r : r*r;
 }
 
 static float gap_parabola_parameter;
 static float gap_parabola(float x)
 {
-	return gap_parabola_parameter * x*x;
+	float r = x / gap_parabola_parameter;
+	return r*r;
 }
 
 static float gap_abs_parameter;
 static float gap_abs(float x)
 {
-	return gap_abs_parameter * fabs(x);
+	return fabs(x / gap_abs_parameter);
 }
 
 static float gap_cubic_parameter;
 static float gap_cubic(float x)
 {
-	return gap_cubic_parameter * x*x*x;
+	float r = x / gap_cubic_parameter;
+	return r*r*r;
+}
+
+static float gap_cbrt_parameter;;
+static float gap_cbrt(float x)
+{
+	return cbrtf(x/gap_cbrt_parameter);
 }
 
 static float logistic_h_parameter;
@@ -450,24 +457,32 @@ static float (*get_heaviside_from_string(char *s))(float)
 
 	if (1 == sscanf(s, "quadratic%g", &p))
 	{
-		fprintf(stderr, "gap σ(t)=%g*t^2\n", fabs(p));
+		fprintf(stderr, "gap σ(t/%g)=t^2*sgn(t)\n", fabs(p));
 		gap_quadratic_parameter = fabs(p);
 		return gap_quadratic;
 	}
 
 	if (1 == sscanf(s, "cubic%g", &p))
 	{
-		fprintf(stderr, "gap σ(t)=%g*t^3\n", fabs(p));
+		fprintf(stderr, "gap σ(t/%g)=t^3\n", fabs(p));
 		gap_cubic_parameter = fabs(p);
 		return gap_cubic;
 	}
 
 	if (1 == sscanf(s, "parabola%g", &p))
 	{
-		fprintf(stderr, "gap σ(t)=%g*t^3\n", fabs(p));
+		fprintf(stderr, "gap σ(t/%g)=t^2\n", fabs(p));
 		gap_parabola_parameter = fabs(p);
 		return gap_parabola;
 	}
+
+	if (1 == sscanf(s, "cbrt%g", &p))
+	{
+		fprintf(stderr, "gap cbrt(t/%g)\n", fabs(p));
+		gap_cbrt_parameter = fabs(p);
+		return gap_cbrt;
+	}
+
 
 	if (1 == sscanf(s, "abs%g", &p))
 	{
