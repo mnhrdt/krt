@@ -538,14 +538,14 @@ Typical ranges: $[1,N^2]$, $[0,1]$, $[-1,1]$
 Visualization: gray-scale, signed
 %(point to a later section where the link to curvature is explained)
 
-\subsection{Limit for a point kernel}
+\subsection{Infinitesimal generator}
 
 In this section we study the effect of the kernel rank
 transform~$\textsc{krt}_{G_h,\sigma}$ for Gaussian kernels
 $G_h(x)=\frac1{2\pi h^2}\exp\frac{-\|x\|^2}{2h^2}$ as~$h\to 0$.
 We will see that there are two different behaviours depending on the
 regularity of~$\sigma$ at~$0$.  If~$\sigma$ is smooth around 0, then the
-local effect of the KRT is equivalent to a convolution, whose infinitesimal
+local effect of the KRT is equivalent to a convolution by~$G_h$, whose infinitesimal
 generator is the Laplacian operator:
 \begin{equation}\label{eq:localsmooth}
 	\textsc{krt}_{G_h,\sigma}(u)(x)=\sigma(0)+\sigma'(0)\Delta u(x)\frac{h^2}2+O(h^3)
@@ -1552,8 +1552,8 @@ any~$c$), and they are not necessarily the identity for~$s=0$.
 	name & $T_s(u)(x)$ & $T_0(u)(x)+A[u]s+\cdots$ \\
 	\hline
 	heat &
-	$\displaystyle (G_s*u)(x)$ &
-	$\displaystyle u(x)-\Delta u(x)\frac{s^2}2+O(s^3)$ \\
+	$\displaystyle G_s*u$ &
+	$\displaystyle u-\Delta u\frac{s^2}2+O(s^3)$ \\
 	reverse heat &
 	$\displaystyle (G_s^{-1}*u)(x)$ &
 	$\displaystyle u(x)+\Delta u(x)\frac{s^2}2+O(s^3)$ \\
