@@ -916,15 +916,46 @@ APPLICATION: SIMULATION OF PERCEPTION (retinex)\\
 
 
 \begin{frame}
+DISCRETIZATION ARTIFACTS\\
+========================
+
+%MAKE: all: o/dist.png o/distcurv.png o/distk3.png o/distk5.png o/distk7.png
+%MAKE: all: o/distg5.png
+%MAKE: o/dist.npy: ; plambda zero:201x201 ':r' -o $@
+%MAKE: o/dist.png: o/dist.npy ; qauto -p 0 $^ $@
+%MAKE: o/distcurv.png: o/dist.npy ; plambda -b p $^ 'a,gf dup vnorm /'|plambda -b p 'x,db'|sauto -p 2.04 - $@
+%MAKE: o/distk%.png: o/dist.npy ; krt actualsquare$* $^ | palette 0 1 signed - $@
+%MAKE: o/distg5.png: o/dist.npy ; krt gauss8 $^ | palette 0 1 signed - $@
+
+\begin{tabular}{lll}
+	\includegraphics[width=0.28\linewidth]{o/dist.png} &
+	\includegraphics[width=0.28\linewidth]{o/distcurv.png} &
+	\includegraphics[width=0.28\linewidth]{o/distk3.png} \\
+	\scriptsize $u(x,y)=\sqrt{x^2+y^2}$ &
+	\scriptsize $\mathrm{curv}(u)=1/\sqrt{x^2+y^2}$ &
+	\scriptsize $\textsc{KRT}_{\color{red}3}(u)$\\
+	&&\\
+	\includegraphics[width=0.28\linewidth]{o/distk5.png} &
+	\includegraphics[width=0.28\linewidth]{o/distk7.png} &
+	\includegraphics[width=0.28\linewidth]{o/distg5.png} \\
+	\scriptsize $\textsc{KRT}_{\color{red}5}(u)$ &
+	\scriptsize $\textsc{KRT}_{\color{red}7}(u)$ &
+	\scriptsize $\textsc{KRT}_{\color{red}G_5}(u)$
+\end{tabular}
+
+\end{frame}
+
+
+\begin{frame}
 APPLICATION: CLEANER CROSS-CORRELATIONS\\
 =======================================
 
-%\begin{tabular}{cc}
-%	\includegraphics[width=0.43\linewidth]{f/i12345.png} &
-%	\includegraphics[width=0.43\linewidth]{f/t12345.jpg} \\
-%	\includegraphics[width=0.43\linewidth]{f/plaincorr_i_t.png} &
-%	\includegraphics[width=0.43\linewidth]{f/croscorr_i_t.png} \\
-%\end{tabular}
+\begin{tabular}{cc}
+	\includegraphics[width=0.43\linewidth]{f/i12345.png} &
+	\includegraphics[width=0.43\linewidth]{f/t12345.jpg} \\
+	\includegraphics[width=0.43\linewidth]{f/plaincorr_i_t.png} &
+	\includegraphics[width=0.43\linewidth]{f/croscorr_i_t.png} \\
+\end{tabular}
 
 \end{frame}
 
