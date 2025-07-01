@@ -598,14 +598,16 @@ GENERAL PROPERTIES OF THE KRT\\
 {\bf P2.} Scaling and shifting:
 $R_{\kappa,\,{\color{red}a}\sigma+{\color{red}b}}={\color{red}a}\,R_{\kappa,\sigma}+{\color{red}b}\int\kappa$.
 
-{\bf P3.} Symmetry: $\R_{\kappa,\sigma}({\color{red}-}u)={\color{red}-}R_{\kappa,\sigma}(u)\quad$ (if~$\sigma$ is odd)
+{\bf P3.} Symmetry: $\R_{\kappa,\sigma}({\color{red}-}u)={\color{red}-}R_{\kappa,\sigma}(u)\quad$ {\color{gray}(if~$\sigma$ is odd)}
 
 {\bf P5.} Affine covariance:
 \( R_{\kappa,\sigma}\left(u\circ{\color{red}\varphi}\right) =
 R_{{\color{red}\tilde\kappa},\sigma}\left(u\right)\circ\color{red}\varphi\)
 		where~$\varphi(x)=Ax+b$ and $\tilde\kappa=\frac1{|A|}\kappa\circ A^{-1}$.
 
-		{\bf P6.} Locality: $R_{\kappa,\sigma}(u)(x)$ only depends on~$u|_{\{x+y:y\in\mathrm{supp}(\kappa)\}}$
+{\bf P6.} Locality: $R_{\kappa,\sigma}(u)(x)$ only depends on~$u|_{\{x+y:y\in\mathrm{supp}(\kappa)\}}$
+
+	{\bf P7'.} If~$\partial[u>u(x)]$ is straight then~$R_{\kappa,\sigma}(u)(x)=\sigma(0)\int\kappa$. {\color{gray}(under symmetry hypotheses on~$\kappa,\sigma$)}
 
 
 \end{frame}
@@ -618,7 +620,6 @@ PROPERTIES FOR THE HEAVISIDE CASE\\
 for any increasing~$\color{red}g$
 $$R_{\kappa,H}({\color{red}g}\circ u)=R_{\kappa,H}(u)$$
 \pause
-
 {\bf H2.} For~$x=\mathrm{argmax}(u)$, $R_{\kappa,H}(u)(x)=\int\kappa$.
 
 {\bf H3.} For~$x=\mathrm{argmin}(u)$, $R_{\kappa,H}(u)(x)=0$.
@@ -633,7 +634,7 @@ $$R_{\kappa,H}({\color{red}g}\circ u)=R_{\kappa,H}(u)$$
 	\includegraphics[width=0.2\linewidth]{o/gbsqrt.png} &
 	\includegraphics[width=0.2\linewidth]{o/gbsqsq.png} &
 	\includegraphics[width=0.2\linewidth]{o/gbsqata.png} &
-	$\longrightarrow$ &
+	$\Longrightarrow$ &
 	\includegraphics[width=0.2\linewidth]{i/gbarbsquare.png} \\
 	$\sqrt{u}$ &
 	$u^2$ &
@@ -697,12 +698,12 @@ if~$T(g\circ u)=T(u)$ for any increasing~$g$.
 
 {\bf\color{red} Proposition 1.}
 If~$T$ is continuous and contrast-invariant then it is trivial: $T(u)=T(0)$ for
-any~$u$).
+any~$u$.
 
 \pause
 
 {\color{gray}
-Proof: the path~$\lambda\mapsto\lambda u$ links any image $u$ to~$0$.
+Proof: continuous path~$\lambda\mapsto\lambda u$ from $u$ to~$0$.
 }
 
 \pause
@@ -900,8 +901,55 @@ MYSTERY EXPLAINED!\\
 
 
 \begin{frame}
-TABLE OF INFINITESIMAL GENERATORS
+TABLE OF {\color{red}INFINITESIMAL GENERATORS}
 =================================
+
+\small
+\begin{tabular}{l|l|l}
+	name & $T_s(u)(x)$ & $T_0(u)(x)+{\color{red}A[u]}s+\cdots$ \\
+	\hline
+	$a$-shift &
+	$\displaystyle u(x-sa)$ &
+	$\displaystyle u(x)-{\color{red}a\cdot\nabla u(x)} s +O(s^2)$ \\
+	heat &
+	$ G_s*u$ &
+	$u{\color{red}-\frac12\Delta u}s^2+O(s^3)$ \\
+	rev. heat &
+	$G_s^{-1}*u$ &
+	$u{\color{red}+\frac12\Delta u}s^2+O(s^3)$ \\
+	dilation &
+	$\displaystyle \sup_{y\in B_s(x)}u(y)$ &
+	$\displaystyle u{\color{red}-\left\|\nabla u\right\|} s +O(s^2)$ \\
+	erosion &
+	$\displaystyle \inf_{y\in B_s(x)}u(y)$ &
+	$\displaystyle u{\color{red}+\left\|\nabla u\right\|} s +O(s^2)$ \\
+	median &
+	$\displaystyle \mathop{med}_{y\in B_s(x)}u(y)$ &
+	$u-{\color{red}\left\|\nabla u\right\|\mathrm{div}\left(
+	\frac{\nabla u}{\left\|\nabla u\right\|}
+	\right)}s +O(s^2)$ \\
+	R.O.F. &
+	$\small\arg\min_{v}\left\{\int\left\|\nabla
+	v\right\|+\frac1{2s}\int(u\!-\!v)^2\right\}$ &
+	$u-{\color{red}\mathrm{div}\left(
+	\frac{\nabla u}{\left\|\nabla u\right\|}
+	\right)}s +O(s^2)$ \\
+	$\textsc{KRT}_{G_s,H}$ &
+	$\small\displaystyle \int G_s(x-y)H(u(x)-u(y))\mathrm{d}y$ &
+	$\frac12+{\color{red}\mathrm{div}\left(
+	\frac{\nabla u}{\left\|\nabla u\right\|}
+	\right)}s +O(s^2)$ \\
+	$\textsc{KRT}_{G_s,\sigma}$ &
+	$\small\displaystyle \int G_s(x-y)\sigma(u(x)-u(y))\mathrm{d}y$ &
+	$\sigma(0)+{\color{red}\frac{\sigma'(0)}2\Delta u} s +O(s^2)$ \\
+	frac. lap &
+	$\displaystyle \mathcal{F}^{-1}(e^{-s|\xi|^\alpha}\hat u(\xi))$ &
+	$\displaystyle u-{\color{red}(-\Delta)^{-\alpha/2}u}s+O(s^2)$ \\
+	Riesz &
+	$\displaystyle (-\Delta)^{-s/2}u$ &
+	$\displaystyle\small u+{\color{red}A[u]}s+O(s^2)$\\
+	& & $\tiny\color{red}\qquad A[u] = -\mathcal{F}^{-1}(\log|\xi|\hat u(\xi))$
+\end{tabular}
 
 \end{frame}
 
@@ -924,6 +972,11 @@ $\displaystyle
 	\int \kappa(x-y)\,\color{red}\sigma'(u(x)-u(y)) u(y)\, \ud y
 $
 
+\pause
+	\begin{center}
+		\Huge\bf\color{red}
+		?
+	\end{center}
 
 \end{frame}
 
@@ -942,7 +995,18 @@ APPLICATION: SIMULATION OF PERCEPTION (retinex)\\
 \end{tabular}
 }\only<2>{
 	%\includegraphics[height=0.83\textheight]{f/machs.png}\\
-	mach bands
+	\begin{tabular}{cc}
+		\includegraphics[width=0.41\linewidth]{fa/mach.png} &
+		\includegraphics[width=0.41\linewidth]{fa/p_mach.png} \\
+		%\includegraphics[width=0.45\linewidth]{f/mach_sq21.png} &
+		%\includegraphics[width=0.45\linewidth]{f/p_mach_sq21.png} \\
+		\includegraphics[width=0.41\linewidth]{fa/mach_g7.png} &
+		\includegraphics[width=0.41\linewidth]{fa/p_mach_g7.png} \\
+		\includegraphics[width=0.41\linewidth]{fa/mach_c3.png} &
+		\includegraphics[width=0.41\linewidth]{fa/p_mach_c3.png} \\
+		\includegraphics[width=0.41\linewidth]{fa/mach_la.png} &
+		\includegraphics[width=0.41\linewidth]{fa/p_mach_la.png} \\
+	\end{tabular}
 }
 
 \vfill
@@ -1020,6 +1084,74 @@ APPLICATION: CLEANER CROSS-CORRELATIONS\\
 
 \end{frame}
 
+\begin{frame}
+SUMMARY OF RESULTS\\
+==================
+
+{\bf Definition:}
+{\color{blue}
+	\fbox{
+		\color{black}
+		\(\displaystyle
+		\textsc{KRT}_{{\color{red}\kappa},{\color{red}\sigma}}({\color{blue}u})({\color{blue}x})
+		:=
+		\int {\color{red}\kappa}({\color{blue}x}-y)\,{\color{red}\sigma}({\color{blue}u(x)}-{\color{blue}u}(y))\,\ud y
+		\)
+	}
+}
+
+\vfill
+
+\begin{columns}[T]
+	\begin{column}[T]{0.5\linewidth}
+		\small
+		\setlength{\parskip}{.6em}
+
+		{\bf Case $\sigma=H$}
+
+		\bigskip
+
+		\scriptsize
+		* Contrast invariant
+
+		* Noise uniformization
+
+		\bigskip
+
+		* Small~$\kappa$: curvature
+
+		* Medium~$\kappa$: local contrast equalization
+
+		* Large~$\kappa$: global contrast equalization
+	\end{column}
+	\begin{column}[T]{0.5\linewidth}
+		\small
+		\setlength{\parskip}{.6em}
+
+		{\bf Case $\sigma$ smooth}
+
+		\bigskip
+
+		\scriptsize
+		* Differentiable
+
+		* Noise~$>\sigma$ is uniformized
+
+		\bigskip
+
+		* Large~$\sigma$: convolution with~$\kappa$
+
+		* Small~$\sigma$: $\approx$ contrast invariant
+
+		* Small~$\kappa$: laplacian
+
+		* Larger~$\kappa$: local contrast equalization
+
+	\end{column}
+\end{columns}
+
+\end{frame}
+
 
 \begin{frame}
 PERSPECTIVE: A NEW KIND OF PERCEPTRON?\\
@@ -1041,12 +1173,12 @@ Contrast-invariant perceptron:
 
 
 
-\begin{frame}
-COLOPHON\\
-========
-
-
-\end{frame}
+%\begin{frame}
+%COLOPHON\\
+%========
+%
+%
+%\end{frame}
 
 
 
