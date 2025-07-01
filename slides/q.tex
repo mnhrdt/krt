@@ -128,7 +128,7 @@ THE KERNEL RANK TRANSFORM IN ONE SLIDE\\
 \vspace{-0.5em}
 {\bf Applications:}
 
-	\begin{columns}[b]
+	\begin{columns}[T]
 		\begin{column}{0.31\textwidth}\scriptsize
 $\quad$\\
 $\quad$ * noise whitening \\
@@ -138,7 +138,7 @@ $\quad$ * color balance \\
 $\quad$ * cool math\\
 %$\quad$ * ...?\\
 		\end{column}
-		\begin{column}{0.69\textwidth}
+		\begin{column}[T]{0.69\textwidth}
 			\tiny%\raisebox{5em}{
 			\begin{tabular}{cc}
 				\includegraphics[width=0.45\linewidth]{o/fujishadow.png}&
@@ -166,41 +166,46 @@ OLD VS. NEW\\
 	\begin{columns}[T]
 	\begin{column}{0.5\textwidth}\scriptsize
 		\includegraphics[width=\linewidth]{f/cperceptron.png}
-		{\bf F.~Rosenblatt}, {\color{red} 1958}\\
+		{\bf Frank Rosenblatt}, {\color{red} 1958}\\
 		%\srcsize
 		\tiny
 		%Two Theorems of Statistical Separability in the Perceptron\\
 		3 layer perceptron: projection-association-response
 	\end{column}
+	\pause
 	\begin{column}[T]{0.5\textwidth}\scriptsize
 		\setlength{\parskip}{.6em}
-		Newer than the perceptron\\
-		-{}-{}-{}-{}-{}-{}-{}-{}-{}-{}-{}-{}-{}-{}-{}-{}-{}-{}-{}-{}-{}-{}-{}-{}-{}
+		Newer than perceptrons\\
+		-{}-{}-{}-{}-{}-{}-{}-{}-{}-{}-{}-{}-{}-{}-{}-{}-{}-{}-{}-{}-{}-{}
 
 		* Mathematical Morphology (Matheron-Serra, {\color{red}1964})
 
+		* AD fwd (Wengert, {\color{red}1964})
+
 		* FFT (Cooley-Tuckey, {\color{red}1965})
 
-		* CCD sensors (Boyle-Smith, {\color{red}1969})
+%		* CCD sensors (Boyle-Smith, {\color{red}1969})
 
 		* DCT compression (Ahmed, {\color{red}1972})
+
+		* AD rev (Speelpenning, {\color{red}1980})
 
 		* Anisotropic diffusion\\
 		(Perona-Malik, {\color{red}1987})
 
-		* TV denoising (Rudin-Osher-Fatemi, {\color{red}1992})
+		* TV denoising (R.O.F., {\color{red}1992})
 
 		* SIFT (Lowe, {\color{red}1999})
 
 		\vfill
 		$ $
 
-		Older than the perceptron\\
-		-{}-{}-{}-{}-{}-{}-{}-{}-{}-{}-{}-{}-{}-{}-{}-{}-{}-{}-{}-{}-{}-{}-{}-{}-{}
+		Older than perceptrons\\
+		-{}-{}-{}-{}-{}-{}-{}-{}-{}-{}-{}-{}-{}-{}-{}-{}-{}-{}-{}-{}-{}-{}
 
 		* PCA (Pearson, {\color{red}1901})
 
-		* Wavelets (Haar,Gabor, {\color{red}1946})
+		* Wavelets (Haar~{\color{red}1909}, Gabor~{\color{red}1946})
 	\end{column}
 \end{columns}
 
@@ -565,9 +570,20 @@ DISCRETE KRT\\
 	KRT_{\kappa,\,\sigma}(u)(x) = \sum_{y\in\textbf{Z}^2}\kappa(x-y)\sigma(u(x)-u(y))
 \]
 
-Naïve implementation $O(N^2)$~:
+Naïve implementation~: $\mathcal{O}(N^2)$
 
-Fancier implementaiton $O(QN\log N)$~:
+Fancier implementaiton~: $\mathcal{O}(QN\log N)$
+
+\vfill
+	{\color{gray}
+$N = W\times H = $ number of pixels\\
+$Q = $ number of quantization levels
+	}
+
+\vfill
+\pause
+	\color{blue}{\bf Observation:}\\
+	If~$\sigma$ is continuous then $u\mapsto\textsc{KRT}_{\kappa,\sigma}(u)$ is continuous
 
 \end{frame}
 
@@ -606,78 +622,6 @@ $$R_{\kappa,H}({\color{red}g}\circ u)=R_{\kappa,H}(u)$$
 {\bf H2.} For~$x=\mathrm{argmax}(u)$, $R_{\kappa,H}(u)(x)=\int\kappa$.
 
 {\bf H3.} For~$x=\mathrm{argmin}(u)$, $R_{\kappa,H}(u)(x)=0$.
-\end{frame}
-
-
-% noise whitening experiment
-\begin{frame}
-NOISE UNIFORMIZATION BY KRT\\
-===========================
-
-%MAKE: all: o/wramp.png o/wramphist.png o/wramptex.png
-%MAKE: all: o/wrampk7.png o/wrampk7hist.png o/wrampk7tex.png
-%MAKE: o/wramp.png: o/wramp.npy ; qauto -p 1 $^ $@
-%MAKE: o/wramp.npy: ; plambda zero:400x300 'randg :i *' -o $@
-%MAKE: o/wramphist.png: o/wramp.npy ; plambda $^ round|ghisto|gnuplot -e 'set term pngcairo size 400,300' ->$@
-%MAKE: o/wrampk7.png: o/wrampk7.npy ; qeasy 0 1 $^ $@
-%MAKE: o/wrampk7.npy: o/wramp.npy ; krt actualsquare7 $^ $@
-%MAKE: o/wrampk7hist.png: o/wrampk7.npy ; plambda $^ '48 * round'|ghisto|gnuplot -e 'set term pngcairo size 400,300' ->$@
-%MAKE: o/wramptex.png: o/wramp.npy ; autocorr $^|croparound 200 150 50 37|sauto -s 3e8|ntiply 8 - $@
-%MAKE: o/wrampk7tex.png: o/wrampk7.npy ; autocorr $^|croparound 200 150 50 37|sauto -s 300|ntiply 8 - $@
-
-%MAKE: all: o/wrampg4.png o/wrampg4hist.png o/wrampg4tex.png
-%MAKE: o/wrampg4.png: o/wrampg4.npy ; qeasy 0 1 $^ $@
-%MAKE: o/wrampg4.npy: o/wramp.npy ; krt gauss4 $^ $@
-%MAKE: o/wrampg4hist.png: o/wrampg4.npy ; plambda $^ '100 * round'|ghisto|gnuplot -e 'set term pngcairo size 400,300' ->$@
-%MAKE: o/wrampg4tex.png: o/wrampg4.npy ; autocorr $^|croparound 200 150 50 37|sauto -s 300|ntiply 8 - $@
-
-\begin{tabular}{lll}
-	\includegraphics[width=0.3\linewidth]{o/wramp.png} &
-	\includegraphics[width=0.3\linewidth]{o/wramphist.png} &
-	\includegraphics[width=0.3\linewidth]{o/wramptex.png} \\
-	$u(x,y)=x\mathcal{W}(x,y)$ &
-	$\mathrm{hist}(u)$ &
-	$\mathrm{autocorr}(u)$\\
-	&&\\
-	\only<1>{%
-	\includegraphics[width=0.3\linewidth]{o/wrampk7.png} &
-	\includegraphics[width=0.3\linewidth]{o/wrampk7hist.png} &
-	\includegraphics[width=0.3\linewidth]{o/wrampk7tex.png} \\
-	$\textsc{KRT}_{\color{red}7}(u)$ &
-	$\mathrm{hist}(\textsc{KRT}_{\color{red}7}(u))$ &
-	$\mathrm{autocorr}(\textsc{KRT}_{\color{red}7}(u))$
-	}\only<2>{%
-	\includegraphics[width=0.3\linewidth]{o/wrampg4.png} &
-	\includegraphics[width=0.3\linewidth]{o/wrampg4hist.png} &
-	\includegraphics[width=0.3\linewidth]{o/wrampg4tex.png} \\
-	$\textsc{KRT}_{\color{red}G_4}(u)$ &
-	$\mathrm{hist}(\textsc{KRT}_{\color{red}G_4}(u))$ &
-	$\mathrm{autocorr}(\textsc{KRT}_{\color{red}G_4}(u))$
-	}
-\end{tabular}
-
-	{\color{red}
-	\fbox{
-	\footnotesize
-	{\bf Thm.} If $\color{black}X=\textsc{KRT}_{\kappa}(\mathcal{W})$
-	then $\color{black}X_p\sim\mathcal{U}(0,1)$
-	and  $\color{black}\mathrm{cov}(X_p,X_q)\approx-\kappa(p-q)$
-	}
-	}
-
-\end{frame}
-
-% noise whitening experiment
-\begin{frame}
-KRT ON HDR IMAGES\\
-=================
-
-\vfill
-	\begin{center}
-		(experiments on Pléaides images)
-	\end{center}
-\vfill
-
 \end{frame}
 
 
@@ -730,7 +674,7 @@ CONTRAST-INVARIANCE VS. DIFFERENTIABILITY\\
 An image operator~$T:u\mapsto T(u)$ is {\color{blue}contrast-invariant}
 if~$T(g\circ u)=T(u)$ for any increasing~$g$.
 
-{\bf Proposition 1.}
+{\bf\color{red} Proposition 1.}
 If~$T$ is continuous and contrast-invariant then it is trivial: $T(u)=T(0)$ for
 any~$u$).
 
@@ -747,6 +691,81 @@ Proof: the path~$\lambda\mapsto\lambda u$ links any image $u$ to~$0$.
 \fbox{
 Contrast-invariance is a non-differentiable property
 }}
+\vfill
+
+\end{frame}
+
+
+% noise whitening experiment
+\begin{frame}
+NOISE UNIFORMIZATION BY KRT\\
+===========================
+
+%MAKE: all: o/wramp.png o/wramphist.png o/wramptex.png
+%MAKE: all: o/wrampk7.png o/wrampk7hist.png o/wrampk7tex.png
+%MAKE: o/wramp.png: o/wramp.npy ; qauto -p 1 $^ $@
+%MAKE: o/wramp.npy: ; plambda zero:400x300 'randg :i *' -o $@
+%MAKE: o/wramphist.png: o/wramp.npy ; plambda $^ round|ghisto|gnuplot -e 'set term pngcairo size 400,300' ->$@
+%MAKE: o/wrampk7.png: o/wrampk7.npy ; qeasy 0 1 $^ $@
+%MAKE: o/wrampk7.npy: o/wramp.npy ; krt actualsquare7 $^ $@
+%MAKE: o/wrampk7hist.png: o/wrampk7.npy ; plambda $^ '48 * round'|ghisto|gnuplot -e 'set term pngcairo size 400,300' ->$@
+%MAKE: o/wramptex.png: o/wramp.npy ; autocorr $^|croparound 200 150 50 37|sauto -s 3e8|ntiply 8 - $@
+%MAKE: o/wrampk7tex.png: o/wrampk7.npy ; autocorr $^|croparound 200 150 50 37|sauto -s 300|ntiply 8 - $@
+
+%MAKE: all: o/wrampg4.png o/wrampg4hist.png o/wrampg4tex.png
+%MAKE: o/wrampg4.png: o/wrampg4.npy ; qeasy 0 1 $^ $@
+%MAKE: o/wrampg4.npy: o/wramp.npy ; krt gauss4 $^ $@
+%MAKE: o/wrampg4hist.png: o/wrampg4.npy ; plambda $^ '100 * round'|ghisto|gnuplot -e 'set term pngcairo size 400,300' ->$@
+%MAKE: o/wrampg4tex.png: o/wrampg4.npy ; autocorr $^|croparound 200 150 50 37|sauto -s 300|ntiply 8 - $@
+
+\begin{tabular}{ccc}
+	\includegraphics[width=0.3\linewidth]{o/wramp.png} &
+	\includegraphics[width=0.3\linewidth]{o/wramphist.png} &
+	\only<2->{\includegraphics[width=0.3\linewidth]{o/wramptex.png}} \\
+	$u(x,y)=x\mathcal{W}(x,y)$ &
+	$\mathrm{hist}(u)$ &
+	\only<2->{$\mathrm{autocorr}(u)$}\\
+	&&\\
+	\only<1-2>{\includegraphics[width=0.3\linewidth]{o/wrampk7.png}}%
+	\only<3->{\includegraphics[width=0.3\linewidth]{o/wrampg4.png}}
+	&
+	\only<1-2>{\includegraphics[width=0.3\linewidth]{o/wrampk7hist.png}}%
+	\only<3->{\includegraphics[width=0.3\linewidth]{o/wrampg4hist.png}}
+	&
+	\only<2>{\includegraphics[width=0.3\linewidth]{o/wrampk7tex.png}}%
+	\only<3->{\includegraphics[width=0.3\linewidth]{o/wrampg4tex.png}}
+	\\
+	\only<1-2>{$\textsc{KRT}_{\color{red}7}(u)$}%
+	\only<3->{$\textsc{KRT}_{\color{red}G_4}(u)$}
+	&
+	\only<1-2>{$\mathrm{hist}(\textsc{KRT}_{\color{red}7}(u))$}%
+	\only<3->{$\mathrm{hist}(\textsc{KRT}_{\color{red}G_4}(u))$}
+	&
+	\only<2>{$\mathrm{autocorr}(\textsc{KRT}_{\color{red}7}(u))$}%
+	\only<3->{$\mathrm{autocorr}(\textsc{KRT}_{\color{red}G_4}(u))$}
+	\\
+\end{tabular}
+
+	{\color{red}
+	\fbox{
+	\footnotesize
+	{\bf Thm~0.} If $\color{black}X=\textsc{KRT}_{\kappa}(\mathcal{W})$
+	then $\color{black}X_p\sim\mathcal{U}(0,1)$
+	\only<2->{and  $\color{black}\mathrm{cov}(X_p,X_q)\approx-\kappa(p-q)$}
+	}
+	}
+
+\end{frame}
+
+% noise whitening experiment
+\begin{frame}
+KRT ON HDR IMAGES\\
+=================
+
+\vfill
+	\begin{center}
+		(experiments on Pléaides images)
+	\end{center}
 \vfill
 
 \end{frame}
@@ -947,6 +966,15 @@ DISCRETIZATION ARTIFACTS\\
 
 
 \begin{frame}
+DISCRETIZATION ARTIFACTS : FAREY SEQUENCES\\
+==========================================
+
+\begin{tabular}{ll}
+	\includegraphics[width=0.5\linewidth]{f/farey.png}
+\end{tabular}
+
+
+\begin{frame}
 APPLICATION: CLEANER CROSS-CORRELATIONS\\
 =======================================
 
@@ -973,7 +1001,7 @@ Typical perceptron layer:
 
 Contrast-invariant perceptron:
 \[
-	u'_i \gets \sum_j k_{ij}{\color{red}\sigma}(u_i-u_j)
+	u'_i \gets \sum_j k_{ij}{\color{red}\sigma'}(u_i-u_j)
 \]
 
 \end{frame}
