@@ -550,7 +550,7 @@ where
 {\bf Typical kernels:}\\
 $g_s=$ gaussian of size~$s$, $N_d=$ square of side~$d$
 
-{\bf Typical gaps:} $H=$ Heaviside step function,\\
+{\bf Typical gaps:} $H=$ Heaviside step function, $\sigma=$ sigmoids\\
 \includegraphics[height=0.25\textheight]{f/plot_heavisides.png}
 %SCRIPT gnuplot > f/plot_heavisides.png <<EOF
 %SCRIPT set term pngcairo size 600,300
@@ -622,6 +622,27 @@ $$R_{\kappa,H}({\color{red}g}\circ u)=R_{\kappa,H}(u)$$
 {\bf H2.} For~$x=\mathrm{argmax}(u)$, $R_{\kappa,H}(u)(x)=\int\kappa$.
 
 {\bf H3.} For~$x=\mathrm{argmin}(u)$, $R_{\kappa,H}(u)(x)=0$.
+
+
+%MAKE: all: o/gbsqsq.png o/gbsqrt.png o/gbsqata.png
+%MAKE: o/gbsqsq.png: i/gbarbsquare.png ; plambda $^ "255 / 3 ^ 255 *" -o $@
+%MAKE: o/gbsqrt.png: i/gbarbsquare.png ; plambda $^ "255 / .3 ^ 255 *" -o $@
+%MAKE: o/gbsqata.png: i/gbarbsquare.png ; plambda $^ "127 - 20 / atan"|qauto -p 0 - $@
+
+\begin{tabular}{ccccc}
+	\includegraphics[width=0.2\linewidth]{o/gbsqrt.png} &
+	\includegraphics[width=0.2\linewidth]{o/gbsqsq.png} &
+	\includegraphics[width=0.2\linewidth]{o/gbsqata.png} &
+	$\longrightarrow$ &
+	\includegraphics[width=0.2\linewidth]{i/gbarbsquare.png} \\
+	$\sqrt{u}$ &
+	$u^2$ &
+	$\arctan(u)$ &
+	&
+	same $\textsc{KRT}$
+\end{tabular}
+
+
 \end{frame}
 
 
@@ -647,7 +668,7 @@ EXPLORATION OF THE PARAMETERS\\
 	$R_{g_5,H}(u)$ &
 	$R_{g_{50},H}(u)$ \\
 	&&\\
-	\pause
+	%\pause
 	\only<2>{
 	\includegraphics[width=0.3\linewidth]{o/bstars.png}&
 	\includegraphics[width=0.3\linewidth]{o/bstarsr5.png}&
@@ -891,23 +912,18 @@ TABLE OF INFINITESIMAL GENERATORS
 RELATIONSHIP WITH BILATERAL FILTERS
 ===================================
 
-\end{frame}
+$\displaystyle
+	\textsc{KRT}_{\kappa,\sigma}(u)(x)
+	=
+	\int \kappa(x-y)\,\color{red}\sigma(u(x)-u(y))\phantom{u(y)\,}\ud y
+$
 
+$\displaystyle
+	\textsc{BIL}_{\kappa,\sigma}(u)(x)
+	=
+	\int \kappa(x-y)\,\color{red}\sigma'(u(x)-u(y)) u(y)\, \ud y
+$
 
-\begin{frame}
-APPLICATION: NOISE UNIFORMISATION\\
-=================================
-
-(example with synthetic image "randg :i *")
-
-\end{frame}
-
-
-\begin{frame}
-APPLICATION: NOISE UNIFORMISATION\\
-=================================
-
-(example "calanques")
 
 \end{frame}
 
@@ -969,9 +985,26 @@ DISCRETIZATION ARTIFACTS\\
 DISCRETIZATION ARTIFACTS : FAREY SEQUENCES\\
 ==========================================
 
-\begin{tabular}{ll}
-	\includegraphics[width=0.5\linewidth]{f/farey.png}
-\end{tabular}
+\begin{columns}[T]
+	\begin{column}[T]{0.55\textwidth}
+		{\bf\color{blue} Gradient quantization}
+		\includegraphics[width=\linewidth]{f/dequant.png}
+
+		\includegraphics[width=.5\linewidth]{f/empigrad.png}
+
+		\includegraphics[width=\linewidth]{f/cdesolneux.png}
+	\end{column}
+	\begin{column}[T]{0.45\textwidth}
+		{\bf\color{blue} Farey sequences}
+		\includegraphics[width=\linewidth]{f/farey.png}
+
+		\vspace{2em}
+
+		\includegraphics[width=0.7\linewidth]{f/fareyburst.png}
+	\end{column}
+\end{columns}
+
+\end{frame}
 
 
 \begin{frame}
