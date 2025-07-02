@@ -781,14 +781,61 @@ NOISE UNIFORMIZATION BY KRT\\
 
 % noise whitening experiment
 \begin{frame}
-KRT ON HDR IMAGES\\
+KRT ON HDR IMAGES $\qquad\qquad$%
+	\only<1>{{\color{blue}$u$ in range $[132,4417]$}}%
+	\only<2>{{\color{blue}$\textsc{SCB}(u)$}}%
+	\only<3>{{\color{blue}$u$ in range $[250,300]$}}%
+	\only<4>{{\color{blue}$\textsc{KRT}_{D_{50}}(u)$}}%
+	\only<5>{{\color{blue}$\textsc{KRT}_{D_{100}}(u)$}}%
+	\only<6>{{\color{blue}$\textsc{KRT}_{D_{200}}(u)$}}%
+	\only<7>{{\color{blue}$\textsc{KRT}_{D_{400}}(u)$}}%
+	\\
 =================
 
-\vfill
-	\begin{center}
-		(experiments on Pléaides images)
-	\end{center}
-\vfill
+\only<1>{\includegraphics[width=\linewidth]{f/pleimsi_0.jpg}}%
+\only<2>{\includegraphics[width=\linewidth]{f/pleimsi_1.jpg}}%
+\only<3>{\includegraphics[width=\linewidth]{f/pleimsi_2.jpg}}%
+\only<4>{\includegraphics[width=\linewidth]{f/pleimsi_3.jpg}}%
+\only<5>{\includegraphics[width=\linewidth]{f/pleimsi_4.jpg}}%
+\only<6>{\includegraphics[width=\linewidth]{f/pleimsi_5.jpg}}%
+\only<7>{\includegraphics[width=\linewidth]{f/pleimsi_6.jpg}}%
+
+%\vfill
+%	\begin{center}
+%		(experiments on Pléaides images)
+%	\end{center}
+%\vfill
+
+\end{frame}
+
+
+\begin{frame}
+KRT ON HDR IMAGES $\qquad\qquad$%
+	\only<1>{{\color{blue}$u$ in range $[132,4417]$}}%
+	\only<2>{{\color{blue}$\textsc{SCB}(u)$}}%
+	\only<3>{{\color{blue}$u$ in range $[250,300]$}}%
+	\only<4>{{\color{blue}$\textsc{KRT}_{D_{50}}(u)$}}%
+	\only<5>{{\color{blue}$\textsc{KRT}_{D_{100}}(u)$}}%
+	\only<6>{{\color{blue}$\textsc{KRT}_{D_{200}}(u)$}}%
+	\only<7>{{\color{blue}$\textsc{KRT}_{D_{400}}(u)$}}%
+	\only<8>{{\color{blue}$\textsc{KRT}_{D_{800}}(u)$}}%
+	\\
+=================
+
+\only<1>{\includegraphics[width=\linewidth]{f/pleipan_0.jpg}}%
+\only<2>{\includegraphics[width=\linewidth]{f/pleipan_1.jpg}}%
+\only<3>{\includegraphics[width=\linewidth]{f/pleipan_2.jpg}}%
+\only<4>{\includegraphics[width=\linewidth]{f/pleipan_50.jpg}}%
+\only<5>{\includegraphics[width=\linewidth]{f/pleipan_100.jpg}}%
+\only<6>{\includegraphics[width=\linewidth]{f/pleipan_200.jpg}}%
+\only<7>{\includegraphics[width=\linewidth]{f/pleipan_400.jpg}}%
+\only<8>{\includegraphics[width=\linewidth]{f/pleipan_800.jpg}}%
+
+%\vfill
+%	\begin{center}
+%		(experiments on Pléaides images)
+%	\end{center}
+%\vfill
 
 \end{frame}
 
@@ -862,23 +909,29 @@ $R_{g_\epsilon,H}(u)({\color{red}a})\to\frac12$
 $R_{g_\epsilon,H}(u)({\color{red}c})\to\frac12$
 
 $R_{g_\epsilon,H}(u)({\color{red}d})\to\frac{\mathrm{angle}}{2\pi}$
-}
-\only<3>{\includegraphics[height=0.8\textheight]{f/pcurv.png}}
-\only<4>{\includegraphics[height=0.5\textheight]{f/pcurv.png}
+}\only<3>{
+	\includegraphics[width=0.6\linewidth]{f/artishot1.png}
 
-	\vfill
+	\includegraphics[width=0.9\linewidth]{f/artishot2.png}
 
-	{\bf Proposition 3.}
-	If the level curve of~$u$ through~$x$ is smooth;
-set~$\kappa_h(x)=\kappa(x/h)/h^2$, then
-\[
-	R_{\kappa_{\color{red}h},H}(u)(x)
-	=
-	\frac12
-	+\frac1{4\pi}\mathrm{curv}(u)(x){\color{red}h}+O({\color{red}h}^2)
-\]
-with~$\mathrm{curv}(u)=\mathrm{div}\left(\frac{\nabla u}{\left\|\nabla u\right\|}\right)$
+	\includegraphics[width=0.6\linewidth]{f/artishot3.png}
 }
+%\only<3>{\includegraphics[height=0.8\textheight]{f/pcurv.png}}
+%\only<4>{\includegraphics[height=0.5\textheight]{f/pcurv.png}
+%
+%	\vfill
+%
+%	{\bf Proposition 3.}
+%	If the level curve of~$u$ through~$x$ is smooth;
+%set~$\kappa_h(x)=\kappa(x/h)/h^2$, then
+%\[
+%	R_{\kappa_{\color{red}h},H}(u)(x)
+%	=
+%	\frac12
+%	+\frac1{4\pi}\mathrm{curv}(u)(x){\color{red}h}+O({\color{red}h}^2)
+%\]
+%with~$\mathrm{curv}(u)=\mathrm{div}\left(\frac{\nabla u}{\left\|\nabla u\right\|}\right)$
+%}
 
 
 \end{frame}
