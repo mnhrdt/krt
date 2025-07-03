@@ -272,6 +272,30 @@ static float *build_kernel_from_string(char *s, int *n)
 		return k;
 	}
 
+	// try to open an image named s
+	{
+		int w, h;
+		float *iio_read_image_float(const char*,int*,int*);
+		float *x = iio_read_image_float(s, &w, &h);
+		if (x) {
+			*n = 0;
+			for (int i = 0; i < w*h; i++)
+				if (isfinite(x[i]) && x[i])
+					*n += 1;
+			float *k = malloc(3 * *n * sizeof*k);
+			int l = 0;
+			for (int i = 0; i < w*h; i++)
+				if (isfinite(x[i]) && x[i])
+				{
+					k[3*l+0] = i % w - w/2;
+					k[3*l+1] = i / w - h/2;
+					k[3*l+2] = x[i];
+					l += 1;
+				}
+			return k;
+		}
+	}
+
 	exit(fprintf(stderr, "unrecognized kernel string \"%s\"\n", s));
 }
 
@@ -719,7 +743,7 @@ int main(int c, char *v[])
 	char *heaviside_string = pick_option(&c, &v, "h", "h");
 	int offset_x = atoi(pick_option(&c, &v, "ox", "0"));
 	int offset_y = atoi(pick_option(&c, &v, "oy", "0"));
-	bool normalize_kernel = !pick_option(&c, &v, "nn", NULL);
+	bool normalize_kernel = !pick_option(&c, &v, "nn", NULL); // defult true
 	bool remove_kernel_center = !pick_option(&c, &v, "kc", NULL);
 
 	// process input arguments
@@ -757,6 +781,7 @@ int main(int c, char *v[])
 			K += kappa[3*i+2];
 		for (int i = 0; i < n_kappa; i++)
 			kappa[3*i+2] /= K;
+		fprintf(stderr, "normalization K=%g\n", K);
 	}
 
 	// read input image

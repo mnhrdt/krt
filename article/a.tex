@@ -819,6 +819,7 @@ KRT with kernels~$g_h$.
 \end{proof}
 
 
+\clearpage
 \begin{theorem}[behavior of the KRT with Heaviside step]
 	\label{thm:krtheaviside}
 	Let~$u:\mathbf{R}^2\to\mathbf{R}$ and~$x\in\mathbf{R}^2$ such that
@@ -943,7 +944,7 @@ next proposition describes the behaviour of the KRT with Heaviside step
 at a critical point where the level lines meet at an angle or at a cusp.
 
 
-
+\clearpage
 \begin{theorem}[Heaviside KRT with an angle]
 	Let~$u:\mathbf{R}^2\to\mathbf{R}$ and~$x\in\mathbf{R}^2$ such that
 	the level line~$[u=u(x)]$ is a piecewise smooth curve with an
@@ -1011,6 +1012,47 @@ behaviour is very different, especially for a kernel of small support.  Far
 from the origin, most of the transformed image is equal to $1/2$, and the
 other, higher values are concentrated at straight lines at 45 degrees, etc.
 
+\subsection{Statistical properties}
+
+If~$\mathcal{W}$ is a white gaussian noise image, then its KRT is a uniform
+noise image.  The important property is the independence of pixels, the
+initial distribution is not really important.  In the discrete setting, let
+\[
+	X_0,X_1,\ldots,X_n
+\]
+be identically distributed independent variables (+ additional hypotheses).
+Define a variable
+\[
+	Y = \sum k_i 
+\]
+where~$k_i$ are a set of real numbers whose sum is 1 (+ additional
+hypotheses).  Then~$Y\sim\mathcal{U}(0,1)$.
+
+Thus, the KRT transforms white noise into uniform noise.  There is a
+tradeoff, however: whiteness is transformed into uniformity, but the
+whiteness is lost.
+
+Experimental observations: the KRT of white noise is negativelly correlated
+with a profile that is minus the symmetrized kernel + some smaller
+correction terms [this must be formalized somehow].
+
+
+\subsection{Statistical implementation}
+
+If instead of applying the full definition of the KRT, we sample using k
+around each pixel and apply the formula just for these observed points.  As
+the number of observed points increases, we converge to the correct
+solution, by iteratively approximating it.
+
+Important: obtain some ``kernel decomposition'' formula that allows to
+formalize this iterative improvement
+
+\[
+	KRT_{\kappa_1\oplus\kappa_2}\approx KRT_{\kappa_1} \otimes KRT_{\kappa2}
+\]
+
+for some combinators~$\oplus,\otimes$ to be found.
+
 \section{Related constructions}
 
 Retinex~\cite{land1971lightness,land1977retinex,land1985recent,kimmel2003variational,provenzi2005mathematical,morel2010pde,petro2014multiscale}.
@@ -1027,6 +1069,7 @@ Curvature.
 ``local contrast equalization''~\cite{sapiro1997histogram}
 KRT with~$\sigma(x)=x$ is~$u-k*u$ (approximation to the laplacian).  Linear
 retinex is a particular case of this.
+ACE retinex (probabilistic interpretation)
 
 Contrast-limited adaptive histogram equalization (!)
 
