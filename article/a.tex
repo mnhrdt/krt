@@ -1023,7 +1023,7 @@ initial distribution is not really important.  In the discrete setting, let
 be identically distributed independent variables (+ additional hypotheses).
 Define a variable
 \[
-	Y = \sum k_i 
+	Y = \sum k_i H(X_i-X_0)
 \]
 where~$k_i$ are a set of real numbers whose sum is 1 (+ additional
 hypotheses).  Then~$Y\sim\mathcal{U}(0,1)$.
@@ -1035,6 +1035,212 @@ whiteness is lost.
 Experimental observations: the KRT of white noise is negativelly correlated
 with a profile that is minus the symmetrized kernel + some smaller
 correction terms [this must be formalized somehow].
+
+\bigskip
+
+Some explicit computations.
+
+Let~$\{X_p\}_p$ be the set of pixel values of an image.  Assume that the
+pixels are independent variables following a continuous law, so that
+
+$$
+P(X_p=X_q)=0
+\qquad
+P(X_p<X_q)=\frac12
+\qquad
+P(X_p>X_q)=\frac12
+$$
+
+Let us start with a uniform kernel, defined by a neighborhood~$\mathcal{N}$
+(which by convention does not contain the center 0).
+Thus the~$KRT$ at a point~$p$ is a random variable, function of all the
+variables~$X_i$ for all the pixels:
+
+\[
+	K_p = \sum_{i\in\mathcal{N}} \kappa_i H(X_p - X_{p+i})
+\]
+
+We will compute the law of this random variable, its expectation, and the
+covariance between two such variables~$K_p$ and~$K_q$.
+
+The case~$\kappa_i=1$ can be treated by elementary considerations, where the
+variable~$K_p$ is discrete uniform with values between~$0$ and~$N-1$,
+where~$N$ is the size of the neighborhood.
+The case for a general kernel~$\kappa$ is more subtle and will be dealt with
+later.
+
+The computations for the expectation and covariance can be done directly for
+arbitrary kernel coefficients~$\kappa_i$.
+
+Let us compute the expectation of~$K_p$
+\[
+	E(K_p) = \sum_{i\in\mathcal{N}} \kappa_i E(H(X_p - X_{p+i}))
+\]
+and now~$E(H(X_p-X_{p+i}))=P(X_p>X_{p+i})=\frac12$.
+
+Now let~$p,q$ be different pixel positions, we want to compute the
+covariance between~$K_p$ and~$K_q$.
+
+\[
+	\mathrm{cov}(K_A,K_B)
+	=
+	E(K_AK_B)-E(K_A)E(K_B)
+\]
+
+let us develop this expression:
+
+\[
+	\mathrm{cov}(K_A,K_B)
+	=
+	\sum_{i\in N}
+	\sum_{j\in N}
+	\kappa_i\kappa_j
+	\left(
+	E
+	\left(
+	H(X_A-X_{A+i})H(X_B-X_{B+j})
+	\right)
+	-\frac14
+	\right)
+\]
+
+these expectations have 4 possible values~$\frac16,\frac14,\frac13,\frac12$
+depending on the relative positions of the 4 points, which may or may not
+coincide.  This allows us to separate the whole sum according to the values of
+these terms.
+
+First, let us separate the cases~$B=A+i$ and~$A=B+j$:
+
+\begin{align*}
+	\mathrm{cov}(K_A,K_B)
+	&=
+	\sum_{i\in N,A+i\neq B}
+	\sum_{j\in N,B+j\neq A}
+	\kappa_i\kappa_j
+	\left(
+	E
+	\left(
+	H(X_A-X_{A+i})H(X_B-X_{B+j})
+	\right)
+	-\frac14
+	\right)\\
+	&+
+	\sum_{j\in N}
+	\kappa_{B-A}\kappa_j
+	\left(
+	E
+	\left(
+	H(X_A-X_B)H(X_B-X_{B+j})
+	\right)
+	-\frac14
+	\right)\\
+	&+
+	\sum_{i\in N}
+	\kappa_i\kappa_{A-B}
+	\left(
+	E
+	\left(
+	H(X_A-X_{A+i})H(X_B-X_A)
+	\right)
+	-\frac14
+	\right)\\
+\end{align*}
+
+Now we separate the first term into the cases, depending on
+whether~$A+i=B+j$ or otherwise (in which case the four pixels are different
+and the expectation will be 0).
+
+
+\begin{align*}
+	\mathrm{cov}(K_A,K_B)
+	&=
+	\sum_{i\in N,\ A+i\neq B}
+	\sum_{j\in N,\ B+j\neq A,\ A+i\neq B+j}
+	\kappa_i\kappa_j
+	\left(
+	E
+	\left(
+	H(X_A-X_{A+i})H(X_B-X_{B+j})
+	\right)
+	-\frac14
+	\right)\\
+	&+
+	\sum_{i\in N,A+i\neq B}
+	\kappa_i\kappa_{A-B+i}
+	\left(
+	E
+	\left(
+	H(X_A-X_{A+i})H(X_B-X_{A+i})
+	\right)
+	-\frac14
+	\right)\\
+	&+
+	\sum_{j\in N}
+	\kappa_{B-A}\kappa_j
+	\left(
+	E
+	\left(
+	H(X_A-X_B)H(X_B-X_{B+j})
+	\right)
+	-\frac14
+	\right)\\
+	&+
+	\sum_{i\in N}
+	\kappa_i\kappa_{A-B}
+	\left(
+	E
+	\left(
+	H(X_A-X_{A+i})H(X_B-X_A)
+	\right)
+	-\frac14
+	\right)\\
+\end{align*}
+
+now, the expectations above can be replaced by their values, according to
+the ``table of local cases''.  The first case involves 4 independent pixels
+thus the expectation is 0.  Thus we get the remaining three terms
+
+\begin{align*}
+	\mathrm{cov}(K_A,K_B)
+	&=
+	\frac1{12}
+	\sum_{i\in N,A+i\neq B}
+	\kappa_i\kappa_{A-B+i}
+	\\
+	&-\frac1{12}
+	\sum_{j\in N}
+	\kappa_{B-A}\kappa_j
+	\\
+	&-\frac1{12}
+	\sum_{i\in N}
+	\kappa_i\kappa_{A-B}
+	\\
+\end{align*}
+
+This expression can be simplified and interpreted geometrically in according
+to overlap of the kernels and the symmetrized kernel
+
+
+\[
+	\mathrm{cov}(K_A,K_B)
+	=
+	-
+	\frac{\kappa_{B-A}+\kappa_{A-B}}{12}
+	\sum_{i\in N} \kappa_i
+	+
+	\frac1{12}
+	\sum_{i\in N,A+i\neq B} \kappa_i\kappa_{A-B+i}
+\]
+
+
+
+
+
+
+
+
+
+
 
 
 \subsection{Statistical implementation}
