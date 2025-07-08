@@ -26,5 +26,5 @@ distclean: clean doc-clean ; $(RM) $(MAN)
 .PHONY  : default clean distclean manpages doc
 
 # build latex article and associated experiments
-doc     : $(BIN) ; $(MAKE) -C article
-doc-clean : ; $(MAKE) -C article clean
+doc     : $(BIN) ; $(MAKE) -C article ; $(MAKE) -C slides
+doc-clean : ; $(MAKE) -C article clean ; $(MAKE) -C slides clean
