@@ -1065,7 +1065,7 @@ We will compute the law of this random variable, its expectation, and the
 covariance between two such variables~$K_p$ and~$K_q$.
 
 The case~$\kappa_i=1$ can be treated by elementary considerations, where the
-variable~$K_p$ is discrete uniform with values between~$0$ and~$N-1$,
+variable~$K_p$ is discrete uniform with values between~$0$ and~$N$,
 where~$N$ is the size of the neighborhood.
 The case for a general kernel~$\kappa$ is more subtle and will be dealt with
 later.
@@ -1073,14 +1073,15 @@ later.
 The computations for the expectation and covariance can be done directly for
 arbitrary kernel coefficients~$\kappa_i$.
 
-Let us compute the expectation of~$K_p$
+Let us compute the {\bf expectation} of~$K_p$
 \[
 	E(K_p) = \sum_{i\in\mathcal{N}} \kappa_i E(H(X_p - X_{p+i}))
 \]
 and now~$E(H(X_p-X_{p+i}))=P(X_p>X_{p+i})=\frac12$.
+Thus~$E(K_p)=\frac12\sum_{i\in\mathcal{N}}\kappa_i$.
 
 Now let~$p,q$ be different pixel positions, we want to compute the
-covariance between~$K_p$ and~$K_q$.
+{\bf covariance} between~$K_p$ and~$K_q$.
 
 \[
 	\mathrm{cov}(K_A,K_B)
@@ -1233,10 +1234,60 @@ to overlap of the kernels and the symmetrized kernel
 	\sum_{i\in N,A+i\neq B} \kappa_i\kappa_{A-B+i}
 \]
 
+\clearpage
+
+\begin{proposition}
+	%Let~$\kappa_i=1$ for~$i=1,\ldots,N$.
+	Let~$\{X_i\}$ be a set of independent, identically distributed random
+	variables with density.
+	Then the law of the random variable
+	\[
+		K_p = \sum_{i\in\mathcal N}H(X_p-X_{p+1})
+	\]
+	is uniform~$P(K_p=t)=\frac1{N+1}$ for~$t=0,\ldots,N$.
+\end{proposition}
+
+\begin{proof}
+	Let us consider the sorted pixel values
+	\[
+		X_{(0)} < X_{(1)} < \cdots < X_{(N)}
+	\]
+	by the hypotheses, all the~$(N+1)!$ possible permutations  have the same
+	probability.
+	The event~$K_p=t$ corresponds to~$X_{(t)}=X_p$, which happens in~$N!$ of
+	the possible permutations (which are all the permutations of the
+	remaning~$N$ variables).  Thus~$P(K_p=t)=\frac{N!}{(N+1)!}=\frac1{N+1}$.
+\end{proof}
 
 
+\begin{proposition}
+	Let~$\{\kappa_i\}$ be a set of~$N$ numbers such that the sums~$\sum_{i\in
+	A}\kappa_i$ are different for each subset~$A\subseteq\{1,\ldots,N\}$.
+	Let~$\{X_i\}$ be a set of independent, identically distributed random
+	variables with density.
+	Then the law of the random variable
+	\[
+		K_p = \sum_{i\in\mathcal N}\kappa_i H(X_p-X_{p+1})
+	\]
+	is given by
+	\[
+		P\left(K_p=\sum_{i\in A}\kappa_i\right)
+		=
+		\frac1{(N+1){N\choose |A|}}
+	\]
+\end{proposition}
 
-
+\begin{proposition}
+	In the setup of the previous proposition, let~$F(t)=P(K_p<t)$ be the
+	cumulative distribution function of~$K_p$.  Then the error between~$F$ and
+	a uniform distribution is bounded by the largest~$\kappa_i$.  More precisely
+	\[
+		\left|
+		F(t)-\frac{t}{\sum\kappa_i}
+		\right|
+		<\frac{\max\kappa_i}{\sum\kappa_i}
+	\]
+\end{proposition}
 
 
 
