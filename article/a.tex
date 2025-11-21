@@ -1521,8 +1521,61 @@ The first integral can be computed explicitly, for the separation conditions
 assure that the three values at~$p,x,y$ are independent variables.  And we
 know that if~$A,B,C$ are independent variables
 then~$E(H(A>B)H(A>C))=\frac13$.  The rest of the integral concerns a region
-of the plane (see Figure~\ref{fig:domainxy}) of vanishing width, whose
+of the space (see Figure~\ref{fig:domainxy}) of vanishing width, whose
 integrals with respect to~$\kappa$ will go to zero.
+
+More precisely,
+
+\[
+	\mathrm{cov}(K_p,K_p)
+	=
+	\frac13\iint\kappa(p-x)\kappa(p-y)dxdy
+	=
+	\frac13\left(\int\kappa\right)^2
+\]
+
+
+The computation of~$\mathrm{cov}(K_p,K_p)$ uses a similar idea:
+
+\begin{equation}
+	\label{eq:domainxy}
+	\mathrm{cov}(K_p,K_q)
+	=
+	\lim_{\epsilon\to0}
+	\left(
+		\iint_{\begin{smallmatrix}
+			|p-x|>\epsilon\\
+			|p-y|>\epsilon\\
+			|q-x|>\epsilon\\
+			|q-y|>\epsilon\\
+			|x-y|>\epsilon
+		\end{smallmatrix}}\cdots
+	+\int_{\textrm{elsewhere}}\cdots
+	\right)
+\end{equation}
+
+now, inside the first integral, the expectation
+\[
+	E\left(
+		H(
+			\mathcal{W}_\epsilon(p)
+			-
+			\mathcal{W}_\epsilon(x)
+		)
+		H(
+			\mathcal{W}_\epsilon(q)
+			-
+			\mathcal{W}_\epsilon(y)
+		)
+	\right)
+\]
+involves four independent variables (since all the involved points are
+further than~$\epsilon$), thus the expectation equals~$\frac14$ and the
+covariance equals~$\frac14-\frac14=0$.
+
+
+
+
 
 \begin{figure}
 	\centering
