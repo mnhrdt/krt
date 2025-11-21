@@ -1234,6 +1234,10 @@ to overlap of the kernels and the symmetrized kernel
 	\sum_{i\in N,A+i\neq B} \kappa_i\kappa_{A-B+i}
 \]
 
+Observation: this formula is valid for~$A\neq B$.  When~$A=B$ it gives the
+wrong result.  The correct result is~$\frac1{12}$ (the variance of the
+uniform distribution), and this must be computed separately.
+
 \clearpage
 
 \begin{proposition}
@@ -1291,9 +1295,248 @@ to overlap of the kernels and the symmetrized kernel
 
 
 
+\clearpage
+
+\subsection{Continuous noise model}
+
+It is interesting to rewrite the computations above for the case of a
+continuous domain.  Thus the white noise image is a white Gaussian random
+field~$\mathcal{W}$.  This field is not a function in the classical sense
+--we cannot evaluate~$\mathcal{W}$ at a point~$p$ and say
+that~$\mathcal{W}(p)$ is a normal variable.  It is instead a distribution
+that we can integrate against test functions~$\varphi$, to obtain
+well-defined integrals~$\int\mathcal{W}\varphi$ which are random variables
+of known distributions.  See~LeGall2016 for a detailed explanation of this
+object.  More precisely, the
+distribution~$\mathcal{W}$ is determined by the following properties
+
+$$\int\mathcal{W}\varphi\ \sim\ N\left(0,\int\varphi^2\right)$$
+
+and, as a consequence~$\varphi*\mathcal{W}$ is well defined and
+
+$$\varphi*\mathcal{W}(p) \sim\ N\left(0,\int\varphi^2\right)$$
+
+for all~$p\in\mathbf{R}^2$.
+
+And
+
+$$\mathrm{cov}\left(\mathcal{W}_\varphi(p),\mathcal{W}_\varphi(q)\right)=
+\int\varphi(x - p)\varphi(x-q) d x
+=\varphi\star\varphi(p-q)$$
+
+As a consequence, if~$\mathrm{supp}(\varphi)\subseteq B_t(0)$ then the
+variables~$\varphi*\mathcal{W}(p)$ and~$\varphi*\mathcal{W}(q)$ are
+independent when~$\|p-q\|<\frac12t$.
+
+This allows to compute the expectation
+of~$I_\epsilon(0)=KRT_{\kappa,H}(\mathcal{W}_\epsilon)(0)$
+as
+
+$$
+\int_{\mathbf{R}^2}\kappa(-q)H(
+	\mathcal{W}_\epsilon(0)
+	-
+	\mathcal{W}_\epsilon(q)
+)dq
+=
+\int_{|q|<\epsilon}
+\kappa(-q)H(
+	\mathcal{W}_\epsilon(0)
+	-
+	\mathcal{W}_\epsilon(q)
+)dq
++
+\int_{|q|\geq\epsilon}
+\kappa(-q)H(
+	\mathcal{W}_\epsilon(0)
+	-
+	\mathcal{W}_\epsilon(q)
+)dq
+$$
+
+$$
+E(I_\epsilon(0))
+\geq
+\pi\epsilon^2\int\kappa +
+\int_{|q|\geq\epsilon}
+\kappa(-q)E(H(
+	\mathcal{W}_\epsilon(0)
+	-
+	\mathcal{W}_\epsilon(q)
+))dq
+$$
+
+and the expectation inside the integral is~$\frac12$, thus it
+can be seen the limit as~$\epsilon\to0$ is
+$\frac12\int\kappa$.  NOTE: there are maybe regularity hypotheses on~$\kappa$, for
+example that it is smooth enough around~$0$.
+
+\bigskip
+
+Let's try to compute the covariance between the values of the KRT
+of~$\epsilon$-filtered white gaussian noise at two
+points~$p,q$, namely
+
+\[
+	\mathrm{cov}(
+		KRT_{\kappa,H}(\mathcal{W}_\epsilon)(p),
+		KRT_{\kappa,H}(\mathcal{W}_\epsilon)(q)
+	)
+\]
+\[
+	= E(
+		KRT_{\kappa,H}(\mathcal{W}_\epsilon)(p)\cdot
+		KRT_{\kappa,H}(\mathcal{W}_\epsilon)(q)
+	)
+	)
+\]
+\[
+	= E\left(
+		\int\kappa(p-x)H(
+			\mathcal{W}_\epsilon(p)
+			-
+			\mathcal{W}_\epsilon(x)
+		)dx
+		\cdot
+		\int\kappa(q-y)H(
+			\mathcal{W}_\epsilon(q)
+			-
+			\mathcal{W}_\epsilon(y)
+		)dy
+	\right)
+\]
+\[
+	= E\left(
+		\iint
+		\kappa(p-x)H(
+			\mathcal{W}_\epsilon(p)
+			-
+			\mathcal{W}_\epsilon(x)
+		)
+		\kappa(q-y)H(
+			\mathcal{W}_\epsilon(q)
+			-
+			\mathcal{W}_\epsilon(y)
+		)
+		dx
+		dy
+	\right)
+\]
+\[
+	= E\left(
+		\iint
+		\kappa(p-x)
+		\kappa(q-y)
+		H(
+			\mathcal{W}_\epsilon(p)
+			-
+			\mathcal{W}_\epsilon(x)
+		)
+		H(
+			\mathcal{W}_\epsilon(q)
+			-
+			\mathcal{W}_\epsilon(y)
+		)
+		dx
+		dy
+	\right)
+\]
+\[
+	=
+		\iint
+		\kappa(p-x)
+		\kappa(q-y)
+	E\left(
+		H(
+			\mathcal{W}_\epsilon(p)
+			-
+			\mathcal{W}_\epsilon(x)
+		)
+		H(
+			\mathcal{W}_\epsilon(q)
+			-
+			\mathcal{W}_\epsilon(y)
+		)
+	\right)
+		dx
+		dy
+\]
+
+We are interested in the limit of this expression,  when~$\epsilon\to 0$.
+We will see that the limit exists and it's a function of~$(p,q)$ and the
+kernel~$\kappa$.  Let us name it
+\[
+	\mathrm{cov}(K_p,K_q)
+	:=
+	\lim_{\epsilon\to0}
+	\mathrm{cov}\bigl(
+		KRT_{\kappa,H}(\mathcal{W}_\epsilon)(p),
+		KRT_{\kappa,H}(\mathcal{W}_\epsilon)(q)
+	\bigr)
+\]
+To deal with the limit, notice that for any~$(p,q)$ the
+function~$(x,y)\mapsto\kappa(p-x)\kappa(q-y)$ is integrable in~$R^2\times
+R^2$ and that the expectation is pointwise bounded by~$1$.  Thus by
+dominated convergence we can move the limit inside the integral,
+where~$(p,q,x,y)$ are constant.
+
+We start with the easier computation for the case when~$p=q$, which will
+give the variance of the~$KRT$ at one point.
+\[
+	\mathrm{cov}(K_p,K_p)
+	=
+	\lim_{\epsilon\to0}
+		\iint
+		\kappa(p-x)
+		\kappa(p-y)
+	E\left(
+		H(
+			\mathcal{W}_\epsilon(p)
+			-
+			\mathcal{W}_\epsilon(x)
+		)
+		H(
+			\mathcal{W}_\epsilon(p)
+			-
+			\mathcal{W}_\epsilon(y)
+		)
+	\right)
+		dx
+		dy
+\]
+to compute this integral, we divide the domain of integration into two parts
+\begin{equation}
+	\label{eq:domainxy}
+	\lim_{\epsilon\to0}
+	\left(
+		\iint_{\begin{smallmatrix}
+			|p-x|>\epsilon\\
+			|p-y|>\epsilon\\
+			|x-y|>\epsilon
+		\end{smallmatrix}}\cdots
+	+\int_{\textrm{elsewhere}}\cdots
+	\right)
+\end{equation}
+The first integral can be computed explicitly, for the separation conditions
+assure that the three values at~$p,x,y$ are independent variables.  And we
+know that if~$A,B,C$ are independent variables
+then~$E(H(A>B)H(A>C))=\frac13$.  The rest of the integral concerns a region
+of the plane (see Figure~\ref{fig:domainxy}) of vanishing width, whose
+integrals with respect to~$\kappa$ will go to zero.
+
+\begin{figure}
+	\centering
+	\includegraphics[width=0.5\linewidth]{f/domain.jpg}
+	\caption{
+		\label{fig:domainxy}
+		The blue part of the plain represents the domain of integration of the
+		first integral in equation~\ref{eq:domainxy}.
+	}
+\end{figure}
 
 
 
+\clearpage
 
 \subsection{Statistical implementation}
 
